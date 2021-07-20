@@ -8,10 +8,15 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    let weather = Networkmanager.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        weather.getWeather(city: "London") { model in
+            print(model?.list?.count , model?.list?[0])
+        }
+                           
     }
 
 

@@ -7,23 +7,26 @@
 
 import Foundation
 
-struct WeatherModel: Codable {
+//весь файл погода на несколько дней
+
+struct WeatherModelForcast: Codable {
     var cod: String?
     var message: Float?
     var cnt: Float?
-    var list: [ListModel]?
-    var city: CityModel?
+    var list: [ListModelForcast]?
+    var city: CityModelForcast?
 }
 
-struct ListModel: Codable {
+
+struct ListModelForcast: Codable {
    var dt: Float?
-   var main: Main?
-   var weather: [Weather]?
+   var main: MainForcast?
+   var weather: [WeatherForcast]?
    var wind: Wind?
    var dt_txt: String?
 }
 
-struct Weather: Codable {
+struct WeatherForcast: Codable {
   var id: Float?
   var main: String?
   var description:String?
@@ -34,13 +37,13 @@ struct Wind: Codable {
   var speed: Float?
 }
 
-struct Main: Codable {
+struct MainForcast: Codable {
     var temp: Float?
     var temp_min: Float?
     var temp_max: Float?
 }
 
-struct CityModel:Codable {
+struct CityModelForcast:Codable {
     var id: Float?
     var name: String?
     var coord: Coordinate?

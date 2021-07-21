@@ -13,8 +13,15 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        weather.getWeather(city: "London") { model in
-            print(model?.list?.count , model?.list?[0])
+        //на несколько дней
+        weather.getForcastWeather(city: "San Migel") { model in
+            print(model?.list?.count ?? 0 , model?.list?[0])
+        }
+        //на сегодня
+        weather.getCurrentWeather(city: "Лондон") { current in
+            print("Name: ",current?.name)
+            print(current?.weather)
+            print(current?.sys)
         }
                            
     }

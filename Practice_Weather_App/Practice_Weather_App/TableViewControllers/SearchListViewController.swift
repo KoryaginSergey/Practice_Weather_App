@@ -17,8 +17,10 @@ class SearchListViewController: UIViewController {
 
     private let searchListCellID = String(describing: SearchListCell.self)
     private var pendingRequestWorkItem: DispatchWorkItem?
-    var cities = [String]()
+    private var dataTask: URLSessionDataTask?
+    var cities: [CityModel] = [CityModel]()
     
+    var favoriteCities: [CityModel] = [CityModel(name: "Kharkiv", lat: 50.0, lon: 49.0)]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,14 +29,13 @@ class SearchListViewController: UIViewController {
         self.tableView.keyboardDismissMode = .onDrag
 
         searchBar.delegate = self
-        cities = ["Kyiv", "Kharkov", "lvov", "City2", "City5", "City10"]
-        
-        
+        cities = favoriteCities
+        configureNavigationButtons()
     }
     
 }
 
-    // MARK: - Extensions
+// MARK: - Extensions
 
 extension SearchListViewController: UITableViewDataSource {
   
@@ -47,7 +48,7 @@ extension SearchListViewController: UITableViewDataSource {
         cell.setParamsViewForCell()
         
         let city = cities[indexPath.row]
-        cell.nameCityLabel.text = city
+        cell.nameCityLabel.text = city.name
         
         return cell
     }
@@ -92,20 +93,17 @@ extension SearchListViewController: UITableViewDelegate {
 
 extension SearchListViewController: UISearchBarDelegate {
 
-func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-      // Cancel the currently pending item
-      pendingRequestWorkItem?.cancel()
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        pendingRequestWorkItem?.cancel()
 
-      // Wrap our request in a work item
-      let requestWorkItem = DispatchWorkItem { [weak self] in
-          print(searchText)
-      }
+        let requestWorkItem = DispatchWorkItem { [weak self] in
+            self?.invokeNetworkingRequest(text: searchText)
+        }
 
-      // Save the new work item and execute it after 2 s
-      pendingRequestWorkItem = requestWorkItem
-      DispatchQueue.main.asyncAfter(deadline: .now() + 2,
+        pendingRequestWorkItem = requestWorkItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5,
                                     execute: requestWorkItem)
-  }
+    }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
@@ -114,7 +112,27 @@ func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
-    
+}
 
+private extension SearchListViewController {
+    
+    private func configureNavigationButtons() {
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Exit", style: .plain, target: self, action: #selector(cancelButtonSelector))
+    }
+    
+    @objc private func cancelButtonSelector() {
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+
+    private func invokeNetworkingRequest(text: String) {
+        self.dataTask?.suspend()
+        self.dataTask = Networkmanager.shared.getListOfCities(by: text) { [weak self] cityModels in
+            if let  cities = cityModels {
+                self?.cities = cities
+                self?.tableView.reloadData()
+            }
+        }
+    }
+    
 }
 

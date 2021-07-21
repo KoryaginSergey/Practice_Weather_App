@@ -9,7 +9,7 @@ import Foundation
 
 //http://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
 //http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
-
+//http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=010490d0c60a959c36f0688641ada569
 
 //MARK: -  погода на сегодня или на несколько дней
 private enum DownloadTask: String {
@@ -23,7 +23,7 @@ class Networkmanager {
     static let shared: Networkmanager = Networkmanager()
     
     // получение урл с возможностью выбора задачи на день или на несколько
-  private func getUrl(_ task: DownloadTask ,city: String ) -> URL {
+    private func getUrl(_ task: DownloadTask ,city: String ) -> URL {
         var urlcomponents = URLComponents()
         urlcomponents.scheme = "https"
         urlcomponents.host = "api.openweathermap.org"
@@ -33,6 +33,7 @@ class Networkmanager {
                                     URLQueryItem(name: "appid", value: "010490d0c60a959c36f0688641ada569")]
         return urlcomponents.url!
     }
+    
     //MARK: - univarsal decodable function
     func decodejson<T:Decodable>(type: T.Type, from: Data?) -> T? {
     let decoder = JSONDecoder()
@@ -71,4 +72,25 @@ class Networkmanager {
             result(self.decodejson(type: CurrentWeather.self , from: data))
             }
         }.resume()
-    }}
+    }
+    
+    func getListOfCities(by cityName: String, result: @escaping (([CityModel]?)->())) -> URLSessionDataTask? {
+        guard let url = URL(string: "https://api.openweathermap.org/geo/1.0/direct?q=\(cityName)&limit=1&appid=010490d0c60a959c36f0688641ada569") else {
+            result(nil)
+            return nil
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { (data, responce, error) in
+            DispatchQueue.main.async {
+                result(self.decodejson(type: [CityModel].self , from: data))
+            }
+        }
+        
+        task.resume()
+        
+        return task
+    }
+    
+    //MARK: -
+    
+}

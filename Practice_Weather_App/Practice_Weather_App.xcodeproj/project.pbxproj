@@ -15,6 +15,11 @@
 		84BE973326A6C15C00796529 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84BE973226A6C15C00796529 /* Assets.xcassets */; };
 		84BE973626A6C15C00796529 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84BE973426A6C15C00796529 /* LaunchScreen.storyboard */; };
 		84CE2FF926A6E1B80092427F /* FavoriteCitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CE2FF826A6E1B80092427F /* FavoriteCitiesViewController.swift */; };
+		84CE302826A746DF0092427F /* SearchListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CE302726A746DF0092427F /* SearchListCell.swift */; };
+		84CE303526A800BC0092427F /* SearchListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CE303326A800BC0092427F /* SearchListTableViewController.swift */; };
+		84CE303B26A807250092427F /* SearchListTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CE303A26A807250092427F /* SearchListTableViewController.storyboard */; };
+		84CE304026A83E0D0092427F /* SearchListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CE303F26A83E0D0092427F /* SearchListViewController.storyboard */; };
+		84CE304326A8429C0092427F /* SearchListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CE304226A8429C0092427F /* SearchListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +33,11 @@
 		84BE973526A6C15C00796529 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84BE973726A6C15C00796529 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84CE2FF826A6E1B80092427F /* FavoriteCitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCitiesViewController.swift; sourceTree = "<group>"; };
+		84CE302726A746DF0092427F /* SearchListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListCell.swift; sourceTree = "<group>"; };
+		84CE303326A800BC0092427F /* SearchListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListTableViewController.swift; sourceTree = "<group>"; };
+		84CE303A26A807250092427F /* SearchListTableViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SearchListTableViewController.storyboard; sourceTree = "<group>"; };
+		84CE303F26A83E0D0092427F /* SearchListViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SearchListViewController.storyboard; sourceTree = "<group>"; };
+		84CE304226A8429C0092427F /* SearchListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +70,8 @@
 		84BE972526A6C15800796529 /* Practice_Weather_App */ = {
 			isa = PBXGroup;
 			children = (
+				84CE302626A746AA0092427F /* Cells */,
+				84CE301326A72BEB0092427F /* TableViewControllers */,
 				84CE2FFB26A6E1CE0092427F /* ViewControllers */,
 				84BE972626A6C15800796529 /* AppDelegate.swift */,
 				84BE972826A6C15800796529 /* SceneDelegate.swift */,
@@ -79,6 +91,25 @@
 				84CE2FF826A6E1B80092427F /* FavoriteCitiesViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		84CE301326A72BEB0092427F /* TableViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				84CE303326A800BC0092427F /* SearchListTableViewController.swift */,
+				84CE303A26A807250092427F /* SearchListTableViewController.storyboard */,
+				84CE303F26A83E0D0092427F /* SearchListViewController.storyboard */,
+				84CE304226A8429C0092427F /* SearchListViewController.swift */,
+			);
+			path = TableViewControllers;
+			sourceTree = "<group>";
+		};
+		84CE302626A746AA0092427F /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				84CE302726A746DF0092427F /* SearchListCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +172,8 @@
 				84BE973626A6C15C00796529 /* LaunchScreen.storyboard in Resources */,
 				84BE973326A6C15C00796529 /* Assets.xcassets in Resources */,
 				84BE972E26A6C15800796529 /* Main.storyboard in Resources */,
+				84CE303B26A807250092427F /* SearchListTableViewController.storyboard in Resources */,
+				84CE304026A83E0D0092427F /* SearchListViewController.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,9 +186,12 @@
 			files = (
 				84BE972B26A6C15800796529 /* LocationViewController.swift in Sources */,
 				84BE973126A6C15800796529 /* Practice_Weather_App.xcdatamodeld in Sources */,
+				84CE304326A8429C0092427F /* SearchListViewController.swift in Sources */,
 				84BE972726A6C15800796529 /* AppDelegate.swift in Sources */,
 				84BE972926A6C15800796529 /* SceneDelegate.swift in Sources */,
+				84CE302826A746DF0092427F /* SearchListCell.swift in Sources */,
 				84CE2FF926A6E1B80092427F /* FavoriteCitiesViewController.swift in Sources */,
+				84CE303526A800BC0092427F /* SearchListTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

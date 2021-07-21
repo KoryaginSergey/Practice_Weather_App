@@ -7,12 +7,16 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+    
+   
+
+class LocationViewController: UIViewController {
     
     let weather = Networkmanager.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         //на несколько дней
         weather.getForcastWeather(city: "San Migel") { model in
             print(model?.list?.count ?? 0 , model?.list?[0])

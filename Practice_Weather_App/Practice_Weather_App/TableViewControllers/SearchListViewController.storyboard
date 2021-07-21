@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="lQT-ej-2Is">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -29,17 +29,17 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SearchListCell" id="dUD-Of-Xug" customClass="SearchListCell" customModule="Practice_Weather_App" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="390" height="30.666666030883789"/>
+                                        <rect key="frame" x="0.0" y="28" width="390" height="31"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dUD-Of-Xug" id="8dw-cc-oVW">
-                                            <rect key="frame" x="0.0" y="0.0" width="390" height="30.666666030883789"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="390" height="31"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Znm-hm-cGo">
-                                                    <rect key="frame" x="10" y="5" width="370" height="20.666666666666668"/>
+                                                    <rect key="frame" x="10" y="5" width="370" height="21"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AS1-0t-1Ay">
-                                                            <rect key="frame" x="10" y="0.0" width="350" height="20.666666666666668"/>
+                                                            <rect key="frame" x="10" y="0.0" width="350" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -61,6 +61,10 @@
                                                 <constraint firstAttribute="bottom" secondItem="Znm-hm-cGo" secondAttribute="bottom" constant="5" id="pH6-EQ-9jf"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="nameCityLabel" destination="AS1-0t-1Ay" id="tlx-nh-hal"/>
+                                            <outlet property="viewForCell" destination="Znm-hm-cGo" id="YTV-ZY-YBk"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -85,6 +89,11 @@
                             <constraint firstItem="Z7s-4v-g6G" firstAttribute="trailing" secondItem="BSN-xe-ZDX" secondAttribute="trailing" id="vyf-KD-8z6"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="searchBar" destination="jmO-wl-zpy" id="BIw-r5-W2g"/>
+                        <outlet property="searchListImageView" destination="ZeX-vR-U8L" id="Mah-o0-yix"/>
+                        <outlet property="tableView" destination="BSN-xe-ZDX" id="cCL-v9-79T"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6S9-bb-t84" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

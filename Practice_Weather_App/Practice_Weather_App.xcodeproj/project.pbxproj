@@ -16,8 +16,6 @@
 		84BE973626A6C15C00796529 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84BE973426A6C15C00796529 /* LaunchScreen.storyboard */; };
 		84CE2FF926A6E1B80092427F /* FavoriteCitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CE2FF826A6E1B80092427F /* FavoriteCitiesViewController.swift */; };
 		84CE302826A746DF0092427F /* SearchListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CE302726A746DF0092427F /* SearchListCell.swift */; };
-		84CE303526A800BC0092427F /* SearchListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CE303326A800BC0092427F /* SearchListTableViewController.swift */; };
-		84CE303B26A807250092427F /* SearchListTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CE303A26A807250092427F /* SearchListTableViewController.storyboard */; };
 		84CE304026A83E0D0092427F /* SearchListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CE303F26A83E0D0092427F /* SearchListViewController.storyboard */; };
 		84CE304326A8429C0092427F /* SearchListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CE304226A8429C0092427F /* SearchListViewController.swift */; };
 /* End PBXBuildFile section */
@@ -34,8 +32,6 @@
 		84BE973726A6C15C00796529 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84CE2FF826A6E1B80092427F /* FavoriteCitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCitiesViewController.swift; sourceTree = "<group>"; };
 		84CE302726A746DF0092427F /* SearchListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListCell.swift; sourceTree = "<group>"; };
-		84CE303326A800BC0092427F /* SearchListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListTableViewController.swift; sourceTree = "<group>"; };
-		84CE303A26A807250092427F /* SearchListTableViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SearchListTableViewController.storyboard; sourceTree = "<group>"; };
 		84CE303F26A83E0D0092427F /* SearchListViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SearchListViewController.storyboard; sourceTree = "<group>"; };
 		84CE304226A8429C0092427F /* SearchListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,8 +92,6 @@
 		84CE301326A72BEB0092427F /* TableViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				84CE303326A800BC0092427F /* SearchListTableViewController.swift */,
-				84CE303A26A807250092427F /* SearchListTableViewController.storyboard */,
 				84CE303F26A83E0D0092427F /* SearchListViewController.storyboard */,
 				84CE304226A8429C0092427F /* SearchListViewController.swift */,
 			);
@@ -172,7 +166,6 @@
 				84BE973626A6C15C00796529 /* LaunchScreen.storyboard in Resources */,
 				84BE973326A6C15C00796529 /* Assets.xcassets in Resources */,
 				84BE972E26A6C15800796529 /* Main.storyboard in Resources */,
-				84CE303B26A807250092427F /* SearchListTableViewController.storyboard in Resources */,
 				84CE304026A83E0D0092427F /* SearchListViewController.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -191,7 +184,6 @@
 				84BE972926A6C15800796529 /* SceneDelegate.swift in Sources */,
 				84CE302826A746DF0092427F /* SearchListCell.swift in Sources */,
 				84CE2FF926A6E1B80092427F /* FavoriteCitiesViewController.swift in Sources */,
-				84CE303526A800BC0092427F /* SearchListTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

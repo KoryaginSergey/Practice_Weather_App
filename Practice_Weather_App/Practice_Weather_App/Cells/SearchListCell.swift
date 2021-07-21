@@ -10,12 +10,9 @@ import  UIKit
 
 
 class SearchListCell: UITableViewCell {
-    
-    
   
     @IBOutlet weak var nameCityLabel: UILabel!
     @IBOutlet weak var viewForCell: UIView!
-    
     
     
    public func setParamsViewForCell() {

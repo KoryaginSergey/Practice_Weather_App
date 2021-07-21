@@ -15,7 +15,7 @@ class SearchListViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
 
-    private let searchListCellID = String(describing: SearchListCell())
+    private let searchListCellID = String(describing: SearchListCell.self)
     private var pendingRequestWorkItem: DispatchWorkItem?
     var cities = [String]()
     
@@ -24,6 +24,7 @@ class SearchListViewController: UIViewController {
         super.viewDidLoad()
 
 //        tableView.isEditing = true
+        self.tableView.keyboardDismissMode = .onDrag
 
         searchBar.delegate = self
         cities = ["Kyiv", "Kharkov", "lvov", "City2", "City5", "City10"]
@@ -42,7 +43,7 @@ extension SearchListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SearchListCell", for: indexPath) as! SearchListCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: searchListCellID, for: indexPath) as! SearchListCell
         cell.setParamsViewForCell()
         
         let city = cities[indexPath.row]
@@ -105,5 +106,15 @@ func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
       DispatchQueue.main.asyncAfter(deadline: .now() + 2,
                                     execute: requestWorkItem)
   }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
 
 }
+

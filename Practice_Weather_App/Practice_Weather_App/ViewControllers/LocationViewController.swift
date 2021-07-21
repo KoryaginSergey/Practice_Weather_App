@@ -7,11 +7,27 @@
 
 import UIKit
 
+    
+   
+
 class LocationViewController: UIViewController {
+    
+    let weather = Networkmanager.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        //на несколько дней
+        weather.getForcastWeather(city: "San Migel") { model in
+            print(model?.list?.count ?? 0 , model?.list?[0])
+        }
+        //на сегодня
+        weather.getCurrentWeather(city: "Лондон") { current in
+            print("Name: ",current?.name)
+            print(current?.weather)
+            print(current?.sys)
+        }
+                           
     }
 
 

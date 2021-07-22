@@ -8,6 +8,8 @@
 import UIKit
 
 class CurrentLocationViewController: UIViewController {
+    
+    
 
     
     @IBOutlet private weak var currentLocationLabel: UILabel!
@@ -17,8 +19,13 @@ class CurrentLocationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        Networkmanager.shared.getCurrentWeatherByLocation(lat: 50, lon: 36.15) {[weak self] weather in
+            DispatchQueue.main.async {
+                self?.currentLocationLabel.text = weather?.name
+            }
+        }
         setBackgroundImage()
-        getDataFromServer()
+        //getDataFromServer()
         
     }
 

@@ -59,7 +59,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" alpha="0.34999999999999998" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Zpe-Mv-1qG">
-                                <rect key="frame" x="20" y="476.5" width="374" height="263"/>
+                                <rect key="frame" x="20" y="432.5" width="374" height="356"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="WeatherForDaysAheadTableViewCell" id="n2m-dx-UfG" customClass="WeatherForDaysAheadTableViewCell" customModule="Practice_Weather_App" customModuleProvider="target">
@@ -77,7 +77,7 @@
                                 </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weather Conditions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0oL-SN-MT5">
-                                <rect key="frame" x="228" y="244.5" width="151" height="21"/>
+                                <rect key="frame" x="228" y="200.5" width="151" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -108,10 +108,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="nZP-6b-3DP"/>
                     <connections>
-                        <outlet property="currentLocationLabel" destination="KRb-d2-aEr" id="7qK-mZ-hob"/>
-                        <outlet property="temperatureLabel" destination="cX4-Hq-ebD" id="Nge-lQ-F9f"/>
-                        <outlet property="weatherConditionLabel" destination="0oL-SN-MT5" id="FAe-Sh-CYd"/>
-                        <outlet property="weatherForcastTableView" destination="Zpe-Mv-1qG" id="ipD-Zn-ycF"/>
+                        <outlet property="currentLocationLabel" destination="KRb-d2-aEr" id="EAZ-FR-8wa"/>
+                        <outlet property="forcastTableView" destination="Zpe-Mv-1qG" id="Aiu-2q-Nmk"/>
+                        <outlet property="temperatureLabel" destination="cX4-Hq-ebD" id="YwN-DC-4rm"/>
+                        <outlet property="weatherConditionLabel" destination="0oL-SN-MT5" id="0Ir-c9-iEp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -152,12 +152,13 @@
                                 <color key="tintColor" red="1" green="0.65392485950000001" blue="0.1228824743" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <state key="normal" title="Gesture"/>
                                 <connections>
-                                    <segue destination="BYZ-38-t0r" kind="show" id="tgJ-KN-ehs"/>
+                                    <action selector="onButton:" destination="iMf-cf-CeE" eventType="touchUpInside" id="S4x-wb-Z5M"/>
                                 </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="qi5-AF-ij7"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="K0A-1s-IrY" firstAttribute="top" secondItem="yjL-r3-vmS" secondAttribute="bottom" constant="64.5" id="J42-J7-d6R"/>
                             <constraint firstItem="yjL-r3-vmS" firstAttribute="centerX" secondItem="qi5-AF-ij7" secondAttribute="centerX" id="OcU-BT-ejP"/>

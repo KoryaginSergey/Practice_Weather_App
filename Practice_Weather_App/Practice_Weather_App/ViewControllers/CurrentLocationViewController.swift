@@ -21,8 +21,8 @@ class CurrentLocationViewController: UIViewController {
         getDataFromServer()
         
     }
-
-    func getDataFromServer() {
+    
+    private func getDataFromServer() {
        
         Networkmanager.shared.getCurrentWeather(city: "Харьков") { [weak self] current in
             guard let self = self,
@@ -41,11 +41,11 @@ class CurrentLocationViewController: UIViewController {
         }
         
     }
-    func setBackgroundImage() {
+    private func setBackgroundImage() {
         
         let background = UIImageView()
         
-        background.contentMode = .scaleToFill // Or w/e your desired content mode is
+        background.contentMode = .scaleToFill
         
         view.insertSubview(background, at: 0)
         background.translatesAutoresizingMaskIntoConstraints = false
@@ -56,4 +56,21 @@ class CurrentLocationViewController: UIViewController {
         background.image = UIImage(named: "Mountain")
     }
 
+    @objc func showMiracle() {
+            let weatherForcast = GestureTableView()
+        weatherForcast.modalPresentationStyle = .custom
+        weatherForcast.transitioningDelegate = self
+            self.present(weatherForcast, animated: true, completion: nil)
+        }
+        
+        @IBAction func onButton(_ sender: Any) {
+            showMiracle()
+        }
+    
+}
+
+extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        PresentationController(presentedViewController: presented, presenting: presenting)
+    }
 }

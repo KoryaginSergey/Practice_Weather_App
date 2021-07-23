@@ -146,11 +146,10 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MKg-sl-hk7">
-                                <rect key="frame" x="180" y="558" width="55" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MKg-sl-hk7">
+                                <rect key="frame" x="128.5" y="783" width="157" height="30"/>
                                 <color key="tintColor" red="1" green="0.65392485950000001" blue="0.1228824743" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <state key="normal" title="Gesture"/>
+                                <state key="normal" title="Forcast for days ahead"/>
                                 <connections>
                                     <action selector="didTapPresentForcast:" destination="iMf-cf-CeE" eventType="touchUpInside" id="GQJ-Ru-h43"/>
                                 </connections>
@@ -161,10 +160,12 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="K0A-1s-IrY" firstAttribute="top" secondItem="yjL-r3-vmS" secondAttribute="bottom" constant="64.5" id="J42-J7-d6R"/>
+                            <constraint firstItem="MKg-sl-hk7" firstAttribute="centerX" secondItem="qi5-AF-ij7" secondAttribute="centerX" id="Lh2-lJ-XVw"/>
                             <constraint firstItem="yjL-r3-vmS" firstAttribute="centerX" secondItem="qi5-AF-ij7" secondAttribute="centerX" id="OcU-BT-ejP"/>
                             <constraint firstItem="f6m-Sn-TQm" firstAttribute="bottom" secondItem="yjL-r3-vmS" secondAttribute="bottom" id="e94-qH-XzH"/>
                             <constraint firstItem="K0A-1s-IrY" firstAttribute="centerX" secondItem="qi5-AF-ij7" secondAttribute="centerX" id="iNY-Ds-0Su"/>
                             <constraint firstItem="qi5-AF-ij7" firstAttribute="trailing" secondItem="f6m-Sn-TQm" secondAttribute="trailing" constant="35" id="lcq-Cf-oTB"/>
+                            <constraint firstItem="MKg-sl-hk7" firstAttribute="bottom" secondItem="qi5-AF-ij7" secondAttribute="bottom" id="lrH-Ms-CWO"/>
                             <constraint firstItem="yjL-r3-vmS" firstAttribute="top" secondItem="qi5-AF-ij7" secondAttribute="top" constant="74" id="nS5-gE-JNa"/>
                         </constraints>
                     </view>

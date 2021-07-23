@@ -9,22 +9,19 @@ import UIKit
 
 class GestureViewController: UIViewController {
     
-    @IBOutlet weak var weatherForcastTableView: UITableView!
-    var hasSetPointOrigin = false
-    var pointOrigin: CGPoint?
-    let cellID = String(describing: WeatherForcastTableViewCell.self)
+    @IBOutlet private weak var weatherForcastTableView: UITableView!
+    private var hasSetPointOrigin = false
+    private var pointOrigin: CGPoint?
+    private let cellID = String(describing: WeatherForcastTableViewCell.self)
     private var weatherForcast: [ListModelForcast]?
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadForcast()
-        weatherForcastTableView.backgroundColor = .red
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerAction))
         view.addGestureRecognizer(panGesture)
         weatherForcastTableView.register(UINib(nibName: cellID, bundle: nil), forCellReuseIdentifier: cellID)
-        
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -35,13 +32,15 @@ class GestureViewController: UIViewController {
         }
     }
     
-    func loadForcast() {
+    private func loadForcast() {
+        
         Networkmanager.shared.getForcastWeather(city: "Лондон") { [weak self] weatherForcastData in
             guard let self = self,
                   let forcast = weatherForcastData?.list
-                   else {
+            else {
                 return
             }
+            
             DispatchQueue.main.async {
                 self.weatherForcast = forcast
                 self.weatherForcastTableView.reloadData()
@@ -49,11 +48,11 @@ class GestureViewController: UIViewController {
         }
     }
     
-    @objc func panGestureRecognizerAction(sender: UIPanGestureRecognizer) {
+    @objc private func panGestureRecognizerAction(sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: view)
         
         guard translation.y >= 0 else { return }
-      
+        
         view.frame.origin = CGPoint(x: 0, y: self.pointOrigin!.y + translation.y)
         
         if sender.state == .ended {
@@ -61,7 +60,7 @@ class GestureViewController: UIViewController {
             if dragVelocity.y >= 1300 {
                 self.dismiss(animated: true, completion: nil)
             } else {
-               
+                
                 UIView.animate(withDuration: 0.3) {
                     self.view.frame.origin = self.pointOrigin ?? CGPoint(x: 0, y: 400)
                 }
@@ -73,17 +72,20 @@ class GestureViewController: UIViewController {
 
 extension LocationViewController: UITableViewDelegate {
     
-    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
 }
 
 extension GestureViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        guard let rowsCount = weatherForcast?.count else {
-//            return 0
-//        }
-        return 7
+        guard let rowsCount = weatherForcast?.count else {
+            return 0
+        }
+        return rowsCount
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -93,16 +95,9 @@ extension GestureViewController: UITableViewDataSource {
               let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForcastTableViewCell else {
             return WeatherForcastTableViewCell()
         }
-
-
+        
         weatherCell.setupWeatherForDaysCell(dayOfTheWeek: day, conditionIcon: nil, temperature: String(temperature))
         
-        
-        guard let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForcastTableViewCell else {
-            return WeatherForcastTableViewCell()
-        }
-        
-        
-       return weatherCell
+        return weatherCell
     }
 }

@@ -19,22 +19,24 @@ class SearchListViewController: UIViewController {
     private var pendingRequestWorkItem: DispatchWorkItem?
     private var dataTask: URLSessionDataTask?
     
-    var models = [CDCityModel]()
+    private var models = [CDCityModel]()
     
-    var cities = [CityModel]()
+    private var cities = [CityModel]()
     
-    var isSearching = false
+    private var isSearching = false
+    private var buttonIsEdit = false
+    private let nameNavigationItem = "Favorites list"
+    private let heightForRow: CGFloat = 60
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        tableView.isEditing = true
 //        self.tableView.keyboardDismissMode = .onDrag
 
         searchBar.delegate = self
         configureNavigationButtons()
-        self.navigationItem.title = "Favorites list"
+        self.navigationItem.title = nameNavigationItem
 //        let arrayCity = self.fetchData()
 //        self.cities = arrayCity.map({ (model) -> CityModel in
 //            let city = CityModel(name: model.name, lat: model.latitude, lon: model.longitude)
@@ -80,13 +82,14 @@ extension SearchListViewController: UITableViewDataSource {
         let removeElement = models[sourceIndexPath.row]
         models.remove(at: sourceIndexPath.row)
         models.insert(removeElement, at: destinationIndexPath.row)
+    
     }
 }
 
 extension SearchListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return heightForRow
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -158,10 +161,22 @@ private extension SearchListViewController {
     
     private func configureNavigationButtons() {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Exit", style: .plain, target: self, action: #selector(cancelButtonSelector))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonSelector))
     }
     
     @objc private func cancelButtonSelector() {
         self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func editButtonSelector() {
+        if buttonIsEdit {
+        self.tableView.isEditing = false
+            buttonIsEdit = false
+        } else {
+            self.tableView.isEditing = true
+            buttonIsEdit = true
+        }
+
     }
 
     private func invokeNetworkingRequest(text: String) {
@@ -174,7 +189,7 @@ private extension SearchListViewController {
         }
     }
     
-    func fetchData() {
+    private func fetchData() {
         let context = DataModels.sharedInstance.context
         let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
         do {
@@ -185,17 +200,16 @@ private extension SearchListViewController {
         self.tableView.reloadData()
     }
     
-    func deleteCDCityModel(model: CDCityModel?) {
+    private func deleteCDCityModel(model: CDCityModel?) {
         let context = DataModels.sharedInstance.context
         guard let model = model else {
             return
         }
         context.delete(model)
         DataModels.sharedInstance.saveContext()
-//        self.fetchData()
     }
     
-    func saveItemToDataBase(indexPath: IndexPath) {
+    private func saveItemToDataBase(indexPath: IndexPath) {
         let city = cities[indexPath.row]
         let context = DataModels.sharedInstance.context
         let entity = NSEntityDescription.entity(forEntityName: "CDCityModel", in: context)!
@@ -209,27 +223,4 @@ private extension SearchListViewController {
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-//    func saveCDCityModel() {
-//        let context = DataModels.sharedInstance.context
-//        let entity = NSEntityDescription.entity(forEntityName: "CDCityModel", in: context)!
-//        let model = [CDCityModel(entity: entity, insertInto: context)]
-//        models = model
-//
-//        DataModels.sharedInstance.saveContext()
-//    }
-    
-    
-    
-    
-    
-    
-
 }

@@ -6,22 +6,32 @@
 //
 
 import UIKit
+import CoreData
 
 class FavoriteCitiesViewController: UIPageViewController {
     
-    var weatherVcs = [UIViewController]()
+    private var weatherVcs = [UIViewController]()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private var models = [CDCityModel]()
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super .viewWillAppear(animated)
         
-        self.configureNavigationButtons()
+        self.fetchData()
+        weatherVcs = createArrayVC()
         
         if weatherVcs.count > 0 {
             self.dataSource = self
             self.setViewControllers([weatherVcs[0]], direction: .forward, animated: false, completion: nil)
         }
     }
-
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.configureNavigationButtons()
+    }
 }
 
 extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
@@ -69,5 +79,27 @@ private extension FavoriteCitiesViewController {
         navigation.modalPresentationStyle = .fullScreen
         self.navigationController?.present(navigation, animated: true, completion: nil)
     }
-
+    
+    private func fetchData() {
+        let context = DataModels.sharedInstance.context
+        let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
+        do {
+             self.models = try context.fetch(fetchRequest)
+        } catch {
+            print("ERROR")
+        }
+    }
+    
+    private func createArrayVC() -> [UIViewController] {
+        var weatherVcsArray = [UIViewController]()
+    
+        for model in models {
+            guard let modelVC =
+                    storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
+                    as? CurrentLocationViewController else {continue}
+            weatherVcsArray.append(modelVC)
+        }
+    return weatherVcsArray
+    }
 }
+

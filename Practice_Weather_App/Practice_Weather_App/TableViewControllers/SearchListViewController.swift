@@ -36,6 +36,7 @@ class SearchListViewController: UIViewController {
 
         searchBar.delegate = self
         configureNavigationButtons()
+
         self.navigationItem.title = nameNavigationItem
 //        let arrayCity = self.fetchData()
 //        self.cities = arrayCity.map({ (model) -> CityModel in
@@ -44,6 +45,8 @@ class SearchListViewController: UIViewController {
 //        })
 //        tableView.reloadData()
         self.fetchData()
+
+
         
     }
     

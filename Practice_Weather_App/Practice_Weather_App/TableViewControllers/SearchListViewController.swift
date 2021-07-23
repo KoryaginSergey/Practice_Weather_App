@@ -11,9 +11,9 @@ import CoreData
 
 class SearchListViewController: UIViewController {
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchListImageView: UIImageView!
-    @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak private var tableView: UITableView!
+    @IBOutlet weak private var searchListImageView: UIImageView!
+    @IBOutlet weak private var searchBar: UISearchBar!
     
     private let searchListCellID = String(describing: SearchListCell.self)
     private var pendingRequestWorkItem: DispatchWorkItem?
@@ -22,23 +22,26 @@ class SearchListViewController: UIViewController {
     var models = [CDCityModel]()
     
     var cities = [CityModel]()
+    
+    var isSearching = false
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
 //        tableView.isEditing = true
-        self.tableView.keyboardDismissMode = .onDrag
+//        self.tableView.keyboardDismissMode = .onDrag
 
         searchBar.delegate = self
         configureNavigationButtons()
-        
-        let arrayCity = self.fetchData()
-        self.cities = arrayCity.map({ (model) -> CityModel in
-            let city = CityModel(name: model.name, lat: model.latitude, lon: model.longitude)
-            return city
-        })
-        tableView.reloadData()
-        
+        self.navigationItem.title = "Favorites list"
+//        let arrayCity = self.fetchData()
+//        self.cities = arrayCity.map({ (model) -> CityModel in
+//            let city = CityModel(name: model.name, lat: model.latitude, lon: model.longitude)
+//            return city
+//        })
+//        tableView.reloadData()
+        self.fetchData()
         
     }
     
@@ -49,16 +52,23 @@ class SearchListViewController: UIViewController {
 extension SearchListViewController: UITableViewDataSource {
   
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cities.count
+        if isSearching {
+            return self.cities.count
+        } else {
+            return self.models.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: searchListCellID, for: indexPath) as! SearchListCell
-//        cell.setParamsViewForCell()
-        
-        let city = cities[indexPath.row]
-        cell.nameCityLabel.text = city.name
-        
+        cell.setParamsViewForCell()
+        if isSearching {
+            let city = cities[indexPath.row]
+            cell.nameCityLabel.text = city.name
+        } else {
+            let city = models[indexPath.row]
+            cell.nameCityLabel.text = city.name
+        }
         return cell
     }
     
@@ -67,11 +77,9 @@ extension SearchListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let removeElement = cities[sourceIndexPath.row]
-        cities.remove(at: sourceIndexPath.row)
-        cities.insert(removeElement, at: destinationIndexPath.row)
-        print(cities[destinationIndexPath.row])
-        print(destinationIndexPath.row)
+        let removeElement = models[sourceIndexPath.row]
+        models.remove(at: sourceIndexPath.row)
+        models.insert(removeElement, at: destinationIndexPath.row)
     }
 }
 
@@ -89,9 +97,9 @@ extension SearchListViewController: UITableViewDelegate {
     func tableViewDidDeleteRow(indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in
 
-            self.cities.remove(at: indexPath.row)
+            let model = self.models.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
-            
+            self.deleteCDCityModel(model: model)
             
             completion(true)
         }
@@ -101,19 +109,14 @@ extension SearchListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let city = cities[indexPath.row]
-        
-        let context = DataModels.sharedInstance.context
-        
-        let entity = NSEntityDescription.entity(forEntityName: "CDCityModel", in: context)!
-        
-        let model = CDCityModel(entity: entity, insertInto: context)
-        
-        model.name = city.name
-        model.latitude = city.lat!
-        model.longitude = city.lon!
-        
-        DataModels.sharedInstance.saveContext()
+        if isSearching {
+            self.saveItemToDataBase(indexPath: indexPath)
+            isSearching = false
+            searchBar.resignFirstResponder()
+            searchBar.text = ""
+            fetchData()
+            self.tableView.reloadData()
+        }
     }
     
 }
@@ -121,23 +124,33 @@ extension SearchListViewController: UITableViewDelegate {
 extension SearchListViewController: UISearchBarDelegate {
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        pendingRequestWorkItem?.cancel()
-
-        let requestWorkItem = DispatchWorkItem { [weak self] in
+        if searchBar.text == "" {
+                    isSearching = false
+                    tableView.reloadData()
+        } else {
+            isSearching = true
+            pendingRequestWorkItem?.cancel()
+            let requestWorkItem = DispatchWorkItem { [weak self] in
             self?.invokeNetworkingRequest(text: searchText)
         }
-
-        pendingRequestWorkItem = requestWorkItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1,
+            pendingRequestWorkItem = requestWorkItem
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1,
                                     execute: requestWorkItem)
+        }
+        
+//        filteredData = data.filter({$0.contains(searchBar.text ?? "")})
+//        tableView.reloadData()
+        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+        isSearching = false
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+        isSearching = false
     }
 }
 
@@ -161,19 +174,62 @@ private extension SearchListViewController {
         }
     }
     
-    func fetchData() -> [CDCityModel]{
+    func fetchData() {
         let context = DataModels.sharedInstance.context
-        
         let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
-        
         do {
-            return try context.fetch(fetchRequest)
+            return self.models = try context.fetch(fetchRequest)
         } catch {
             print("ERROR")
-            
         }
-        return []
+        self.tableView.reloadData()
     }
     
-}
+    func deleteCDCityModel(model: CDCityModel?) {
+        let context = DataModels.sharedInstance.context
+        guard let model = model else {
+            return
+        }
+        context.delete(model)
+        DataModels.sharedInstance.saveContext()
+//        self.fetchData()
+    }
+    
+    func saveItemToDataBase(indexPath: IndexPath) {
+        let city = cities[indexPath.row]
+        let context = DataModels.sharedInstance.context
+        let entity = NSEntityDescription.entity(forEntityName: "CDCityModel", in: context)!
+        let model = CDCityModel(entity: entity, insertInto: context)
+        
+        model.name = city.name
+        model.latitude = city.lat!
+        model.longitude = city.lon!
+        
+        DataModels.sharedInstance.saveContext()
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//    func saveCDCityModel() {
+//        let context = DataModels.sharedInstance.context
+//        let entity = NSEntityDescription.entity(forEntityName: "CDCityModel", in: context)!
+//        let model = [CDCityModel(entity: entity, insertInto: context)]
+//        models = model
+//
+//        DataModels.sharedInstance.saveContext()
+//    }
+    
+    
+    
+    
+    
+    
 
+}

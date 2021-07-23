@@ -16,9 +16,9 @@ class SearchListCell: UITableViewCell {
     
     
    public func setParamsViewForCell() {
-        viewForCell.layer.cornerRadius = 15.0
-        viewForCell.layer.borderWidth = 1.0
-        viewForCell.layer.borderColor = UIColor.black.cgColor
+//        viewForCell.layer.cornerRadius = 15.0
+//        viewForCell.layer.borderWidth = 1.0
+//        viewForCell.layer.borderColor = UIColor.black.cgColor
     }
     
     

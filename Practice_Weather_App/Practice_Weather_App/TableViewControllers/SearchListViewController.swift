@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 
 class SearchListViewController: UIViewController {
@@ -14,13 +15,13 @@ class SearchListViewController: UIViewController {
     @IBOutlet weak var searchListImageView: UIImageView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-
     private let searchListCellID = String(describing: SearchListCell.self)
     private var pendingRequestWorkItem: DispatchWorkItem?
     private var dataTask: URLSessionDataTask?
-    var cities: [CityModel] = [CityModel]()
     
-    var favoriteCities: [CityModel] = [CityModel(name: "Kharkiv", lat: 50.0, lon: 49.0)]
+    var models = [CDCityModel]()
+    
+    var cities = [CityModel]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +30,16 @@ class SearchListViewController: UIViewController {
         self.tableView.keyboardDismissMode = .onDrag
 
         searchBar.delegate = self
-        cities = favoriteCities
         configureNavigationButtons()
+        
+        let arrayCity = self.fetchData()
+        self.cities = arrayCity.map({ (model) -> CityModel in
+            let city = CityModel(name: model.name, lat: model.latitude, lon: model.longitude)
+            return city
+        })
+        tableView.reloadData()
+        
+        
     }
     
 }
@@ -45,7 +54,7 @@ extension SearchListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: searchListCellID, for: indexPath) as! SearchListCell
-        cell.setParamsViewForCell()
+//        cell.setParamsViewForCell()
         
         let city = cities[indexPath.row]
         cell.nameCityLabel.text = city.name
@@ -82,11 +91,29 @@ extension SearchListViewController: UITableViewDelegate {
 
             self.cities.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
-
+            
+            
             completion(true)
         }
+        
         action.backgroundColor = .systemRed
         return action
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let city = cities[indexPath.row]
+        
+        let context = DataModels.sharedInstance.context
+        
+        let entity = NSEntityDescription.entity(forEntityName: "CDCityModel", in: context)!
+        
+        let model = CDCityModel(entity: entity, insertInto: context)
+        
+        model.name = city.name
+        model.latitude = city.lat!
+        model.longitude = city.lon!
+        
+        DataModels.sharedInstance.saveContext()
     }
     
 }
@@ -101,7 +128,7 @@ extension SearchListViewController: UISearchBarDelegate {
         }
 
         pendingRequestWorkItem = requestWorkItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5,
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1,
                                     execute: requestWorkItem)
     }
     
@@ -132,6 +159,20 @@ private extension SearchListViewController {
                 self?.tableView.reloadData()
             }
         }
+    }
+    
+    func fetchData() -> [CDCityModel]{
+        let context = DataModels.sharedInstance.context
+        
+        let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
+        
+        do {
+            return try context.fetch(fetchRequest)
+        } catch {
+            print("ERROR")
+            
+        }
+        return []
     }
     
 }

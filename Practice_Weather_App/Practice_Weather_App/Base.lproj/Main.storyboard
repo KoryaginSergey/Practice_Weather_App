@@ -152,7 +152,7 @@
                                 <color key="tintColor" red="1" green="0.65392485950000001" blue="0.1228824743" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <state key="normal" title="Gesture"/>
                                 <connections>
-                                    <action selector="onButton:" destination="iMf-cf-CeE" eventType="touchUpInside" id="S4x-wb-Z5M"/>
+                                    <action selector="didTapPresentForcast:" destination="iMf-cf-CeE" eventType="touchUpInside" id="GQJ-Ru-h43"/>
                                 </connections>
                             </button>
                         </subviews>

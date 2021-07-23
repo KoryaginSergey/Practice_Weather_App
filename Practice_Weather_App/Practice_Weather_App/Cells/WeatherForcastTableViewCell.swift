@@ -7,7 +7,7 @@
 
 import UIKit
 
-class WeatherForDaysAheadTableViewCell: UITableViewCell {
+class WeatherForcastTableViewCell: UITableViewCell {
 
     @IBOutlet weak var dayOfTheWeekLabel: UILabel!
     @IBOutlet weak var dayOfTheWeekTemperature: UILabel!

@@ -7,27 +7,48 @@
 
 import UIKit
 
-class GestureTableView: UIViewController {
+class GestureViewController: UIViewController {
     
     @IBOutlet weak var weatherForcastTableView: UITableView!
     var hasSetPointOrigin = false
     var pointOrigin: CGPoint?
-    let cellID = String(describing: WeatherForDaysAheadTableViewCell.self)
+    let cellID = String(describing: WeatherForcastTableViewCell.self)
+    private var weatherForcast: [ListModelForcast]?
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadForcast()
+        weatherForcastTableView.backgroundColor = .red
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerAction))
         view.addGestureRecognizer(panGesture)
         weatherForcastTableView.register(UINib(nibName: cellID, bundle: nil), forCellReuseIdentifier: cellID)
+        
+        
     }
     
     override func viewDidLayoutSubviews() {
+        
         if !hasSetPointOrigin {
             hasSetPointOrigin = true
             pointOrigin = self.view.frame.origin
         }
     }
+    
+    func loadForcast() {
+        Networkmanager.shared.getForcastWeather(city: "Лондон") { [weak self] weatherForcastData in
+            guard let self = self,
+                  let forcast = weatherForcastData?.list
+                   else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.weatherForcast = forcast
+                self.weatherForcastTableView.reloadData()
+            }
+        }
+    }
+    
     @objc func panGestureRecognizerAction(sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: view)
         
@@ -55,7 +76,7 @@ extension LocationViewController: UITableViewDelegate {
     
 }
 
-extension GestureTableView: UITableViewDataSource {
+extension GestureViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        guard let rowsCount = weatherForcast?.count else {
@@ -66,23 +87,21 @@ extension GestureTableView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-//        guard let forcastData = weatherForcast?[indexPath.row],
-//              let day = forcastData.dt_txt,
-//              let temperature = forcastData.main?.temp,
-//              let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForDaysAheadTableViewCell else {
-//            return WeatherForDaysAheadTableViewCell()
-//        }
-//
-//
-//        weatherCell.setupWeatherForDaysCell(dayOfTheWeek: day, conditionIcon: nil, temperature: String(temperature))
-        
-        
-        guard let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForDaysAheadTableViewCell else {
-            return WeatherForDaysAheadTableViewCell()
+        guard let forcastData = weatherForcast?[indexPath.row],
+              let day = forcastData.dt_txt,
+              let temperature = forcastData.main?.temp,
+              let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForcastTableViewCell else {
+            return WeatherForcastTableViewCell()
         }
-        //            return WeatherForDaysAheadTableViewCell()
-        //        }
-        //
+
+
+        weatherCell.setupWeatherForDaysCell(dayOfTheWeek: day, conditionIcon: nil, temperature: String(temperature))
+        
+        
+        guard let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForcastTableViewCell else {
+            return WeatherForcastTableViewCell()
+        }
+        
         
        return weatherCell
     }

@@ -56,15 +56,15 @@ class CurrentLocationViewController: UIViewController {
         background.image = UIImage(named: "Mountain")
     }
 
-    @objc func showMiracle() {
-            let weatherForcast = GestureTableView()
+    func presentForcast() {
+            let weatherForcast = GestureViewController()
         weatherForcast.modalPresentationStyle = .custom
         weatherForcast.transitioningDelegate = self
             self.present(weatherForcast, animated: true, completion: nil)
         }
         
-        @IBAction func onButton(_ sender: Any) {
-            showMiracle()
+        @IBAction func didTapPresentForcast(_ sender: Any) {
+            presentForcast()
         }
     
 }

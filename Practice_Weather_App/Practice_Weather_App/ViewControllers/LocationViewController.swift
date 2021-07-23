@@ -19,7 +19,7 @@ class LocationViewController: UIViewController {
     
     @IBOutlet private weak var temperatureLabel: UILabel!
     private var weatherForcast: [ListModelForcast]?
-    private let cellID = String(describing: WeatherForDaysAheadTableViewCell.self)
+    private let cellID = String(describing: WeatherForcastTableViewCell.self)
     @IBOutlet weak var forcastTableView: UITableView!
     
     override func viewDidLoad() {
@@ -95,8 +95,8 @@ extension LocationViewController: UITableViewDataSource {
         guard let forcastData = weatherForcast?[indexPath.row],
               let day = forcastData.dt_txt,
               let temperature = forcastData.main?.temp,
-              let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForDaysAheadTableViewCell else {
-            return WeatherForDaysAheadTableViewCell()
+              let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForcastTableViewCell else {
+            return WeatherForcastTableViewCell()
         }
                 
         

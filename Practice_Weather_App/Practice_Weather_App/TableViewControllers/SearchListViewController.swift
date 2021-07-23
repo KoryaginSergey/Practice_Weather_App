@@ -31,6 +31,7 @@ class SearchListViewController: UIViewController {
         searchBar.delegate = self
         cities = favoriteCities
         configureNavigationButtons()
+        
     }
     
 }

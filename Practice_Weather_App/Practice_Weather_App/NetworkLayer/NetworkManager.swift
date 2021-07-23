@@ -24,7 +24,6 @@ class Networkmanager {
     private init() {}
     static let shared: Networkmanager = Networkmanager()
     
-    // получение урл с возможностью выбора задачи на день или на несколько
     private func getUrl(_ task: DownloadTask ,city: String ) -> URL {
         var urlcomponents = URLComponents()
         urlcomponents.scheme = "https"
@@ -52,7 +51,7 @@ class Networkmanager {
     
     
     
-    //MARK: - погода на несколько дней
+    //MARK: - weather for a few days
     func getForcastWeather(city: String, result: @escaping ((WeatherModelForcast?)->())) {
         var request = URLRequest(url: getUrl(.forecast, city: city))
         request.httpMethod = "GET"
@@ -69,7 +68,7 @@ class Networkmanager {
         }.resume()
     }
     
-    //MARK: - погода на сегодня по названию города
+    //MARK: - weather today
     func getCurrentWeather(city: String, result: @escaping ((CurrentWeather?)->())) {
         var request = URLRequest(url: getUrl( .weather, city: city))
         request.httpMethod = "GET"
@@ -85,7 +84,7 @@ class Networkmanager {
         }.resume()
     }
     
-    //MARK: - получить погоду на сегодня по координатам
+    //MARK: - weather today by coordinate
     func getCurrentWeatherByLocation(lat: Double,lon: Double, result: @escaping ((CurrentWeather?)->())) {
         if let  url = URL(string: "https://api.openweathermap.org/data/2.5/weather?lat=\(lat)&lon=\(lon)&units=metric&appid=010490d0c60a959c36f0688641ada569") {
         URLSession.shared.dataTask(with: url) { (data, responce, error) in
@@ -99,7 +98,7 @@ class Networkmanager {
         }.resume()}
     }
     
-    //MARK: - 
+    //MARK: - description for choosen City
     func getListOfCities(by cityName: String, result: @escaping (([CityModel]?)->())) -> URLSessionDataTask? {
         guard let url = URL(string: "https://api.openweathermap.org/geo/1.0/direct?q=\(cityName)&limit=1&appid=010490d0c60a959c36f0688641ada569") else {
             result(nil)

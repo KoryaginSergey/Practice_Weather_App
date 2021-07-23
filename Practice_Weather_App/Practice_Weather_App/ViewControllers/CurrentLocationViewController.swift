@@ -123,7 +123,7 @@ private extension CurrentLocationViewController {
 //MARK: - CLLocationManagerDelegate
 extension CurrentLocationViewController: CLLocationManagerDelegate {
     
-  //  запрос координат при смене местоположения на расстояние указанное в настройках
+  //MARK: - request of coordinate when changing location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let lastLocation = locations.last {
             print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)

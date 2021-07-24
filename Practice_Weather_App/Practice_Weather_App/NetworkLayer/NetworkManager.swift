@@ -31,17 +31,17 @@ enum WeatherURL {
     case weatherbyLocation(lat: Double,lon: Double)
     case direct(name: String)
     
-    //http://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
-    //http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
-    //http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=010490d0c60a959c36f0688641ada569
+    //https://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
+    //https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
+    //https://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=010490d0c60a959c36f0688641ada569
     //https://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&units=metric&appid=76a212233b5863b7fe5c80277e71a5ba
     
     
     var url: String {
             switch self {
-            case .forecast(let name): return Api.mainUrl+"forecast?q=\(name)&units=metric&"+Api.id
-            case .weatherToday(let name):return Api.mainUrl+"weather?q=\(name)&units=metric&"+Api.id
-            case .weatherbyLocation(let lon,let lat): return Api.mainUrl+"weather?\(lon)=35&\(lat)=139&units=metric&"+Api.id
+            case .forecast(let name): return Api.mainUrl+"2.5/forecast?q=\(name)&units=metric&"+Api.id
+            case .weatherToday(let name):return Api.mainUrl+"2.5/weather?q=\(name)&units=metric&"+Api.id
+            case .weatherbyLocation(let lat,let lon): return Api.mainUrl+"2.5/weather?lat=\(lat)&lon=\(lon)&units=metric&"+Api.id
             case .direct(let name): return  Api.mainUrl+"geo/1.0/direct?q=\(name)&limit=5&"+Api.id
         }
     }
@@ -110,7 +110,8 @@ class Networkmanager {
 }
     //MARK: - weather today by coordinate
     func getCurrentWeatherByLocation(lat: Double,lon: Double, result: @escaping ((CurrentWeather?)->())) {
-        if let  url = URL(string: WeatherURL.weatherbyLocation(lat: lat, lon: lon).url) {
+       // print("url: ",WeatherURL.weatherbyLocation(lat: lat, lon: lon).url)
+        guard let url = URL(string: WeatherURL.weatherbyLocation(lat: lat, lon: lon).url) else {return}
         URLSession.shared.dataTask(with: url) { (data, responce, error) in
             guard  error == nil else {
                 print("error: ",error?.localizedDescription as Any)
@@ -119,7 +120,8 @@ class Networkmanager {
             DispatchQueue.main.async {
             result(self.decodejson(type: CurrentWeather.self , from: data))
             }
-        }.resume()}
+        }.resume()
+            
     }
     
     //MARK: - description for choosen City

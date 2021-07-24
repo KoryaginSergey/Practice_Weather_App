@@ -67,14 +67,14 @@ class CurrentLocationViewController: UIViewController {
 }
 
 //MARK: -  locationManager
-private extension CurrentLocationViewController {
+extension CurrentLocationViewController {
     
     //MARK: - start settings for cllLocationManager
     func startLocationManager() {
         locationManager.requestWhenInUseAuthorization()//запрос положения когда приложение используется
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.desiredAccuracy = 100
+            locationManager.desiredAccuracy = 1000
             locationManager.pausesLocationUpdatesAutomatically = false
             checkAutorisation()
         }else{
@@ -90,7 +90,7 @@ private extension CurrentLocationViewController {
         case .authorizedAlways:
             break
         case .authorizedWhenInUse:
-            locationManager.startUpdatingLocation()
+             locationManager.startUpdatingLocation()
         case .denied:
             self.locationAlert(title: "Вы запретили использование геопозиции",
                         message: "разрешить?",
@@ -125,8 +125,9 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
     
   //MARK: - request of coordinate when changing location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
         if let lastLocation = locations.last {
-            print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
+           // print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
             let lon = lastLocation.coordinate.longitude
             

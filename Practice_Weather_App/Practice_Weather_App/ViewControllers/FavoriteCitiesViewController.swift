@@ -12,6 +12,7 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     private var weatherVcs = [UIViewController]()
     private var defaultWeatherVcs = [UIViewController]()
+    private var nameCityForDefault = "Kharkiv"
     
     private var models = [CDCityModel]()
     
@@ -112,10 +113,12 @@ private extension FavoriteCitiesViewController {
     }
     
     private func createDefaultArrayVC() -> [UIViewController] {
+        
         var weatherVcsArray = [UIViewController]()
         guard let modelVC =
                 storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
                 as? CurrentLocationViewController else {return weatherVcsArray}
+        modelVC.nameCity = nameCityForDefault
         weatherVcsArray.append(modelVC)
         return weatherVcsArray
     }

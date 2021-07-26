@@ -133,27 +133,6 @@ extension CurrentLocationViewController {
 extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         PresentationController(presentedViewController: presented, presenting: presenting)
-        
-        
-
-     func checkAutorisation() {
-        switch CLLocationManager.authorizationStatus() {
-        case .authorizedAlways:
-            break
-        case .authorizedWhenInUse:
-             locationManager.startUpdatingLocation()
-        case .denied:
-            self.locationAlert(title: "Вы запретили использование геопозиции",
-                        message: "разрешить?",
-                            url: URL(string: UIApplication.openSettingsURLString))
-        case .restricted:
-            break
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        default:
-            break
-        }
-     }
   }
 }
     //MARK: -  locationManager

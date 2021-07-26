@@ -19,12 +19,13 @@ class WeatherForcastTableViewCell: UITableViewCell {
     func setupWeatherForDaysCell(withForcast forcast: ListModelForcast) {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        formatter.timeStyle = .medium
+        formatter.timeStyle = .none
         
         let dayTimeInterval = Date(timeIntervalSince1970: TimeInterval(forcast.dt ?? 0.0))
         
+        
         let dayOfTheWeek = formatter.string(from: dayTimeInterval)
-        dayOfTheWeekLabel.text = forcast.dt_txt
+        dayOfTheWeekLabel.text = dayOfTheWeek
         weatherConditionIcon.image = nil
         dayOfTheWeekTemperature.text = String(forcast.main?.temp ?? 0.0)
     }

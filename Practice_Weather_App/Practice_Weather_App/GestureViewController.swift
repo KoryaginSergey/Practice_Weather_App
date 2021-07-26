@@ -93,9 +93,9 @@ extension GestureViewController: UITableViewDataSource {
               let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForcastTableViewCell else {
             return WeatherForcastTableViewCell()
         }
-
+       
         weatherCell.setupWeatherForDaysCell(withForcast: forcast)
-        
+       
         return weatherCell
     }
 }

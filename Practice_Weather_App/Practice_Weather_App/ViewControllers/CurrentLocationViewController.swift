@@ -21,13 +21,13 @@ class CurrentLocationViewController: UIViewController {
        
         setBackgroundImage()
         getDataFromServer()
-        
+       // startLocationManager()
     }
     
     //MARK: - функцию настройки местоположения вызывать сдесь
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        startLocationManager()
+       startLocationManager()
     }
     
     
@@ -71,16 +71,14 @@ extension CurrentLocationViewController {
     
     //MARK: - start settings for cllLocationManager
     func startLocationManager() {
-        locationManager.requestWhenInUseAuthorization()//запрос положения когда приложение используется
-        if CLLocationManager.locationServicesEnabled() {
+        locationManager.requestWhenInUseAuthorization()
+        if CLLocationManager.locationServicesEnabled(){
             locationManager.delegate = self
             locationManager.desiredAccuracy = 1000
             locationManager.pausesLocationUpdatesAutomatically = false
+            locationManager.startUpdatingLocation()
             checkAutorisation()
-        }else{
-            self.locationAlert(title: "Геопозиционирование выключено",
-                        message: "разрешить?",
-                            url: URL(string:"App-Prefs:root=LOCATION_SERVICES"))
+            
         }
     }
     
@@ -102,7 +100,7 @@ extension CurrentLocationViewController {
         default:
             break
         }
-        
+
     }
     
     //MARK: - alert "go to location settings"
@@ -127,7 +125,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         if let lastLocation = locations.last {
-           // print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
+            print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
             let lon = lastLocation.coordinate.longitude
             
@@ -142,6 +140,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     self.currentLocationLabel.text = currentLocation
                     self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
                     self.temperatureLabel.text = String(Int(temperature)) + " ºC"
+                    self.locationManager.stopUpdatingLocation()
                 }
             }
         }

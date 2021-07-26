@@ -7,9 +7,9 @@
 
 import Foundation
 
-//http://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
-//http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
-//http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=010490d0c60a959c36f0688641ada569
+//https://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
+//https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
+//https://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=010490d0c60a959c36f0688641ada569
 //https://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&units=metric&appid=76a212233b5863b7fe5c80277e71a5ba
 
 //MARK: -  погода на сегодня или на несколько дней
@@ -30,19 +30,13 @@ enum WeatherURL {
     case weatherToday(name: String)
     case weatherbyLocation(lat: Double,lon: Double)
     case direct(name: String)
-    
-    //https://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
-    //https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
-    //https://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=010490d0c60a959c36f0688641ada569
-    //https://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&units=metric&appid=76a212233b5863b7fe5c80277e71a5ba
-    
-    
+
     var url: String {
             switch self {
-            case .forecast(let name): return Api.mainUrl+"2.5/forecast?q=\(name)&units=metric&"+Api.id
-            case .weatherToday(let name):return Api.mainUrl+"2.5/weather?q=\(name)&units=metric&"+Api.id
+            case .forecast(let name): return Api.mainUrl+"2.5/forecast?q=\(name.replacingOccurrences(of:" ", with: "%20"))&units=metric&"+Api.id
+            case .weatherToday(let name):return Api.mainUrl+"2.5/weather?q=\(name.replacingOccurrences(of:" ", with: "%20"))&units=metric&"+Api.id
             case .weatherbyLocation(let lat,let lon): return Api.mainUrl+"2.5/weather?lat=\(lat)&lon=\(lon)&units=metric&"+Api.id
-            case .direct(let name): return  Api.mainUrl+"geo/1.0/direct?q=\(name)&limit=5&"+Api.id
+            case .direct(let name): return  Api.mainUrl+"geo/1.0/direct?q=\(name.replacingOccurrences(of:" ", with: "%20"))&limit=5&"+Api.id
         }
     }
 }
@@ -51,19 +45,6 @@ class Networkmanager {
     
     private init() {}
     static let shared: Networkmanager = Networkmanager()
-    
-    
-//    //MARK: - getURL
-//    private func getUrl(_ task: DownloadTask ,city: String ) -> URL {
-//        var urlcomponents = URLComponents()
-//        urlcomponents.scheme = "https"
-//        urlcomponents.host = "api.openweathermap.org"
-//        urlcomponents.path = "/data/2.5/\(task)"
-//        urlcomponents.queryItems = [URLQueryItem(name: "q", value: city),
-//                                    URLQueryItem(name: "units", value: "metric"),
-//                                    URLQueryItem(name: "appid", value: "010490d0c60a959c36f0688641ada569")]
-//        return urlcomponents.url!
-//    }
     
     //MARK: - univarsal decodable function
     func decodejson<T:Decodable>(type: T.Type, from: Data?) -> T? {

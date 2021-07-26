@@ -27,13 +27,18 @@ class CurrentLocationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+
+
+        setBackgroundImage()
+        getDataFromServer()
+        
+
         //MARK: Картинки для теста заката/рассвета.
         self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
         self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
         
         setBackgroundImage()
-        //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
-//        getDataFromServer()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,6 +55,8 @@ class CurrentLocationViewController: UIViewController {
     //MARK: - функцию настройки местоположения вызывать сдесь
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+
                 startLocationManager()
     }
         
@@ -107,6 +114,7 @@ class CurrentLocationViewController: UIViewController {
         background.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         background.image = UIImage(named: "Mountain")
     }
+
     
     
     func presentForcast() {
@@ -114,20 +122,24 @@ class CurrentLocationViewController: UIViewController {
         weatherForcast.modalPresentationStyle = .custom
         weatherForcast.transitioningDelegate = self
         self.present(weatherForcast, animated: true, completion: nil)
-    }
+ }
+}
+//MARK: -  locationManager
+extension CurrentLocationViewController {
+    
+   
     
     @IBAction func didTapPresentForcast(_ sender: Any) {
         presentForcast()
     }
     
+
 }
 
 extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         PresentationController(presentedViewController: presented, presenting: presenting)
-        
-        
-    }
+  }
 }
     //MARK: -  locationManager
     private extension CurrentLocationViewController {
@@ -165,8 +177,7 @@ extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
                 default:
                     break
             }
-            
-        }
+    }
         
         //MARK: - alert "go to location settings"
         func locationAlert(title: String ,message: String,url: URL?) {
@@ -188,6 +199,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
     
     //MARK: - request of coordinate when changing location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
         if let lastLocation = locations.last {
 //            print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
@@ -215,6 +227,10 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     
                     self.currentLocationLabel.text = currentLocation
                     self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
+
+                   // self.temperatureLabel.text = String(Int(temperature)) + " ºC"
+                    self.locationManager.stopUpdatingLocation()
+
                     self.temperatureLabel.text = String(Int(main.temp)) + " ºC"
                     
                     
@@ -226,6 +242,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     
                     //MARK: Для теста мин/макс температуры
                     self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"
+
                 }
             }
         }

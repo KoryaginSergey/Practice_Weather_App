@@ -48,6 +48,7 @@ class CurrentLocationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
                 startLocationManager()
+        
     }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна

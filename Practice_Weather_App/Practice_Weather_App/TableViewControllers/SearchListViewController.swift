@@ -169,9 +169,11 @@ private extension SearchListViewController {
     @objc private func editButtonSelector() {
         if isSearching == false {
             if buttonIsEdit {
+                searchBar.isHidden = false
                 self.tableView.isEditing = false
                 buttonIsEdit = false
             } else {
+                searchBar.isHidden = true
                 self.tableView.isEditing = true
                 buttonIsEdit = true
             }

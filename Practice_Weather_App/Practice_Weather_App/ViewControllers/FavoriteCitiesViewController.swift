@@ -114,8 +114,7 @@ private extension FavoriteCitiesViewController {
             guard let modelVC =
                     storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
                     as? CurrentLocationViewController else {return weatherVcsArray}
-            weatherVcsArray.append(modelVC)
-        
+        weatherVcsArray.append(modelVC)
     return weatherVcsArray
     }
 }

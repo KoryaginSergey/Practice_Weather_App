@@ -20,12 +20,11 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="63" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Puk-L6-7mM">
-                    <rect key="frame" x="0.0" y="-7" width="414" height="587"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="63" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Puk-L6-7mM">
+                    <rect key="frame" x="20" y="42" width="374" height="560"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="587" id="7jW-zo-qG7"/>
-                        <constraint firstAttribute="width" constant="485" id="hc2-ur-h50"/>
+                        <constraint firstAttribute="width" constant="374" id="FhY-io-mjp"/>
                     </constraints>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="wLa-ci-NmT"/>
@@ -36,11 +35,12 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Puk-L6-7mM" secondAttribute="bottom" constant="15" id="MnL-rF-2A8"/>
-                <constraint firstItem="Puk-L6-7mM" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="j5j-B7-Grr"/>
+                <constraint firstItem="Puk-L6-7mM" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="8JE-W1-CYx"/>
+                <constraint firstItem="Puk-L6-7mM" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="42" id="BxO-Ab-dbm"/>
+                <constraint firstItem="Puk-L6-7mM" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="lam-u2-72n"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="221.01449275362322" y="157.70089285714286"/>
+            <point key="canvasLocation" x="220.28985507246378" y="157.36607142857142"/>
         </view>
     </objects>
     <resources>

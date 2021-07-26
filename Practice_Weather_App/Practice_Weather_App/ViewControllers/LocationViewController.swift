@@ -92,17 +92,13 @@ extension LocationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let forcastData = weatherForcast?[indexPath.row],
-              let day = forcastData.dt_txt,
-              let temperature = forcastData.main?.temp,
+        guard let forcast = weatherForcast?[indexPath.row],
               let weatherCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? WeatherForcastTableViewCell else {
             return WeatherForcastTableViewCell()
         }
-                
-        
-        weatherCell.setupWeatherForDaysCell(dayOfTheWeek: day, conditionIcon: nil, temperature: String(temperature))
-        
-        
+
+        weatherCell.setupWeatherForDaysCell(withForcast: forcast)
+     
         
        return weatherCell
     }

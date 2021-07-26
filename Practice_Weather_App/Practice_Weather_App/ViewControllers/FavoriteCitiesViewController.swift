@@ -58,7 +58,7 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
     
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
         if weatherVcs.count > 0 {
-        return self.weatherVcs.count
+            return self.weatherVcs.count
         } else {
             return 1
         }
@@ -91,7 +91,7 @@ private extension FavoriteCitiesViewController {
         let context = DataModels.sharedInstance.context
         let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
         do {
-             self.models = try context.fetch(fetchRequest)
+            self.models = try context.fetch(fetchRequest)
         } catch {
             print("ERROR")
         }
@@ -99,23 +99,23 @@ private extension FavoriteCitiesViewController {
     
     private func createArrayVC() -> [UIViewController] {
         var weatherVcsArray = [UIViewController]()
-    
+        
         for model in models {
             guard let modelVC =
                     storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
                     as? CurrentLocationViewController else {continue}
             weatherVcsArray.append(modelVC)
         }
-    return weatherVcsArray
+        return weatherVcsArray
     }
     
     private func createDefaultArrayVC() -> [UIViewController] {
         var weatherVcsArray = [UIViewController]()
-            guard let modelVC =
-                    storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
-                    as? CurrentLocationViewController else {return weatherVcsArray}
+        guard let modelVC =
+                storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
+                as? CurrentLocationViewController else {return weatherVcsArray}
         weatherVcsArray.append(modelVC)
-    return weatherVcsArray
+        return weatherVcsArray
     }
 }
 

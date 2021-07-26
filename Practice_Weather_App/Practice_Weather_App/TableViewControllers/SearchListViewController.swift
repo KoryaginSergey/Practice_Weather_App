@@ -28,13 +28,13 @@ class SearchListViewController: UIViewController {
     private let nameNavigationItem = "Favorites list"
     private let heightForRow: CGFloat = 60
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         searchBar.delegate = self
         configureNavigationButtons()
-
+        
         self.navigationItem.title = nameNavigationItem
         self.fetchData()
     }
@@ -43,7 +43,7 @@ class SearchListViewController: UIViewController {
 // MARK: - Extensions
 
 extension SearchListViewController: UITableViewDataSource {
-  
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching {
             return self.cities.count
@@ -73,7 +73,6 @@ extension SearchListViewController: UITableViewDataSource {
         let removeElement = models[sourceIndexPath.row]
         models.remove(at: sourceIndexPath.row)
         models.insert(removeElement, at: destinationIndexPath.row)
-    
     }
 }
 
@@ -90,7 +89,7 @@ extension SearchListViewController: UITableViewDelegate {
     
     func tableViewDidDeleteRow(indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in
-
+            
             let model = self.models.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
             self.deleteCDCityModel(model: model)
@@ -111,35 +110,30 @@ extension SearchListViewController: UITableViewDelegate {
             fetchData()
             self.tableView.reloadData()
         } else {
-            self.saveItemToDataBase(indexPath: indexPath)
+//            self.saveItemToDataBase(indexPath: indexPath)
             searchBar.text = ""
             fetchData()
             self.tableView.reloadData()
         }
     }
-    
 }
 
 extension SearchListViewController: UISearchBarDelegate {
-
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text == "" {
-                    isSearching = false
-                    tableView.reloadData()
+            isSearching = false
+            tableView.reloadData()
         } else {
             isSearching = true
             pendingRequestWorkItem?.cancel()
             let requestWorkItem = DispatchWorkItem { [weak self] in
-            self?.invokeNetworkingRequest(text: searchText)
-        }
+                self?.invokeNetworkingRequest(text: searchText)
+            }
             pendingRequestWorkItem = requestWorkItem
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1,
-                                    execute: requestWorkItem)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2,
+                                          execute: requestWorkItem)
         }
-        
-//        filteredData = data.filter({$0.contains(searchBar.text ?? "")})
-//        tableView.reloadData()
-        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -179,7 +173,7 @@ private extension SearchListViewController {
             }
         }
     }
-
+    
     private func invokeNetworkingRequest(text: String) {
         self.dataTask?.suspend()
         self.dataTask = Networkmanager.shared.getListOfCities(by: text) { [weak self] cityModels in

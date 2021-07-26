@@ -32,24 +32,12 @@ class SearchListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        self.tableView.keyboardDismissMode = .onDrag
-
         searchBar.delegate = self
         configureNavigationButtons()
 
         self.navigationItem.title = nameNavigationItem
-//        let arrayCity = self.fetchData()
-//        self.cities = arrayCity.map({ (model) -> CityModel in
-//            let city = CityModel(name: model.name, lat: model.latitude, lon: model.longitude)
-//            return city
-//        })
-//        tableView.reloadData()
         self.fetchData()
-
-
-        
     }
-    
 }
 
 // MARK: - Extensions
@@ -122,6 +110,11 @@ extension SearchListViewController: UITableViewDelegate {
             searchBar.text = ""
             fetchData()
             self.tableView.reloadData()
+        } else {
+            self.saveItemToDataBase(indexPath: indexPath)
+            searchBar.text = ""
+            fetchData()
+            self.tableView.reloadData()
         }
     }
     
@@ -152,6 +145,8 @@ extension SearchListViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         isSearching = false
+        searchBar.text = ""
+        self.tableView.reloadData()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -172,14 +167,15 @@ private extension SearchListViewController {
     }
     
     @objc private func editButtonSelector() {
-        if buttonIsEdit {
-        self.tableView.isEditing = false
-            buttonIsEdit = false
-        } else {
-            self.tableView.isEditing = true
-            buttonIsEdit = true
+        if isSearching == false {
+            if buttonIsEdit {
+                self.tableView.isEditing = false
+                buttonIsEdit = false
+            } else {
+                self.tableView.isEditing = true
+                buttonIsEdit = true
+            }
         }
-
     }
 
     private func invokeNetworkingRequest(text: String) {

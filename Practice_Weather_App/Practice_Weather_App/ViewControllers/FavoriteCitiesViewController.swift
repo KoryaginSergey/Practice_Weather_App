@@ -11,6 +11,7 @@ import CoreData
 class FavoriteCitiesViewController: UIPageViewController {
     
     private var weatherVcs = [UIViewController]()
+    private var defaultWeatherVcs = [UIViewController]()
     
     private var models = [CDCityModel]()
     
@@ -19,17 +20,19 @@ class FavoriteCitiesViewController: UIPageViewController {
         super .viewWillAppear(animated)
         
         self.fetchData()
+        self.dataSource = self
         weatherVcs = createArrayVC()
-        
         if weatherVcs.count > 0 {
-            self.dataSource = self
             self.setViewControllers([weatherVcs[0]], direction: .forward, animated: false, completion: nil)
+        } else {
+            defaultWeatherVcs = createDefaultArrayVC()
+            self.setViewControllers([defaultWeatherVcs[0]], direction: .forward, animated: false, completion: nil)
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.navigationItem.title = "Add your favorite cities --->>"
         self.configureNavigationButtons()
     }
 }
@@ -54,7 +57,11 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
     }
     
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
+        if weatherVcs.count > 0 {
         return self.weatherVcs.count
+        } else {
+            return 1
+        }
     }
     
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
@@ -99,6 +106,16 @@ private extension FavoriteCitiesViewController {
                     as? CurrentLocationViewController else {continue}
             weatherVcsArray.append(modelVC)
         }
+    return weatherVcsArray
+    }
+    
+    private func createDefaultArrayVC() -> [UIViewController] {
+        var weatherVcsArray = [UIViewController]()
+            guard let modelVC =
+                    storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
+                    as? CurrentLocationViewController else {return weatherVcsArray}
+            weatherVcsArray.append(modelVC)
+        
     return weatherVcsArray
     }
 }

@@ -16,9 +16,17 @@ class WeatherForcastTableViewCell: UITableViewCell {
     
     //MARK: Убрать нил с картинки
     
-    func setupWeatherForDaysCell(dayOfTheWeek: String, conditionIcon: UIImage?, temperature: String) {
+    func setupWeatherForDaysCell(withForcast forcast: ListModelForcast) {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        
+        let dayTimeInterval = Date(timeIntervalSince1970: TimeInterval(forcast.dt ?? 0.0))
+        
+        
+        let dayOfTheWeek = formatter.string(from: dayTimeInterval)
         dayOfTheWeekLabel.text = dayOfTheWeek
-        weatherConditionIcon.image = conditionIcon
-        dayOfTheWeekTemperature.text = temperature
+        weatherConditionIcon.image = nil
+        dayOfTheWeekTemperature.text = String(forcast.main?.temp ?? 0.0)
     }
 }

@@ -36,10 +36,10 @@ class CurrentLocationViewController: UIViewController {
         Networkmanager.shared.getCurrentWeather(city: "Харьков") { [weak self] current in
             guard let self = self,
                   let currentLocation = current?.name,
-                  let weatherConditionsID = current?.weather?[0].id,
+                  let weatherConditionsID = current?.weather?.first?.id,
                   let main = current?.main,
                   let windSpeed = current?.wind?.speed,
-                  let weatherDescription = current?.weather?[0].description,
+                  let weatherDescription = current?.weather?.first?.description,
                   let intervalForSunrise = current?.sys?.sunrise,
                   let intervalForSunset = current?.sys?.sunset else {
                 return

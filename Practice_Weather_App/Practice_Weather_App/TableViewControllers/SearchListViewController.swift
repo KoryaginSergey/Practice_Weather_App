@@ -101,6 +101,10 @@ extension SearchListViewController: UITableViewDelegate {
         return action
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return !isSearching
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isSearching {
             self.saveItemToDataBase(indexPath: indexPath)
@@ -108,9 +112,10 @@ extension SearchListViewController: UITableViewDelegate {
             searchBar.resignFirstResponder()
             searchBar.text = ""
             fetchData()
+            cities.removeAll()
             self.tableView.reloadData()
         } else {
-//            self.saveItemToDataBase(indexPath: indexPath)
+
             searchBar.text = ""
             fetchData()
             self.tableView.reloadData()
@@ -123,9 +128,11 @@ extension SearchListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text == "" {
             isSearching = false
+            cities.removeAll()
             tableView.reloadData()
         } else {
             isSearching = true
+            tableView.reloadData()
             pendingRequestWorkItem?.cancel()
             let requestWorkItem = DispatchWorkItem { [weak self] in
                 self?.invokeNetworkingRequest(text: searchText)

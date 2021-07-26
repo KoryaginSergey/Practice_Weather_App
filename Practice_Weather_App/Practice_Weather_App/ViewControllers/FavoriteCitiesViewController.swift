@@ -34,6 +34,7 @@ class FavoriteCitiesViewController: UIPageViewController {
         super.viewDidLoad()
         self.navigationItem.title = "Add your favorite cities --->>"
         self.configureNavigationButtons()
+        self.setBackgroundImage()
     }
 }
 
@@ -104,6 +105,7 @@ private extension FavoriteCitiesViewController {
             guard let modelVC =
                     storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
                     as? CurrentLocationViewController else {continue}
+            modelVC.nameCity = model.name
             weatherVcsArray.append(modelVC)
         }
         return weatherVcsArray
@@ -116,6 +118,20 @@ private extension FavoriteCitiesViewController {
                 as? CurrentLocationViewController else {return weatherVcsArray}
         weatherVcsArray.append(modelVC)
         return weatherVcsArray
+    }
+    
+    private func setBackgroundImage() {
+        
+        let background = UIImageView()
+        background.contentMode = .scaleToFill
+        
+        view.insertSubview(background, at: 0)
+        background.translatesAutoresizingMaskIntoConstraints = false
+        background.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        background.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        background.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        background.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        background.image = UIImage(named: "Mountain")
     }
 }
 

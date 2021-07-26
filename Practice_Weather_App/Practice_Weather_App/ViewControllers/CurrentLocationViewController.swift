@@ -23,47 +23,47 @@ class CurrentLocationViewController: UIViewController {
     @IBOutlet private weak var sunsetImageView: UIImageView!
     @IBOutlet weak var weatherDescription: UILabel!
     
+    var nameCity: String?
+    private var isNavigationBarHidden = true
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let cityName = nameCity {
+            isNavigationBarHidden = false
+            self.view.backgroundColor = UIColor.clear
+            getDataFromServer(cityName: cityName)
+        } else {
+            isNavigationBarHidden = true
+            startLocationManager()
+            setBackgroundImage()
+        }
 
-
-        setBackgroundImage()
-        getDataFromServer()
-        
+//        setBackgroundImage()
 
         //MARK: Картинки для теста заката/рассвета.
         self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
         self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
         
-        setBackgroundImage()
+//        setBackgroundImage()
 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        self.navigationController?.setNavigationBarHidden(isNavigationBarHidden, animated: animated)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
-    
-    
-    //MARK: - функцию настройки местоположения вызывать сдесь
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-
-                startLocationManager()
-    }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
-    private func getDataFromServer() {
+    private func getDataFromServer(cityName: String) {
         
-        Networkmanager.shared.getCurrentWeather(city: "Харьков") { [weak self] current in
+        Networkmanager.shared.getCurrentWeather(city: cityName) { [weak self] current in
             guard let self = self,
                   let currentLocation = current?.name,
                   let weatherConditionsID = current?.weather?.first?.id,

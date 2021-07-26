@@ -21,7 +21,6 @@ class CurrentLocationViewController: UIViewController {
         
         setBackgroundImage()
         getDataFromServer()
-        
     }
     
     
@@ -31,6 +30,7 @@ class CurrentLocationViewController: UIViewController {
     //MARK: - функцию настройки местоположения вызывать сдесь
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
         //        startLocationManager()
     }
     
@@ -70,6 +70,7 @@ class CurrentLocationViewController: UIViewController {
         background.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         background.image = UIImage(named: "Mountain")
     }
+
     
     
     func presentForcast() {
@@ -77,12 +78,29 @@ class CurrentLocationViewController: UIViewController {
         weatherForcast.modalPresentationStyle = .custom
         weatherForcast.transitioningDelegate = self
         self.present(weatherForcast, animated: true, completion: nil)
+ }
+}
+//MARK: -  locationManager
+extension CurrentLocationViewController {
+    
+    //MARK: - start settings for cllLocationManager
+    func startLocationManager() {
+        locationManager.requestWhenInUseAuthorization()
+        if CLLocationManager.locationServicesEnabled(){
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = 1000
+            locationManager.pausesLocationUpdatesAutomatically = false
+            locationManager.startUpdatingLocation()
+            checkAutorisation()
+            
+        }
     }
     
     @IBAction func didTapPresentForcast(_ sender: Any) {
         presentForcast()
     }
     
+
 }
 
 extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
@@ -90,7 +108,26 @@ extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
         PresentationController(presentedViewController: presented, presenting: presenting)
         
         
-    }
+
+     func checkAutorisation() {
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedAlways:
+            break
+        case .authorizedWhenInUse:
+             locationManager.startUpdatingLocation()
+        case .denied:
+            self.locationAlert(title: "Вы запретили использование геопозиции",
+                        message: "разрешить?",
+                            url: URL(string: UIApplication.openSettingsURLString))
+        case .restricted:
+            break
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        default:
+            break
+        }
+     }
+  }
 }
     //MARK: -  locationManager
     private extension CurrentLocationViewController {
@@ -128,8 +165,7 @@ extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
                 default:
                     break
             }
-            
-        }
+    }
         
         //MARK: - alert "go to location settings"
         func locationAlert(title: String ,message: String,url: URL?) {
@@ -151,6 +187,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
     
     //MARK: - request of coordinate when changing location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
         if let lastLocation = locations.last {
             print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
@@ -167,6 +204,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     self.currentLocationLabel.text = currentLocation
                     self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
                     self.temperatureLabel.text = String(Int(temperature)) + " ºC"
+                    self.locationManager.stopUpdatingLocation()
                 }
             }
         }

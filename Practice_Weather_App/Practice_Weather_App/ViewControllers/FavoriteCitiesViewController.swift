@@ -33,7 +33,6 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Add your favorite cities --->>"
         self.configureNavigationButtons()
         self.setBackgroundImage()
     }
@@ -79,6 +78,7 @@ private extension FavoriteCitiesViewController {
     
     private func configureNavigationButtons() {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonSelector))
+        self.navigationItem.title = "Add your favorite cities --->>"
     }
     
     @objc private func addButtonSelector() {
@@ -134,7 +134,7 @@ private extension FavoriteCitiesViewController {
         background.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         background.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         background.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        background.image = UIImage(named: "Mountain")
+        background.image = UIImage(named: "unsplash4")
     }
 }
 

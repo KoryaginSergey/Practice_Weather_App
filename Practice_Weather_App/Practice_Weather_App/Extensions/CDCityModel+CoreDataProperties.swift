@@ -19,6 +19,7 @@ extension CDCityModel {
     @NSManaged public var name: String?
     @NSManaged public var latitude: Float
     @NSManaged public var longitude: Float
+    @NSManaged public var id: Int16
 
 }
 

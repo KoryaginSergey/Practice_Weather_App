@@ -8,6 +8,17 @@
 import UIKit
 import CoreLocation
 
+struct Settings {
+    let cityName: String?
+    let isNavigatinBarHidden: Bool
+    let showBackgroundImage: Bool
+    
+    static func getDefaultSettings() -> Settings {
+        let settings = Settings(cityName: nil, isNavigatinBarHidden: true, showBackgroundImage: true)
+        return settings
+    }
+}
+
 class CurrentLocationViewController: UIViewController {
     
     let locationManager = CLLocationManager()
@@ -23,36 +34,21 @@ class CurrentLocationViewController: UIViewController {
     @IBOutlet private weak var sunsetImageView: UIImageView!
     @IBOutlet weak var weatherDescription: UILabel!
     
-    var nameCity: String?
-    private var isNavigationBarHidden = true
-    
+    var settings: Settings = Settings.getDefaultSettings()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let cityName = nameCity {
-            isNavigationBarHidden = false
-            self.view.backgroundColor = UIColor.clear
-            getDataFromServer(cityName: cityName)
-        } else {
-            isNavigationBarHidden = true
-            startLocationManager()
-            setBackgroundImage()
-        }
-
-//        setBackgroundImage()
-
+        self.configureViewController()
+        
         //MARK: Картинки для теста заката/рассвета.
         self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
         self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
-        
-//        setBackgroundImage()
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(isNavigationBarHidden, animated: animated)
+        self.navigationController?.setNavigationBarHidden(self.settings.isNavigatinBarHidden, animated: animated)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -127,13 +123,25 @@ class CurrentLocationViewController: UIViewController {
 //MARK: -  locationManager
 extension CurrentLocationViewController {
     
-   
+    private func configureViewController() {
+        
+        if let cityName = self.settings.cityName {
+            getDataFromServer(cityName: cityName)
+        } else {
+            startLocationManager()
+        }
+        
+        if self.settings.showBackgroundImage {
+            setBackgroundImage()
+        } else {
+            self.view.backgroundColor = UIColor.clear
+        }
+    }
     
     @IBAction func didTapPresentForcast(_ sender: Any) {
         presentForcast()
     }
     
-
 }
 
 extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {

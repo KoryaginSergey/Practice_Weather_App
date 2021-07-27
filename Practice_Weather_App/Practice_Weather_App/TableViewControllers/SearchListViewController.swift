@@ -70,11 +70,10 @@ extension SearchListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-    
         let removeElement = models[sourceIndexPath.row]
         models.remove(at: sourceIndexPath.row)
         models.insert(removeElement, at: destinationIndexPath.row)
-     
+        self.reloadDataModelIndexes()
     }
 }
 
@@ -125,6 +124,13 @@ extension SearchListViewController: UITableViewDelegate {
 }
 
 extension SearchListViewController: UISearchBarDelegate {
+    
+    func reloadDataModelIndexes() {
+        for (index, element) in self.models.reversed().enumerated() {
+            element.id = Int16(index)
+        }
+        DataModels.sharedInstance.saveContext()
+    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text == "" {
@@ -197,7 +203,9 @@ private extension SearchListViewController {
     
     private func fetchData() {
         let context = DataModels.sharedInstance.context
+        let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
         let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
+        fetchRequest.sortDescriptors = [sortDescriptor]
         do {
             return self.models = try context.fetch(fetchRequest)
         } catch {
@@ -217,14 +225,16 @@ private extension SearchListViewController {
     
     private func saveItemToDataBase(indexPath: IndexPath) {
         let city = cities[indexPath.row]
-        let context = DataModels.sharedInstance.context
-        let entity = NSEntityDescription.entity(forEntityName: "CDCityModel", in: context)!
-        let model = CDCityModel(entity: entity, insertInto: context)
         
-        model.name = city.name
-        model.latitude = city.lat!
-        model.longitude = city.lon!
-        
+        if let cityObject = CDCityModel.getCity(by: city.name) {
+            cityObject.name = city.name
+            cityObject.id = Int16(CDCityModel.objectNumber())
+        } else {
+            let newCityObject = CDCityModel.createObject() as CDCityModel
+            newCityObject.name = city.name
+            newCityObject.id = Int16(CDCityModel.objectNumber())
+        }
+
         DataModels.sharedInstance.saveContext()
     }
     

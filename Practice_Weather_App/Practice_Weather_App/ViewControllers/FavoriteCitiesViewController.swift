@@ -91,7 +91,9 @@ private extension FavoriteCitiesViewController {
     
     private func fetchData() {
         let context = DataModels.sharedInstance.context
+        let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
         let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
+        fetchRequest.sortDescriptors = [sortDescriptor]
         do {
             self.models = try context.fetch(fetchRequest)
         } catch {
@@ -106,7 +108,7 @@ private extension FavoriteCitiesViewController {
             guard let modelVC =
                     storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
                     as? CurrentLocationViewController else {continue}
-            modelVC.nameCity = model.name
+            modelVC.settings =  Settings(cityName: model.name, isNavigatinBarHidden: false, showBackgroundImage: false)
             weatherVcsArray.append(modelVC)
         }
         return weatherVcsArray
@@ -118,7 +120,7 @@ private extension FavoriteCitiesViewController {
         guard let modelVC =
                 storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
                 as? CurrentLocationViewController else {return weatherVcsArray}
-        modelVC.nameCity = nameCityForDefault
+        modelVC.settings = Settings(cityName: nil, isNavigatinBarHidden: false, showBackgroundImage: false)
         weatherVcsArray.append(modelVC)
         return weatherVcsArray
     }

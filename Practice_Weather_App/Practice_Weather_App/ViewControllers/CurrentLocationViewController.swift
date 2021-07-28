@@ -23,8 +23,6 @@ class CurrentLocationViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
     private var currentWeather: CurrentWeather?
-    var nameCity: String?
-    private var isNavigationBarHidden = true
     
     @IBOutlet private weak var currentLocationLabel: UILabel!
     @IBOutlet private weak var weatherConditionLabel: UILabel!
@@ -41,28 +39,11 @@ class CurrentLocationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let cityName = nameCity {
-            isNavigationBarHidden = false
-            self.view.backgroundColor = UIColor.clear
-            getDataFromServer(cityName: cityName)
-        } else {
-            isNavigationBarHidden = true
-            startLocationManager()
-            setBackgroundImage()
-        }
-        //MARK: Картинки для теста заката/рассвета.
-        self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
-        self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
-    
-//        setBackgroundImage()
-        //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
-        // getDataFromServer()
         self.configureViewController()
         
         //MARK: Картинки для теста заката/рассвета.
-//        self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
-//        self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
-
+        self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
+        self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,11 +57,6 @@ class CurrentLocationViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
-    //MARK: - функцию настройки местоположения вызывать сдесь
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-//        startLocationManager()
-    }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
     private func getDataFromServer(cityName: String) {
@@ -115,9 +91,6 @@ class CurrentLocationViewController: UIViewController {
 //MARK: -  locationManager
 extension CurrentLocationViewController {
     
-    @IBAction func didTapPresentForcast(_ sender: Any) {
-        presentForcast()
-    }
     private func configureViewController() {
         
         if let cityName = self.settings.cityName {
@@ -133,9 +106,9 @@ extension CurrentLocationViewController {
         }
     }
     
-//    @IBAction func didTapPresentForcast(_ sender: Any) {
-//        presentForcast()
-//    }
+    @IBAction func didTapPresentForcast(_ sender: Any) {
+        presentForcast()
+    }
 }
 
 extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {

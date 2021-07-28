@@ -54,14 +54,14 @@ class CurrentLocationViewController: UIViewController {
         self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
         self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
     
-        setBackgroundImage()
+//        setBackgroundImage()
         //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
         // getDataFromServer()
         self.configureViewController()
         
         //MARK: Картинки для теста заката/рассвета.
-        self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
-        self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
+//        self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
+//        self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
 
     }
     

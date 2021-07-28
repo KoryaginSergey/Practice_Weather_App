@@ -27,6 +27,7 @@ class WeatherForcastTableViewCell: UITableViewCell {
         let dayOfTheWeek = formatter.string(from: dayTimeInterval)
         dayOfTheWeekLabel.text = dayOfTheWeek
         weatherConditionIcon.image = nil
+            //MARK: сделать округгление к целому числу
         dayOfTheWeekTemperature.text = String(forcast.main?.temp ?? 0.0)
     }
 }

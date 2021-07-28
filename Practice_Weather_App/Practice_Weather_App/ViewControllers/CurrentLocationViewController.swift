@@ -8,6 +8,17 @@
 import UIKit
 import CoreLocation
 
+struct Settings {
+    let cityName: String?
+    let isNavigatinBarHidden: Bool
+    let showBackgroundImage: Bool
+    
+    static func getDefaultSettings() -> Settings {
+        let settings = Settings(cityName: nil, isNavigatinBarHidden: true, showBackgroundImage: true)
+        return settings
+    }
+}
+
 class CurrentLocationViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
@@ -22,7 +33,9 @@ class CurrentLocationViewController: UIViewController {
     @IBOutlet private weak var sunsetTimeLabel: UILabel!
     @IBOutlet private weak var sunriseImageView: UIImageView!
     @IBOutlet private weak var sunsetImageView: UIImageView!
-    @IBOutlet private weak var weatherDescription: UILabel!
+    @IBOutlet weak var weatherDescription: UILabel!
+    
+    var settings: Settings = Settings.getDefaultSettings()
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -44,11 +57,17 @@ class CurrentLocationViewController: UIViewController {
         setBackgroundImage()
         //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
         // getDataFromServer()
+        self.configureViewController()
+        
+        //MARK: Картинки для теста заката/рассвета.
+        self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
+        self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(isNavigationBarHidden, animated: animated)
+        self.navigationController?.setNavigationBarHidden(self.settings.isNavigatinBarHidden, animated: animated)
     }
     
 
@@ -95,6 +114,24 @@ class CurrentLocationViewController: UIViewController {
 
 //MARK: -  locationManager
 extension CurrentLocationViewController {
+    
+    @IBAction func didTapPresentForcast(_ sender: Any) {
+        presentForcast()
+    }
+    private func configureViewController() {
+        
+        if let cityName = self.settings.cityName {
+            getDataFromServer(cityName: cityName)
+        } else {
+            startLocationManager()
+        }
+        
+        if self.settings.showBackgroundImage {
+            setBackgroundImage()
+        } else {
+            self.view.backgroundColor = UIColor.clear
+        }
+    }
     
     @IBAction func didTapPresentForcast(_ sender: Any) {
         presentForcast()

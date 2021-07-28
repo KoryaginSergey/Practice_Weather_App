@@ -17,11 +17,28 @@ extension CDCityModel {
     }
 
     @NSManaged public var name: String?
-    @NSManaged public var latitude: Float
-    @NSManaged public var longitude: Float
+    @NSManaged public var id: Int16
 
 }
 
 extension CDCityModel : Identifiable {
 
+    static func getCity(by name: String?) -> CDCityModel? {
+        let context = DataModels.sharedInstance.context
+        let predicate = NSPredicate(format: "name == %@", name as! CVarArg)
+        let fetchRequest = NSFetchRequest<CDCityModel>(entityName: String(describing: CDCityModel.self))
+        fetchRequest.predicate = predicate
+        let cities = try? context.fetch(fetchRequest)
+        
+        return cities?.first
+    }
+    
+    static func objectNumber() -> Int {
+        let context = DataModels.sharedInstance.context
+        let fetchRequest = NSFetchRequest<CDCityModel>(entityName: String(describing: CDCityModel.self))
+        let cities = try? context.fetch(fetchRequest)
+        
+        return cities?.count ?? 0
+    }
+    
 }

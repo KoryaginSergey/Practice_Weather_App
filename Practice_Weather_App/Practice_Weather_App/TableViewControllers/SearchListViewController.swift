@@ -73,6 +73,7 @@ extension SearchListViewController: UITableViewDataSource {
         let removeElement = models[sourceIndexPath.row]
         models.remove(at: sourceIndexPath.row)
         models.insert(removeElement, at: destinationIndexPath.row)
+        self.reloadDataModelIndexes()
     }
 }
 
@@ -115,7 +116,6 @@ extension SearchListViewController: UITableViewDelegate {
             cities.removeAll()
             self.tableView.reloadData()
         } else {
-
             searchBar.text = ""
             fetchData()
             self.tableView.reloadData()
@@ -124,6 +124,13 @@ extension SearchListViewController: UITableViewDelegate {
 }
 
 extension SearchListViewController: UISearchBarDelegate {
+    
+    func reloadDataModelIndexes() {
+        for (index, element) in self.models.reversed().enumerated() {
+            element.id = Int16(index)
+        }
+        DataModels.sharedInstance.saveContext()
+    }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text == "" {
@@ -138,7 +145,7 @@ extension SearchListViewController: UISearchBarDelegate {
                 self?.invokeNetworkingRequest(text: searchText)
             }
             pendingRequestWorkItem = requestWorkItem
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2,
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5,
                                           execute: requestWorkItem)
         }
     }
@@ -153,6 +160,8 @@ extension SearchListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         isSearching = false
+        searchBar.text = ""
+        self.tableView.reloadData()
     }
 }
 
@@ -174,6 +183,7 @@ private extension SearchListViewController {
                 self.tableView.isEditing = false
                 buttonIsEdit = false
             } else {
+                searchBar.resignFirstResponder()
                 searchBar.isHidden = true
                 self.tableView.isEditing = true
                 buttonIsEdit = true
@@ -193,7 +203,9 @@ private extension SearchListViewController {
     
     private func fetchData() {
         let context = DataModels.sharedInstance.context
+        let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
         let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
+        fetchRequest.sortDescriptors = [sortDescriptor]
         do {
             return self.models = try context.fetch(fetchRequest)
         } catch {
@@ -213,14 +225,16 @@ private extension SearchListViewController {
     
     private func saveItemToDataBase(indexPath: IndexPath) {
         let city = cities[indexPath.row]
-        let context = DataModels.sharedInstance.context
-        let entity = NSEntityDescription.entity(forEntityName: "CDCityModel", in: context)!
-        let model = CDCityModel(entity: entity, insertInto: context)
         
-        model.name = city.name
-        model.latitude = city.lat!
-        model.longitude = city.lon!
-        
+        if let cityObject = CDCityModel.getCity(by: city.name) {
+            cityObject.name = city.name
+            cityObject.id = Int16(CDCityModel.objectNumber())
+        } else {
+            let newCityObject = CDCityModel.createObject() as CDCityModel
+            newCityObject.name = city.name
+            newCityObject.id = Int16(CDCityModel.objectNumber())
+        }
+
         DataModels.sharedInstance.saveContext()
     }
     

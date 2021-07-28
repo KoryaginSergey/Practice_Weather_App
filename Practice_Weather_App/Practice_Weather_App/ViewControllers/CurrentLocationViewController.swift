@@ -79,7 +79,7 @@ class CurrentLocationViewController: UIViewController {
     //MARK: - функцию настройки местоположения вызывать сдесь
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        startLocationManager()
+//        startLocationManager()
     }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
@@ -133,9 +133,9 @@ extension CurrentLocationViewController {
         }
     }
     
-    @IBAction func didTapPresentForcast(_ sender: Any) {
-        presentForcast()
-    }
+//    @IBAction func didTapPresentForcast(_ sender: Any) {
+//        presentForcast()
+//    }
 }
 
 extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {

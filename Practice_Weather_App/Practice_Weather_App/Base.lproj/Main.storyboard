@@ -12,7 +12,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="3Es-v6-Zpb">
             <objects>
-                <tabBarController id="yDU-pA-nPX" sceneMemberID="viewController">
+                <tabBarController id="yDU-pA-nPX" customClass="TabBarController" customModule="Practice_Weather_App" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="9ah-G1-n6s">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

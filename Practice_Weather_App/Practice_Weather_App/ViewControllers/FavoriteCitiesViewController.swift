@@ -12,10 +12,8 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     private var weatherVcs = [UIViewController]()
     private var defaultWeatherVcs = [UIViewController]()
-    private var nameCityForDefault = "Kharkiv"
     
     private var models = [CDCityModel]()
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super .viewWillAppear(animated)
@@ -33,8 +31,10 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.configureNavigationButtons()
         self.setBackgroundImage()
+
     }
 }
 
@@ -126,17 +126,11 @@ private extension FavoriteCitiesViewController {
     }
     
     private func setBackgroundImage() {
-        
         let background = UIImageView()
-        background.contentMode = .scaleToFill
-        
+        background.contentMode = .scaleToFill // Or w/e your desired content mode is
         view.insertSubview(background, at: 0)
-        background.translatesAutoresizingMaskIntoConstraints = false
-        background.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        background.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        background.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        background.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        background.image = UIImage(named: "unsplash4")
+        background.frame = view.bounds
+        background.image = UIImage(named: "Mountain")
     }
 }
 

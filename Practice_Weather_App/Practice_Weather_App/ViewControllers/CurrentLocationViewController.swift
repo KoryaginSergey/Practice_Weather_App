@@ -23,8 +23,6 @@ class CurrentLocationViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
     private var currentWeather: CurrentWeather?
-    var nameCity: String?// = "Kiev"
-    private var isNavigationBarHidden = true
     
     @IBOutlet private weak var currentLocationLabel: UILabel!
     @IBOutlet private weak var weatherConditionLabel: UILabel!
@@ -40,30 +38,12 @@ class CurrentLocationViewController: UIViewController {
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if let cityName = nameCity {
-            isNavigationBarHidden = false
-            self.view.backgroundColor = UIColor.clear
-            getDataFromServer(cityName: cityName)
-        } else {
-            isNavigationBarHidden = true
-           // startLocationManager()
-            setBackgroundImage()
-        }
-        
-        //MARK: Картинки для теста заката/рассвета.
-        self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
-        self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
     
-        setBackgroundImage()
-        //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
-
         self.configureViewController()
         
         //MARK: Картинки для теста заката/рассвета.
         self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
         self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,12 +55,6 @@ class CurrentLocationViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
-    }
-    
-    //MARK: - функцию настройки местоположения вызывать сдесь
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-       //startLocationManager()
     }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна

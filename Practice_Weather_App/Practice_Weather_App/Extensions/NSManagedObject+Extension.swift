@@ -2,7 +2,7 @@
 //  NSManagedObject+Extension.swift
 //  Practice_Weather_App
 //
-//  Created by Alex Korygin on 27.07.2021.
+//  Created by Admin on 27.07.2021.
 //
 
 import Foundation

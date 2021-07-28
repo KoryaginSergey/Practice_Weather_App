@@ -15,27 +15,17 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     private var models = [CDCityModel]()
     
-    override func viewWillAppear(_ animated: Bool) {
-        super .viewWillAppear(animated)
-        
-        self.fetchData()
-        self.dataSource = self
-        weatherVcs = createArrayVC()
-        if weatherVcs.count > 0 {
-            self.setViewControllers([weatherVcs[0]], direction: .forward, animated: false, completion: nil)
-        } else {
-            defaultWeatherVcs = createDefaultArrayVC()
-            self.setViewControllers([defaultWeatherVcs[0]], direction: .forward, animated: false, completion: nil)
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.configureNavigationButtons()
         self.setBackgroundImage()
 
+        self.dataSource = self
+     
+        self.reloadViewControllers()
     }
+    
 }
 
 extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
@@ -76,6 +66,17 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
 
 private extension FavoriteCitiesViewController {
     
+    private func reloadViewControllers() {
+        self.fetchData()
+        weatherVcs = createArrayVC()
+        if weatherVcs.count > 0 {
+            self.setViewControllers([weatherVcs[0]], direction: .forward, animated: false, completion: nil)
+        } else {
+            defaultWeatherVcs = createDefaultArrayVC()
+            self.setViewControllers([defaultWeatherVcs[0]], direction: .forward, animated: false, completion: nil)
+        }
+    }
+    
     private func configureNavigationButtons() {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonSelector))
         self.navigationItem.title = "Add your favorite cities --->>"
@@ -84,6 +85,9 @@ private extension FavoriteCitiesViewController {
     @objc private func addButtonSelector() {
         let storyboard = UIStoryboard(name: String(describing: SearchListViewController.self), bundle: nil)
         let searchVc = storyboard.instantiateViewController(identifier: String(describing: SearchListViewController.self)) as SearchListViewController
+        searchVc.completion = {
+            self.reloadViewControllers()
+        }
         let navigation = UINavigationController(rootViewController: searchVc)
         navigation.modalPresentationStyle = .fullScreen
         self.navigationController?.present(navigation, animated: true, completion: nil)
@@ -108,7 +112,7 @@ private extension FavoriteCitiesViewController {
             guard let modelVC =
                     storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
                     as? CurrentLocationViewController else {continue}
-            modelVC.settings =  Settings(cityName: model.name, isNavigatinBarHidden: false, showBackgroundImage: false)
+            modelVC.settings =  Settings(cityName: model.name, showBackgroundImage: false)
             weatherVcsArray.append(modelVC)
         }
         return weatherVcsArray
@@ -120,7 +124,7 @@ private extension FavoriteCitiesViewController {
         guard let modelVC =
                 storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
                 as? CurrentLocationViewController else {return weatherVcsArray}
-        modelVC.settings = Settings(cityName: nil, isNavigatinBarHidden: false, showBackgroundImage: false)
+        modelVC.settings = Settings(cityName: nil, showBackgroundImage: false)
         weatherVcsArray.append(modelVC)
         return weatherVcsArray
     }

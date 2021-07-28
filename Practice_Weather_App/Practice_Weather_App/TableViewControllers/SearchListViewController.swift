@@ -15,10 +15,12 @@ class SearchListViewController: UIViewController {
     @IBOutlet weak private var searchListImageView: UIImageView!
     @IBOutlet weak private var searchBar: UISearchBar!
     
+    var completion: (() -> ())?
+    
     private let searchListCellID = String(describing: SearchListCell.self)
     private var pendingRequestWorkItem: DispatchWorkItem?
     private var dataTask: URLSessionDataTask?
-    
+
     private var models = [CDCityModel]()
     
     private var cities = [CityModel]()
@@ -130,6 +132,7 @@ extension SearchListViewController: UISearchBarDelegate {
             element.id = Int16(index)
         }
         DataModels.sharedInstance.saveContext()
+        self.completion?()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -221,6 +224,7 @@ private extension SearchListViewController {
         }
         context.delete(model)
         DataModels.sharedInstance.saveContext()
+        self.completion?()
     }
     
     private func saveItemToDataBase(indexPath: IndexPath) {
@@ -236,6 +240,7 @@ private extension SearchListViewController {
         }
 
         DataModels.sharedInstance.saveContext()
+        self.completion?()
     }
     
     

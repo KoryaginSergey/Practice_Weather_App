@@ -11,13 +11,6 @@ class TabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        self.tabBar.isTranslucent = false
-//        self.tabBar.backgroundColor = UIColor.white
-//        let image = UIImage()
-//        image.colo
-
-//        self.tabBar.tintAdjustmentMode = .normal
         
         if let items = self.tabBar.items {
             for (index, item) in items.enumerated() {

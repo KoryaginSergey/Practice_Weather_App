@@ -10,11 +10,10 @@ import CoreLocation
 
 struct Settings {
     let cityName: String?
-    let isNavigatinBarHidden: Bool
     let showBackgroundImage: Bool
     
     static func getDefaultSettings() -> Settings {
-        let settings = Settings(cityName: nil, isNavigatinBarHidden: true, showBackgroundImage: true)
+        let settings = Settings(cityName: nil, showBackgroundImage: true)
         return settings
     }
 }
@@ -38,23 +37,16 @@ class CurrentLocationViewController: UIViewController {
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         self.configureViewController()
         
         //MARK: Картинки для теста заката/рассвета.
         self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
         self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(self.settings.isNavigatinBarHidden, animated: animated)
-    }
-    
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
     }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна

@@ -60,7 +60,7 @@ class CurrentLocationViewController: UIViewController {
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
     private func getDataFromServer(cityName: String) {
-        Networkmanager.shared.getCurrentWeather(city: "Харьков") { [weak self] current in
+        Networkmanager.shared.getCurrentWeather(city: cityName) { [weak self] current in
             guard let current = current else {return}
             DispatchQueue.main.async {
                 self?.currentWeather = current

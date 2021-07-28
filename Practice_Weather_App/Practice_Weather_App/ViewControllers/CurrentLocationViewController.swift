@@ -10,24 +10,21 @@ import CoreLocation
 
 class CurrentLocationViewController: UIViewController {
     
-    let locationManager = CLLocationManager()
-
+    private let locationManager = CLLocationManager()
+    private var currentWeather: CurrentWeather?
     
     @IBOutlet private weak var currentLocationLabel: UILabel!
     @IBOutlet private weak var weatherConditionLabel: UILabel!
     @IBOutlet private weak var temperatureLabel: UILabel!
     @IBOutlet private weak var sunriseTimeLabel: UILabel!
     @IBOutlet private weak var sunsetTimeLabel: UILabel!
-    
     @IBOutlet private weak var sunriseImageView: UIImageView!
     @IBOutlet private weak var sunsetImageView: UIImageView!
     @IBOutlet private weak var weatherDescription: UILabel!
     
-    private var currentWeather: CurrentWeather?
-    
+    //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         //MARK: Картинки для теста заката/рассвета.
         self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
@@ -35,7 +32,7 @@ class CurrentLocationViewController: UIViewController {
         
         setBackgroundImage()
         //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
-//        getDataFromServer()
+        // getDataFromServer()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,51 +40,20 @@ class CurrentLocationViewController: UIViewController {
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
-    
-    
     //MARK: - функцию настройки местоположения вызывать сдесь
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-                startLocationManager()
-        
+        startLocationManager()
     }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
     private func getDataFromServer() {
         
         Networkmanager.shared.getCurrentWeather(city: "Харьков") { [weak self] current in
-            guard let self = self,
-                  let currentLocation = current?.name,
-                  let weatherConditionsID = current?.weather?.first?.id,
-                  let main = current?.main,
-                  let windSpeed = current?.wind?.speed,
-                  let weatherDescription = current?.weather?.first?.description,
-                  let intervalForSunrise = current?.sys?.sunrise,
-                  let intervalForSunset = current?.sys?.sunset else {
-                return
-            }
-            
+            guard let current = current else {return}
             DispatchQueue.main.async {
-                let sunriseTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunrise))
-                let sunsetTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunset))
-                
-                let formatter = DateFormatter()
-                formatter.dateStyle = .none
-                formatter.timeStyle = .medium
-                formatter.dateFormat = "HH:mm"
-                
-                self.currentLocationLabel.text = currentLocation
-                self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
-                self.temperatureLabel.text = String(Int(main.temp)) + " ºC"
-                
-                let formattedSunriseTime = formatter.string(from: sunriseTimeInterval)
-                self.sunriseTimeLabel.text = formattedSunriseTime
-                
-                let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
-                self.sunsetTimeLabel.text = formattedSunsetTime
-                
-                //MARK: Для теста мин/макс температуры
-                self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"
+                self?.currentWeather = current
+                self?.updateUI()
             }
         }
     }
@@ -99,11 +65,7 @@ class CurrentLocationViewController: UIViewController {
         background.contentMode = .scaleToFill // Or w/e your desired content mode is
         
         view.insertSubview(background, at: 0)
-        background.translatesAutoresizingMaskIntoConstraints = false
-        background.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        background.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        background.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        background.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
     }
     
@@ -118,16 +80,14 @@ class CurrentLocationViewController: UIViewController {
     @IBAction func didTapPresentForcast(_ sender: Any) {
         presentForcast()
     }
-    
 }
 
 extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         PresentationController(presentedViewController: presented, presenting: presenting)
-        
-        
     }
 }
+
     //MARK: -  locationManager
     private extension CurrentLocationViewController {
         
@@ -164,7 +124,6 @@ extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
                 default:
                     break
             }
-            
         }
         
         //MARK: - alert "go to location settings"
@@ -180,46 +139,21 @@ extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
         }
     }
 
-
-
 //MARK: - CLLocationManagerDelegate
 extension CurrentLocationViewController: CLLocationManagerDelegate {
     
-    //MARK: - request of coordinate when changing location
+//MARK: - request of coordinate when changing location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let lastLocation = locations.last {
-//            print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
+            print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
             let lon = lastLocation.coordinate.longitude
             
             Networkmanager.shared.getCurrentWeatherByLocation(lat: lat, lon: lon) { [weak self] current in
-                guard let self = self else {
-                    return
-                }
-                self.currentWeather = current
-                
+                guard let current = current else {return}
                 DispatchQueue.main.async {
-                    let sunriseTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunrise))
-                    let sunsetTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunset))
-                    
-                    let formatter = DateFormatter()
-                    formatter.dateStyle = .none
-                    formatter.timeStyle = .medium
-                    formatter.dateFormat = "HH:mm"
-                    
-                    self.currentLocationLabel.text = currentLocation
-                    self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
-                    self.temperatureLabel.text = String(Int(main.temp)) + " ºC"
-                    
-                    
-                    let formattedSunriseTime = formatter.string(from: sunriseTimeInterval)
-                    self.sunriseTimeLabel.text = formattedSunriseTime
-                    
-                    let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
-                    self.sunsetTimeLabel.text = formattedSunsetTime
-                    
-                    //MARK: Для теста мин/макс температуры
-                    self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"
+                 self?.currentWeather = current
+                 self?.updateUI()
                 }
             }
         }
@@ -227,28 +161,42 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
 }
 
 private extension CurrentLocationViewController {
+    
     func updateUI() {
+        guard let current = self.currentWeather else {return}
         
-        let sunriseTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunrise))
-        let sunsetTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunset))
+            guard let currentLocation = current.name,
+              let weatherConditionsID = current.weather?.first?.id,
+              let main = current.main,
+              let windSpeed = current.wind?.speed,
+              let weatherDescription = current.weather?.first?.description,
+              let intervalForSunrise = current.sys?.sunrise,
+              let intervalForSunset = current.sys?.sunset else {
+            return
+        }
         
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .medium
-        formatter.dateFormat = "HH:mm"
+        DispatchQueue.main.async {
+            let sunriseTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunrise))
+            let sunsetTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunset))
+            
+            let formatter = DateFormatter()
+            formatter.dateStyle = .none
+            formatter.timeStyle = .medium
+            formatter.dateFormat = "HH:mm"
+            
+            self.currentLocationLabel.text = currentLocation
+            self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
+            self.temperatureLabel.text = String(Int(main.temp)) + " ºC"
+            
+            let formattedSunriseTime = formatter.string(from: sunriseTimeInterval)
+            self.sunriseTimeLabel.text = formattedSunriseTime
+            
+            let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
+            self.sunsetTimeLabel.text = formattedSunsetTime
+            
+            //MARK: Для теста мин/макс температуры
+            self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"
+        }
         
-        self.currentLocationLabel.text = currentLocation
-        self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
-        self.temperatureLabel.text = String(Int(main.temp)) + " ºC"
-        
-        
-        let formattedSunriseTime = formatter.string(from: sunriseTimeInterval)
-        self.sunriseTimeLabel.text = formattedSunriseTime
-        
-        let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
-        self.sunsetTimeLabel.text = formattedSunsetTime
-        
-        //MARK: Для теста мин/макс температуры
-        self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"
     }
 }

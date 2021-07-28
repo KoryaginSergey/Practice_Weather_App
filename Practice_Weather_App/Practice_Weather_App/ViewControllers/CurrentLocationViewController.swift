@@ -23,7 +23,7 @@ class CurrentLocationViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
     private var currentWeather: CurrentWeather?
-    var nameCity: String?
+    var nameCity: String?// = "Kiev"
     private var isNavigationBarHidden = true
     
     @IBOutlet private weak var currentLocationLabel: UILabel!
@@ -47,16 +47,17 @@ class CurrentLocationViewController: UIViewController {
             getDataFromServer(cityName: cityName)
         } else {
             isNavigationBarHidden = true
-            startLocationManager()
+           // startLocationManager()
             setBackgroundImage()
         }
+        
         //MARK: Картинки для теста заката/рассвета.
         self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
         self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
     
         setBackgroundImage()
         //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
-        // getDataFromServer()
+
         self.configureViewController()
         
         //MARK: Картинки для теста заката/рассвета.
@@ -79,12 +80,12 @@ class CurrentLocationViewController: UIViewController {
     //MARK: - функцию настройки местоположения вызывать сдесь
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        startLocationManager()
+       //startLocationManager()
     }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
     private func getDataFromServer(cityName: String) {
-        Networkmanager.shared.getCurrentWeather(city: "Харьков") { [weak self] current in
+        Networkmanager.shared.getCurrentWeather(city: cityName) { [weak self] current in
             guard let current = current else {return}
             DispatchQueue.main.async {
                 self?.currentWeather = current
@@ -115,9 +116,6 @@ class CurrentLocationViewController: UIViewController {
 //MARK: -  locationManager
 extension CurrentLocationViewController {
     
-    @IBAction func didTapPresentForcast(_ sender: Any) {
-        presentForcast()
-    }
     private func configureViewController() {
         
         if let cityName = self.settings.cityName {

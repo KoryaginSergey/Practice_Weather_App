@@ -188,7 +188,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
     //MARK: - request of coordinate when changing location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let lastLocation = locations.last {
-//            print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
+            print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
             let lon = lastLocation.coordinate.longitude
             
@@ -203,6 +203,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                       let intervalForSunset = current?.sys?.sunset else {
                     return
                 }
+                
                 DispatchQueue.main.async {
                     let sunriseTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunrise))
                     let sunsetTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunset))

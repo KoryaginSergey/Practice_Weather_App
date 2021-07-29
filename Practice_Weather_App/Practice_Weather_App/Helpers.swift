@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Lottie
 
 public func someWrongAlert(_ title: String ,_ message: String) -> UIAlertController {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -35,8 +36,45 @@ public func getDescribe(_ codeOfWeather: Int) -> String {
     case 781: return "торнадо"
     case 800: return "чистое небо"
     case 801...804: return "облачно"
-    
+
     default: return "веедены некоректные данные"
     }
 }
 
+
+public func getAnimationForWeather(conditionID: Float) -> String {
+    switch conditionID {
+        case 200 ... 221:
+            return "thunderstorm"
+        case 230 ... 232, 313, 314, 321, 502 ... 504, 520 ... 522, 531:
+            return "rainfall"
+        case 300 ... 302, 310 ... 312, 500, 501:
+            return "rain"
+        case 511, 611, 612, 616:
+            return "snowandrain"
+        case 600 ... 602:
+            return "snow"
+        case 620 ... 622:
+            return "blizzard"
+        case 711, 722,741:
+            return "fog"
+        case 701:
+            return "cloudsandsun"
+        case 801 ... 804:
+            return "clouds"
+        default:
+            return "clear"  // чистое небо
+    }
+}
+
+
+public func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
+    let animationView = AnimationView()
+    
+    animationView.frame = frame
+    animationView.animation = Animation.named(name)
+    animationView.contentMode = .scaleAspectFill
+    animationView.loopMode = .loop   
+    
+    return animationView
+}

@@ -131,7 +131,7 @@ private extension FavoriteCitiesViewController {
     
     private func setBackgroundImage() {
         let background = UIImageView()
-        background.contentMode = .scaleToFill // Or w/e your desired content mode is
+        background.contentMode = .scaleAspectFill
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")

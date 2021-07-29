@@ -72,7 +72,10 @@ class CurrentLocationViewController: UIViewController {
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
     }
-
+    
+    func setWeatherAnimations() {
+        
+    }
     
     
     func presentForcast() {
@@ -185,17 +188,12 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                 guard let self = self,
                       let currentLocation = current?.name,
                       let weatherConditionsID = current?.weather?.first?.id,
-                      let main = current?.main,
-                      let windSpeed = current?.wind?.speed,
-                      let weatherDescription = current?.weather?.first?.description,
-                      let intervalForSunrise = current?.sys?.sunrise,
-                      let intervalForSunset = current?.sys?.sunset else {
+                      let main = current?.main
+                      else {
                     return
                 }
                 
                 DispatchQueue.main.async {
-                    let sunriseTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunrise))
-                    let sunsetTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunset))
                     
                     let formatter = DateFormatter()
                     formatter.dateStyle = .none

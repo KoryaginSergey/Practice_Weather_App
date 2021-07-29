@@ -68,13 +68,4 @@ public func getAnimationForWeather(conditionID: Float) -> String {
 }
 
 
-public func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
-    let animationView = AnimationView()
-    
-    animationView.frame = frame
-    animationView.animation = Animation.named(name)
-    animationView.contentMode = .scaleAspectFill
-    animationView.loopMode = .loop   
-    
-    return animationView
-}
+

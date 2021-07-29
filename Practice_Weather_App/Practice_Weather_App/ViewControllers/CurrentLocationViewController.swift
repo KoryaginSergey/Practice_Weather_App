@@ -58,7 +58,12 @@ class CurrentLocationViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if let animationView = self.weatherAnimationView {
+            self.backgroundView.addSubview(animationView)
+        }
         if let animation = weatherAnimationView {
             animation.play()
         }
@@ -82,6 +87,21 @@ class CurrentLocationViewController: UIViewController {
         view.insertSubview(backgroundView, at: 0)
         backgroundView.frame = view.bounds
         backgroundView.image = UIImage(named: "Mountain")
+        
+        
+        
+        
+    }
+    
+    private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
+        let animationView = AnimationView()
+        
+        animationView.frame = frame
+        animationView.animation = Animation.named(name)
+        animationView.contentMode = .scaleAspectFill
+        animationView.loopMode = .loop
+        
+        return animationView
     }
     
     func presentForcast() {
@@ -185,7 +205,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         if let lastLocation = locations.last {
-//            print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
+            print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
             let lon = lastLocation.coordinate.longitude
             
@@ -216,6 +236,10 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     self.currentWeather = current
                     self.updateUI()
                     
+                    let weatherAnimationNamed = getAnimationForWeather(conditionID: weatherConditionsID)
+                    self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
+                                                                           andFrame: self.view.bounds)
+                    self.locationManager.stopUpdatingLocation()
                 }
             }
         }
@@ -252,12 +276,8 @@ private extension CurrentLocationViewController {
             let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
             self.sunsetTimeLabel.text = formattedSunsetTime
         
-            let weatherAnimationNamed = getAnimationForWeather(conditionID: weatherConditionsID)
-            weatherAnimationView = setWeatherAnimation(with: weatherAnimationNamed,
-                                                       andFrame: view.bounds)
-            if let animationView = weatherAnimationView {
-//                self.backgroundView.addSubview(animationView)
-            }
+          
+            
         
             //MARK: Для теста мин/макс температуры
             self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"

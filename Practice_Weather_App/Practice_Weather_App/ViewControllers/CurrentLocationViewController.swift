@@ -10,9 +10,6 @@ import CoreLocation
 
 class CurrentLocationViewController: UIViewController {
     
-    let locationManager = CLLocationManager()
-
-    
     @IBOutlet private weak var currentLocationLabel: UILabel!
     @IBOutlet private weak var weatherConditionLabel: UILabel!
     @IBOutlet private weak var temperatureLabel: UILabel!
@@ -21,9 +18,12 @@ class CurrentLocationViewController: UIViewController {
     
     @IBOutlet private weak var sunriseImageView: UIImageView!
     @IBOutlet private weak var sunsetImageView: UIImageView!
-    @IBOutlet weak var weatherDescription: UILabel!
+    @IBOutlet private weak var weatherDescription: UILabel!
     
-    
+    private let locationManager = CLLocationManager()
+    var cityNameForForcast: String?
+        
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -108,10 +108,11 @@ class CurrentLocationViewController: UIViewController {
     
     
     func presentForcast() {
-        let weatherForcast = GestureViewController()
-        weatherForcast.modalPresentationStyle = .custom
-        weatherForcast.transitioningDelegate = self
-        self.present(weatherForcast, animated: true, completion: nil)
+        let weatherForcastVC = GestureViewController()
+        weatherForcastVC.forcastForCityNamed = cityNameForForcast
+        weatherForcastVC.modalPresentationStyle = .custom
+        weatherForcastVC.transitioningDelegate = self
+        self.present(weatherForcastVC, animated: true, completion: nil)
     }
     
     @IBAction func didTapPresentForcast(_ sender: Any) {
@@ -211,6 +212,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     formatter.timeStyle = .medium
                     formatter.dateFormat = "HH:mm"
                     
+                    self.cityNameForForcast = currentLocation
                     self.currentLocationLabel.text = currentLocation
                     self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
                     self.temperatureLabel.text = String(Int(main.temp)) + " ºC"

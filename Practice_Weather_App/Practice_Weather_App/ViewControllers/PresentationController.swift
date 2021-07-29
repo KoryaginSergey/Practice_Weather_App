@@ -18,6 +18,7 @@ class PresentationController: UIPresentationController {
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissController))
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.blurEffectView.isUserInteractionEnabled = true
+        
         self.blurEffectView.addGestureRecognizer(tapGestureRecognizer)
     }
     

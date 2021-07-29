@@ -11,27 +11,21 @@ import CoreData
 class FavoriteCitiesViewController: UIPageViewController {
     
     private var weatherVcs = [UIViewController]()
+    private var defaultWeatherVcs = [UIViewController]()
     
     private var models = [CDCityModel]()
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super .viewWillAppear(animated)
-        
-        self.fetchData()
-        weatherVcs = createArrayVC()
-        
-        if weatherVcs.count > 0 {
-            self.dataSource = self
-            self.setViewControllers([weatherVcs[0]], direction: .forward, animated: false, completion: nil)
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.configureNavigationButtons()
+        self.setBackgroundImage()
+
+        self.dataSource = self
+     
+        self.reloadViewControllers()
     }
+    
 }
 
 extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
@@ -54,7 +48,11 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
     }
     
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
-        return self.weatherVcs.count
+        if weatherVcs.count > 0 {
+            return self.weatherVcs.count
+        } else {
+            return 1
+        }
     }
     
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
@@ -68,13 +66,28 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
 
 private extension FavoriteCitiesViewController {
     
+    private func reloadViewControllers() {
+        self.fetchData()
+        weatherVcs = createArrayVC()
+        if weatherVcs.count > 0 {
+            self.setViewControllers([weatherVcs[0]], direction: .forward, animated: false, completion: nil)
+        } else {
+            defaultWeatherVcs = createDefaultArrayVC()
+            self.setViewControllers([defaultWeatherVcs[0]], direction: .forward, animated: false, completion: nil)
+        }
+    }
+    
     private func configureNavigationButtons() {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonSelector))
+        self.navigationItem.title = "Add your favorite cities --->>"
     }
     
     @objc private func addButtonSelector() {
         let storyboard = UIStoryboard(name: String(describing: SearchListViewController.self), bundle: nil)
         let searchVc = storyboard.instantiateViewController(identifier: String(describing: SearchListViewController.self)) as SearchListViewController
+        searchVc.completion = {
+            self.reloadViewControllers()
+        }
         let navigation = UINavigationController(rootViewController: searchVc)
         navigation.modalPresentationStyle = .fullScreen
         self.navigationController?.present(navigation, animated: true, completion: nil)
@@ -82,9 +95,11 @@ private extension FavoriteCitiesViewController {
     
     private func fetchData() {
         let context = DataModels.sharedInstance.context
+        let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
         let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
+        fetchRequest.sortDescriptors = [sortDescriptor]
         do {
-             self.models = try context.fetch(fetchRequest)
+            self.models = try context.fetch(fetchRequest)
         } catch {
             print("ERROR")
         }
@@ -92,14 +107,34 @@ private extension FavoriteCitiesViewController {
     
     private func createArrayVC() -> [UIViewController] {
         var weatherVcsArray = [UIViewController]()
-    
+        
         for model in models {
             guard let modelVC =
                     storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
                     as? CurrentLocationViewController else {continue}
+            modelVC.settings =  Settings(cityName: model.name, showBackgroundImage: false)
             weatherVcsArray.append(modelVC)
         }
-    return weatherVcsArray
+        return weatherVcsArray
+    }
+    
+    private func createDefaultArrayVC() -> [UIViewController] {
+        
+        var weatherVcsArray = [UIViewController]()
+        guard let modelVC =
+                storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
+                as? CurrentLocationViewController else {return weatherVcsArray}
+        modelVC.settings = Settings(cityName: nil, showBackgroundImage: false)
+        weatherVcsArray.append(modelVC)
+        return weatherVcsArray
+    }
+    
+    private func setBackgroundImage() {
+        let background = UIImageView()
+        background.contentMode = .scaleToFill // Or w/e your desired content mode is
+        view.insertSubview(background, at: 0)
+        background.frame = view.bounds
+        background.image = UIImage(named: "Mountain")
     }
 }
 

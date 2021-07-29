@@ -15,10 +15,12 @@ class SearchListViewController: UIViewController {
     @IBOutlet weak private var searchListImageView: UIImageView!
     @IBOutlet weak private var searchBar: UISearchBar!
     
+    var completion: (() -> ())?
+    
     private let searchListCellID = String(describing: SearchListCell.self)
     private var pendingRequestWorkItem: DispatchWorkItem?
     private var dataTask: URLSessionDataTask?
-    
+
     private var models = [CDCityModel]()
     
     private var cities = [CityModel]()
@@ -28,34 +30,22 @@ class SearchListViewController: UIViewController {
     private let nameNavigationItem = "Favorites list"
     private let heightForRow: CGFloat = 60
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        self.tableView.keyboardDismissMode = .onDrag
-
+        
         searchBar.delegate = self
         configureNavigationButtons()
-
-        self.navigationItem.title = nameNavigationItem
-//        let arrayCity = self.fetchData()
-//        self.cities = arrayCity.map({ (model) -> CityModel in
-//            let city = CityModel(name: model.name, lat: model.latitude, lon: model.longitude)
-//            return city
-//        })
-//        tableView.reloadData()
-        self.fetchData()
-
-
         
+        self.navigationItem.title = nameNavigationItem
+        self.fetchData()
     }
-    
 }
 
 // MARK: - Extensions
 
 extension SearchListViewController: UITableViewDataSource {
-  
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching {
             return self.cities.count
@@ -85,7 +75,7 @@ extension SearchListViewController: UITableViewDataSource {
         let removeElement = models[sourceIndexPath.row]
         models.remove(at: sourceIndexPath.row)
         models.insert(removeElement, at: destinationIndexPath.row)
-    
+        self.reloadDataModelIndexes()
     }
 }
 
@@ -102,7 +92,7 @@ extension SearchListViewController: UITableViewDelegate {
     
     func tableViewDidDeleteRow(indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in
-
+            
             let model = self.models.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
             self.deleteCDCityModel(model: model)
@@ -114,6 +104,10 @@ extension SearchListViewController: UITableViewDelegate {
         return action
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return !isSearching
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isSearching {
             self.saveItemToDataBase(indexPath: indexPath)
@@ -121,42 +115,56 @@ extension SearchListViewController: UITableViewDelegate {
             searchBar.resignFirstResponder()
             searchBar.text = ""
             fetchData()
+            cities.removeAll()
+            self.tableView.reloadData()
+        } else {
+            searchBar.text = ""
+            fetchData()
             self.tableView.reloadData()
         }
     }
-    
 }
 
 extension SearchListViewController: UISearchBarDelegate {
-
+    
+    func reloadDataModelIndexes() {
+        for (index, element) in self.models.reversed().enumerated() {
+            element.id = Int16(index)
+        }
+        DataModels.sharedInstance.saveContext()
+        self.completion?()
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text == "" {
-                    isSearching = false
-                    tableView.reloadData()
+            isSearching = false
+            cities.removeAll()
+            tableView.reloadData()
         } else {
             isSearching = true
+            tableView.reloadData()
             pendingRequestWorkItem?.cancel()
             let requestWorkItem = DispatchWorkItem { [weak self] in
-            self?.invokeNetworkingRequest(text: searchText)
-        }
+                self?.invokeNetworkingRequest(text: searchText)
+            }
             pendingRequestWorkItem = requestWorkItem
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1,
-                                    execute: requestWorkItem)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5,
+                                          execute: requestWorkItem)
         }
-        
-//        filteredData = data.filter({$0.contains(searchBar.text ?? "")})
-//        tableView.reloadData()
-        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         isSearching = false
+        searchBar.text = ""
+        self.tableView.reloadData()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         isSearching = false
+        searchBar.text = ""
+        self.tableView.reloadData()
     }
 }
 
@@ -172,16 +180,20 @@ private extension SearchListViewController {
     }
     
     @objc private func editButtonSelector() {
-        if buttonIsEdit {
-        self.tableView.isEditing = false
-            buttonIsEdit = false
-        } else {
-            self.tableView.isEditing = true
-            buttonIsEdit = true
+        if isSearching == false {
+            if buttonIsEdit {
+                searchBar.isHidden = false
+                self.tableView.isEditing = false
+                buttonIsEdit = false
+            } else {
+                searchBar.resignFirstResponder()
+                searchBar.isHidden = true
+                self.tableView.isEditing = true
+                buttonIsEdit = true
+            }
         }
-
     }
-
+    
     private func invokeNetworkingRequest(text: String) {
         self.dataTask?.suspend()
         self.dataTask = Networkmanager.shared.getListOfCities(by: text) { [weak self] cityModels in
@@ -194,7 +206,9 @@ private extension SearchListViewController {
     
     private func fetchData() {
         let context = DataModels.sharedInstance.context
+        let sortDescriptor = NSSortDescriptor(key: "id", ascending: false)
         let fetchRequest = NSFetchRequest<CDCityModel>(entityName: "CDCityModel")
+        fetchRequest.sortDescriptors = [sortDescriptor]
         do {
             return self.models = try context.fetch(fetchRequest)
         } catch {
@@ -210,19 +224,23 @@ private extension SearchListViewController {
         }
         context.delete(model)
         DataModels.sharedInstance.saveContext()
+        self.completion?()
     }
     
     private func saveItemToDataBase(indexPath: IndexPath) {
         let city = cities[indexPath.row]
-        let context = DataModels.sharedInstance.context
-        let entity = NSEntityDescription.entity(forEntityName: "CDCityModel", in: context)!
-        let model = CDCityModel(entity: entity, insertInto: context)
         
-        model.name = city.name
-        model.latitude = city.lat!
-        model.longitude = city.lon!
-        
+        if let cityObject = CDCityModel.getCity(by: city.name) {
+            cityObject.name = city.name
+            cityObject.id = Int16(CDCityModel.objectNumber())
+        } else {
+            let newCityObject = CDCityModel.createObject() as CDCityModel
+            newCityObject.name = city.name
+            newCityObject.id = Int16(CDCityModel.objectNumber())
+        }
+
         DataModels.sharedInstance.saveContext()
+        self.completion?()
     }
     
     

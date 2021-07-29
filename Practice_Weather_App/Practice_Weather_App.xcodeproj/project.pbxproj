@@ -33,6 +33,8 @@
 		C946CB3926A9A5480087FCBB /* GestureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C946CB3826A9A5480087FCBB /* GestureViewController.swift */; };
 		C9FC35C026A84D21008BC576 /* WeatherForcastTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FC35BD26A84D21008BC576 /* WeatherForcastTableViewCell.xib */; };
 		F13486F726A89DBD008E9582 /* ModelsCity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13486F626A89DBD008E9582 /* ModelsCity.swift */; };
+		F14BA82126B08A1F004E69D6 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14BA82026B08A1F004E69D6 /* NSManagedObject+Extension.swift */; };
+		F1E92AEA26B1E71800FF0A33 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E92AE926B1E71800FF0A33 /* TabBarController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +66,8 @@
 		C946CB3826A9A5480087FCBB /* GestureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureViewController.swift; sourceTree = "<group>"; };
 		C9FC35BD26A84D21008BC576 /* WeatherForcastTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WeatherForcastTableViewCell.xib; sourceTree = "<group>"; };
 		F13486F626A89DBD008E9582 /* ModelsCity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsCity.swift; sourceTree = "<group>"; };
+		F14BA82026B08A1F004E69D6 /* NSManagedObject+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extension.swift"; sourceTree = "<group>"; };
+		F1E92AE926B1E71800FF0A33 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,23 +102,24 @@
 		84BE972526A6C15800796529 /* Practice_Weather_App */ = {
 			isa = PBXGroup;
 			children = (
-				84CE308B26A9FC390092427F /* Extensions */,
-				C9FC35BD26A84D21008BC576 /* WeatherForcastTableViewCell.xib */,
-				C946CB3626A9A4520087FCBB /* GestureViewController.xib */,
-				C946CB3826A9A5480087FCBB /* GestureViewController.swift */,
-				84CE305F26A8875D0092427F /* Cells */,
-				84CE305C26A8875D0092427F /* TableViewControllers */,
-				84CE304B26A849450092427F /* ViewControllers */,
 				84BE972626A6C15800796529 /* AppDelegate.swift */,
-				84BE972826A6C15800796529 /* SceneDelegate.swift */,
-				A32927CA26A9B05C0045CAEC /* Helpers.swift */,
-				A36BB6B226A6E28B00273107 /* NetworkLayer */,
-				84BE972C26A6C15800796529 /* Main.storyboard */,
 				84BE973226A6C15C00796529 /* Assets.xcassets */,
-				84BE973426A6C15C00796529 /* LaunchScreen.storyboard */,
-				84BE973726A6C15C00796529 /* Info.plist */,
+				84CE305F26A8875D0092427F /* Cells */,
 				84BE972F26A6C15800796529 /* DataBase.xcdatamodeld */,
 				84CE307826A9ABEF0092427F /* DataModels.swift */,
+				84CE308B26A9FC390092427F /* Extensions */,
+				C946CB3826A9A5480087FCBB /* GestureViewController.swift */,
+				C946CB3626A9A4520087FCBB /* GestureViewController.xib */,
+				A32927CA26A9B05C0045CAEC /* Helpers.swift */,
+				84BE973726A6C15C00796529 /* Info.plist */,
+				84BE973426A6C15C00796529 /* LaunchScreen.storyboard */,
+				84BE972C26A6C15800796529 /* Main.storyboard */,
+				A36BB6B226A6E28B00273107 /* NetworkLayer */,
+				84BE972826A6C15800796529 /* SceneDelegate.swift */,
+				84CE305C26A8875D0092427F /* TableViewControllers */,
+				84CE304B26A849450092427F /* ViewControllers */,
+				C9FC35BD26A84D21008BC576 /* WeatherForcastTableViewCell.xib */,
+				F1E92AE926B1E71800FF0A33 /* TabBarController.swift */,
 			);
 			path = Practice_Weather_App;
 			sourceTree = "<group>";
@@ -151,6 +156,7 @@
 		84CE308B26A9FC390092427F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F14BA82026B08A1F004E69D6 /* NSManagedObject+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -240,6 +246,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F14BA82126B08A1F004E69D6 /* NSManagedObject+Extension.swift in Sources */,
 				84CE309126A9FF420092427F /* CDCityModel+CoreDataProperties.swift in Sources */,
 				F13486F726A89DBD008E9582 /* ModelsCity.swift in Sources */,
 				A32927CB26A9B05C0045CAEC /* Helpers.swift in Sources */,
@@ -252,6 +259,7 @@
 				A31F2A7A26A6F14E00806B7F /* WeatherDataSourse.swift in Sources */,
 				C946CB3126A961EA0087FCBB /* CurrentLocationViewController.swift in Sources */,
 				84CE307526A98A950092427F /* LocationViewController.swift in Sources */,
+				F1E92AEA26B1E71800FF0A33 /* TabBarController.swift in Sources */,
 				84CE304F26A849450092427F /* FavoriteCitiesViewController.swift in Sources */,
 				84BE973126A6C15800796529 /* DataBase.xcdatamodeld in Sources */,
 				84BE972726A6C15800796529 /* AppDelegate.swift in Sources */,

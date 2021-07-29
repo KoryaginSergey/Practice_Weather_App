@@ -19,22 +19,22 @@ struct WeatherModelForcast: Codable {
 
 
 struct ListModelForcast: Codable {
-   var dt: Float?
-   var main: MainForcast?
-   var weather: [WeatherForcast]?
-   var wind: Wind?
-   var dt_txt: String?
+    var dt: Float?
+    var main: MainForcast?
+    var weather: [WeatherForcast]?
+    var wind: Wind?
+    var dt_txt: String?
 }
 
 struct WeatherForcast: Codable {
-  var id: Float?
-  var main: String?
-  var description:String?
-  var icon: String?
+    var id: Float?
+    var main: String?
+    var description:String?
+    var icon: String?
 }
 
 struct Wind: Codable {
-  var speed: Float?
+    var speed: Float?
 }
 
 struct MainForcast: Codable {

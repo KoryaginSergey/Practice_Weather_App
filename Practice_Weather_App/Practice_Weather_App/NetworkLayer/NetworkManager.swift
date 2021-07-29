@@ -7,16 +7,40 @@
 
 import Foundation
 
-//http://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
-//http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
-//http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=010490d0c60a959c36f0688641ada569
+//https://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
+//https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
+//https://api.openweathermap.org/geo/1.0/direct?q=London&limit=1&appid=010490d0c60a959c36f0688641ada569
 //https://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&units=metric&appid=76a212233b5863b7fe5c80277e71a5ba
 
 //MARK: -  погода на сегодня или на несколько дней
+
 private enum DownloadTask: String {
     case forecast
     case weather
     case weatherByLocation
+}
+
+private struct Api {
+    static  let mainUrlGeo: String = "https://api.openweathermap.org/geo/"
+    static  let mainUrl: String = "https://api.openweathermap.org/data/"
+    static  let id: String = "appid=76a212233b5863b7fe5c80277e71a5ba"
+    static let id2: String = "appid=010490d0c60a959c36f0688641ada569"
+}
+
+enum WeatherURL {
+    case forecast(name: String)
+    case weatherToday(name: String)
+    case weatherbyLocation(lat: Double,lon: Double)
+    case direct(name: String)
+    
+    var url: String {
+        switch self {
+        case .forecast(let name): return Api.mainUrl+"2.5/forecast?q=\(name.replacingOccurrences(of:" ", with: "%20"))&units=metric&"+Api.id
+        case .weatherToday(let name):return Api.mainUrl+"2.5/weather?q=\(name.replacingOccurrences(of:" ", with: "%20"))&units=metric&"+Api.id
+        case .weatherbyLocation(let lat,let lon): return Api.mainUrl+"2.5/weather?lat=\(lat)&lon=\(lon)&units=metric&"+Api.id
+        case .direct(let name): return  Api.mainUrlGeo+"/1.0/direct?q=\(name.replacingOccurrences(of:" ", with: "%20"))&limit=1&"+Api.id2
+        }
+    }
 }
 
 class Networkmanager {
@@ -24,20 +48,9 @@ class Networkmanager {
     private init() {}
     static let shared: Networkmanager = Networkmanager()
     
-    private func getUrl(_ task: DownloadTask ,city: String ) -> URL {
-        var urlcomponents = URLComponents()
-        urlcomponents.scheme = "https"
-        urlcomponents.host = "api.openweathermap.org"
-        urlcomponents.path = "/data/2.5/\(task)"
-        urlcomponents.queryItems = [URLQueryItem(name: "q", value: city),
-                                    URLQueryItem(name: "units", value: "metric"),
-                                    URLQueryItem(name: "appid", value: "010490d0c60a959c36f0688641ada569")]
-        return urlcomponents.url!
-    }
-    
     //MARK: - univarsal decodable function
     func decodejson<T:Decodable>(type: T.Type, from: Data?) -> T? {
-    let decoder = JSONDecoder()
+        let decoder = JSONDecoder()
         guard let data = from else { return nil }
         
         do {
@@ -49,58 +62,54 @@ class Networkmanager {
         }
     }
     
-    
-    
     //MARK: - weather for a few days
     func getForcastWeather(city: String, result: @escaping ((WeatherModelForcast?)->())) {
-        var request = URLRequest(url: getUrl(.forecast, city: city))
-        request.httpMethod = "GET"
-        let task = URLSession(configuration: .default)
-        task.dataTask(with: request) { (data, responce, error) in
-            guard  error == nil else {
-                print("error: ",error?.localizedDescription as Any)
-                return
-            }
-            DispatchQueue.main.async {
-            result(self.decodejson(type: WeatherModelForcast.self , from: data))
-            }
-            
-        }.resume()
+        if let url = URL(string: WeatherURL.forecast(name: city).url) {
+            URLSession.shared.dataTask(with: url) { (data, responce, error) in
+                guard  error == nil else {
+                    print("error: ",error?.localizedDescription as Any)
+                    return
+                }
+                DispatchQueue.main.async {
+                    result(self.decodejson(type: WeatherModelForcast.self , from: data))
+                }
+            }.resume()
+        }
     }
     
     //MARK: - weather today
     func getCurrentWeather(city: String, result: @escaping ((CurrentWeather?)->())) {
-        var request = URLRequest(url: getUrl( .weather, city: city))
-        request.httpMethod = "GET"
-        let task = URLSession(configuration: .default)
-        task.dataTask(with: request) { (data, responce, error) in
-            guard  error == nil else {
-                print("error: ",error?.localizedDescription as Any)
-                return
-            }
-            DispatchQueue.main.async {
-            result(self.decodejson(type: CurrentWeather.self , from: data))
-            }
-        }.resume()
+        if let url = URL(string: WeatherURL.weatherToday(name: city).url) {
+            URLSession.shared.dataTask(with: url){ (data, responce, error) in
+                guard  error == nil else {
+                    print("error: ",error?.localizedDescription as Any)
+                    return
+                }
+                DispatchQueue.main.async {
+                    result(self.decodejson(type: CurrentWeather.self , from: data))
+                }
+            }.resume()
+        }
     }
-    
     //MARK: - weather today by coordinate
     func getCurrentWeatherByLocation(lat: Double,lon: Double, result: @escaping ((CurrentWeather?)->())) {
-        if let  url = URL(string: "https://api.openweathermap.org/data/2.5/weather?lat=\(lat)&lon=\(lon)&units=metric&appid=010490d0c60a959c36f0688641ada569") {
+        // print("url: ",WeatherURL.weatherbyLocation(lat: lat, lon: lon).url)
+        guard let url = URL(string: WeatherURL.weatherbyLocation(lat: lat, lon: lon).url) else {return}
         URLSession.shared.dataTask(with: url) { (data, responce, error) in
             guard  error == nil else {
                 print("error: ",error?.localizedDescription as Any)
                 return
             }
             DispatchQueue.main.async {
-            result(self.decodejson(type: CurrentWeather.self , from: data))
+                result(self.decodejson(type: CurrentWeather.self , from: data))
             }
-        }.resume()}
+        }.resume()
+        
     }
     
     //MARK: - description for choosen City
     func getListOfCities(by cityName: String, result: @escaping (([CityModel]?)->())) -> URLSessionDataTask? {
-        guard let url = URL(string: "https://api.openweathermap.org/geo/1.0/direct?q=\(cityName)&limit=1&appid=010490d0c60a959c36f0688641ada569") else {
+        guard let url = URL(string: WeatherURL.direct(name: cityName).url) else {
             result(nil)
             return nil
         }
@@ -116,7 +125,4 @@ class Networkmanager {
         task.resume()
         return task
     }
-    
-    //MARK: -
-    
 }

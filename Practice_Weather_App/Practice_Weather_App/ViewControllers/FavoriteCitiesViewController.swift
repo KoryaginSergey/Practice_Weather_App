@@ -144,7 +144,7 @@ private extension FavoriteCitiesViewController {
         background.image = UIImage(named: "Mountain")
         
 //        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
-        self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
+        self.weatherAnimationView = self.setWeatherAnimation(with: "rain",
                                                                andFrame: self.view.bounds)
         background.addSubview(weatherAnimationView!)
         

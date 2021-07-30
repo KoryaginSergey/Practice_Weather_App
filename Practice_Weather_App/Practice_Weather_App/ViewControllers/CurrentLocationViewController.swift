@@ -20,6 +20,8 @@ struct Settings {
 
 class CurrentLocationViewController: UIViewController {
     
+    
+    private var isLocationState: Bool = false
     private let locationManager = CLLocationManager()
     private var currentWeather: CurrentWeather?
     
@@ -47,6 +49,11 @@ class CurrentLocationViewController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isLocationState { startLocationManager() }
     }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
@@ -87,6 +94,7 @@ extension CurrentLocationViewController {
         if let cityName = self.settings.cityName {
             getDataFromServer(cityName: cityName)
         } else {
+            self.isLocationState = true
             startLocationManager()
         }
         
@@ -112,9 +120,8 @@ extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
     //MARK: -  locationManager
     private extension CurrentLocationViewController {
         
-        //MARK: - start settings for cllLocationManager
+    //MARK: - start settings for cllLocationManager
         func startLocationManager() {
-            locationManager.requestWhenInUseAuthorization()//запрос положения когда приложение используется
             if CLLocationManager.locationServicesEnabled() {
                 locationManager.delegate = self
                 locationManager.desiredAccuracy = 100
@@ -135,15 +142,15 @@ extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
                     locationManager.startUpdatingLocation()
                 case .denied:
                     self.locationAlert(title: "Вы запретили использование геопозиции",
-                                       message: "разрешить?",
-                                       url: URL(string: UIApplication.openSettingsURLString))
+                                message: "разрешить?",
+                                    url: URL(string: UIApplication.openSettingsURLString))
                 case .restricted:
                     break
                 case .notDetermined:
                     locationManager.requestWhenInUseAuthorization()
                 default:
-                    break
-         }
+                     break
+            }
     }
         //MARK: - alert "go to location settings"
         func locationAlert(title: String ,message: String,url: URL?) {
@@ -152,6 +159,7 @@ extension CurrentLocationViewController: UIViewControllerTransitioningDelegate {
                 if let url = url{
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
                 }
+             
             }))
             alert.addAction(.init(title: "отмена", style: .cancel, handler: nil))
             present(alert, animated: true, completion: nil)
@@ -177,6 +185,10 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                 }
             }
         }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        startLocationManager()
     }
 }
 
@@ -211,7 +223,8 @@ private extension CurrentLocationViewController {
             let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
             self.sunsetTimeLabel.text = formattedSunsetTime
             //MARK: Для теста мин/макс температуры
-            self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"
+            self.weatherDescription.text = weatherDescription + "\nмаксимальная температура " + String(main.temp_max) + "\nминимальная температура  " + String(main.temp_min) + "\nскорость ветра " + String(windSpeed) + " м/сек"
+            self.locationManager.stopUpdatingLocation()
         }
     }
 }

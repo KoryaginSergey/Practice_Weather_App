@@ -21,7 +21,6 @@ struct Settings {
 
 class CurrentLocationViewController: UIViewController {
     
-    
     private var isLocationState: Bool = false
     private let locationManager = CLLocationManager()
     private var currentWeather: CurrentWeather?

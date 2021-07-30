@@ -194,54 +194,8 @@ private extension CurrentLocationViewController {
             default:
                 break
         }
-
-    //MARK: -  locationManager
-    private extension CurrentLocationViewController {
-        
-    //MARK: - start settings for cllLocationManager
-        func startLocationManager() {
-            if CLLocationManager.locationServicesEnabled() {
-                locationManager.delegate = self
-                locationManager.desiredAccuracy = 100
-                locationManager.pausesLocationUpdatesAutomatically = false
-                checkAutorisation()
-            }else{
-                self.locationAlert(title: "Геопозиционирование выключено",
-                                   message: "разрешить?",
-                                   url: URL(string:"App-Prefs:root=LOCATION_SERVICES"))
-            }
-        }
-        
-        func checkAutorisation() {
-            switch CLLocationManager.authorizationStatus() {
-                case .authorizedAlways:
-                    break
-                case .authorizedWhenInUse:
-                    locationManager.startUpdatingLocation()
-                case .denied:
-                    self.locationAlert(title: "Вы запретили использование геопозиции",
-                                message: "разрешить?",
-                                    url: URL(string: UIApplication.openSettingsURLString))
-                case .restricted:
-                    break
-                case .notDetermined:
-                    locationManager.requestWhenInUseAuthorization()
-                default:
-                     break
-            }
     }
-        //MARK: - alert "go to location settings"
-        func locationAlert(title: String ,message: String,url: URL?) {
-            let alert = UIAlertController(title: title, message: message , preferredStyle:.alert)
-            alert.addAction(.init(title: title, style: .default, handler: { alert in
-                if let url = url{
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                }
-             
-            }))
-            alert.addAction(.init(title: "отмена", style: .cancel, handler: nil))
-            present(alert, animated: true, completion: nil)
-        }
+}
     
     //MARK: - alert "go to location settings"
     func locationAlert(title: String ,message: String,url: URL?) {
@@ -353,5 +307,5 @@ private extension CurrentLocationViewController {
 //            self.weatherDescription.text = weatherDescription + "\nмаксимальная температура " + String(main.temp_max) + "\nминимальная температура  " + String(main.temp_min) + "\nскорость ветра " + String(windSpeed) + " м/сек"
 //            self.locationManager.stopUpdatingLocation()
 //        }
-    }
+//    }
 }

@@ -42,7 +42,7 @@ class SearchListViewController: UIViewController {
     }
 }
 
-// MARK: - Extensions
+// MARK: - TableViewDataSource
 
 extension SearchListViewController: UITableViewDataSource {
     
@@ -78,6 +78,8 @@ extension SearchListViewController: UITableViewDataSource {
         self.reloadDataModelIndexes()
     }
 }
+
+// MARK: - TableViewDelegate
 
 extension SearchListViewController: UITableViewDelegate {
     
@@ -125,6 +127,8 @@ extension SearchListViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - SearchBarDelegate
+
 extension SearchListViewController: UISearchBarDelegate {
     
     func reloadDataModelIndexes() {
@@ -167,6 +171,8 @@ extension SearchListViewController: UISearchBarDelegate {
         self.tableView.reloadData()
     }
 }
+
+// MARK: - Private extensions
 
 private extension SearchListViewController {
     
@@ -242,6 +248,5 @@ private extension SearchListViewController {
         DataModels.sharedInstance.saveContext()
         self.completion?()
     }
-    
     
 }

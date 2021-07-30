@@ -106,12 +106,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1A2834E70FB9AEB6BAE22350 /* Frameworks */ = {
+
+		845DCE9726B341E3005B9CB4 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				579E1923A3EC695716BF40FB /* Pods_Practice_Weather_App.framework */,
+				84BE972F26A6C15800796529 /* DataBase.xcdatamodeld */,
 			);
-			name = Frameworks;
+			path = CoreData;
+
 			sourceTree = "<group>";
 		};
 		84BE971A26A6C15800796529 = {
@@ -137,13 +139,12 @@
 		84BE972526A6C15800796529 /* Practice_Weather_App */ = {
 			isa = PBXGroup;
 			children = (
-				C9ABAE7D26B45CBD004EA6AA /* JSONAnimations */,
-				C9FBD6F226B2CA3200598899 /* images */,
+
+				845DCE9726B341E3005B9CB4 /* CoreData */,
+
 				84BE972626A6C15800796529 /* AppDelegate.swift */,
 				84BE973226A6C15C00796529 /* Assets.xcassets */,
 				84CE305F26A8875D0092427F /* Cells */,
-				84BE972F26A6C15800796529 /* DataBase.xcdatamodeld */,
-				84CE307826A9ABEF0092427F /* DataModels.swift */,
 				84CE308B26A9FC390092427F /* Extensions */,
 				C946CB3826A9A5480087FCBB /* GestureViewController.swift */,
 				C946CB3626A9A4520087FCBB /* GestureViewController.xib */,
@@ -156,6 +157,7 @@
 				84CE305C26A8875D0092427F /* TableViewControllers */,
 				84CE304B26A849450092427F /* ViewControllers */,
 				C9FC35BD26A84D21008BC576 /* WeatherForcastTableViewCell.xib */,
+				84CE307826A9ABEF0092427F /* DataModels.swift */,
 				F1E92AE926B1E71800FF0A33 /* TabBarController.swift */,
 			);
 			path = Practice_Weather_App;

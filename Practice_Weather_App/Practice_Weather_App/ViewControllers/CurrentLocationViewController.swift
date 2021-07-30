@@ -26,8 +26,7 @@ class CurrentLocationViewController: UIViewController {
     private var currentWeather: CurrentWeather?
     private var weatherAnimationView: AnimationView?
     private let backgroundView = UIImageView()
-    
-    
+    private let background = UIImageView()
     
     @IBOutlet private weak var currentLocationLabel: UILabel!
     @IBOutlet private weak var weatherConditionLabel: UILabel!
@@ -50,8 +49,7 @@ class CurrentLocationViewController: UIViewController {
         
         self.configureViewController()
         
-        self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
-        self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
+       
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -82,13 +80,6 @@ class CurrentLocationViewController: UIViewController {
         }
     }
     
-
-    private func setBackground() {
-        backgroundView.contentMode = .scaleAspectFill
-        view.insertSubview(backgroundView, at: 0)
-        backgroundView.frame = view.bounds
-        backgroundView.image = UIImage(named: "Mountain")
-    }
     
     // MARK: функция создания анимации
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
@@ -133,12 +124,14 @@ class CurrentLocationViewController: UIViewController {
         return jsonName
     }
 
-    private func setBackgroundImage() {
-        let background = UIImageView()
-        background.contentMode = .scaleToFill
+    private func setBackground() {
+        background.contentMode = .scaleAspectFill
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
-        background.image = UIImage(named: "Mountain")
+        background.backgroundColor = UIColor(displayP3Red: 0.82,
+                                   green: 0.87,
+                                   blue: 0.96,
+                                   alpha: 1)
     }
 
 
@@ -208,7 +201,6 @@ private extension CurrentLocationViewController {
                                message: "разрешить?",
                                url: URL(string:"App-Prefs:root=LOCATION_SERVICES"))
         }
-        locationManager.stopMonitoringSignificantLocationChanges()
     }
     
     func checkAutorisation() {
@@ -265,7 +257,8 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                 }
                 
                 DispatchQueue.main.async {
-                    
+                    let temperature = -10
+//                    let temperature = Int(main.temp)
                     let formatter = DateFormatter()
                     formatter.dateStyle = .none
                     formatter.timeStyle = .medium
@@ -274,22 +267,34 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     self.cityNameForForcast = currentLocation
                     self.currentLocationLabel.text = currentLocation
                     self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
-                    self.temperatureLabel.text = String(Int(main.temp)) + " ºC"
+                    self.temperatureLabel.text = String(Int(temperature)) + " ºC"
                     
                     guard let current = current else {return}
                     
                     self.currentWeather = current
                     self.updateUI()
                     
-                    // определяем нужную анимацию
                     let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
                     self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
                                                                            andFrame: self.view.bounds)
                     if let animation = self.weatherAnimationView {
-                        self.backgroundView.addSubview(animation)    // добавление анимации
-                        animation.play()                            // и запуск
+                        self.backgroundView.addSubview(animation)
+                        animation.play()
                     }
+                    
                     self.locationManager.stopMonitoringSignificantLocationChanges()
+                    
+                    self.sunriseImageView.image = UIImage(named: "sunrise")
+                    self.sunsetImageView.image = UIImage(named: "sunset")
+                    switch temperature {
+                        case (-15) ... 0:
+                            self.background.image = UIImage(named: "littlemin")
+                        case ...(-16) :
+                            self.background.image = UIImage(named: "bigmin")
+                        default:
+                            self.background.image = UIImage(named: "Mountain")
+
+                    }
                 }
             }
         }
@@ -306,6 +311,7 @@ private extension CurrentLocationViewController {
         guard let current = self.currentWeather else {return}
         
         guard let currentLocation = current.name,
+              let temperature = current.main?.temp,
               let weatherConditionsID = current.weather?.first?.id,
               let main = current.main,
               let windSpeed = current.wind?.speed,
@@ -324,7 +330,7 @@ private extension CurrentLocationViewController {
             
             self.currentLocationLabel.text = currentLocation
             self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
-            self.temperatureLabel.text = String(Int(main.temp)) + " ºC"
+            self.temperatureLabel.text = String(Int(temperature)) + " ºC"
             let formattedSunriseTime = formatter.string(from: sunriseTimeInterval)
             self.sunriseTimeLabel.text = formattedSunriseTime
             let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
@@ -335,7 +341,7 @@ private extension CurrentLocationViewController {
         
             //MARK: Для теста мин/макс температуры
         
-            self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"
+        self.weatherDescription.text = weatherDescription.capitalizedFirstLatter() + ", todays max temperature " + String(Int(main.temp_max)) + " ºC" + ", todays min temperature " + String(Int(main.temp_min)) + " ºC" + ", wind speed " + String(windSpeed) + " m/sec"
         
     }
 //

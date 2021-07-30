@@ -20,3 +20,12 @@ extension NSManagedObject {
     
 }
 
+extension String {
+    func capitalizedFirstLatter() -> String {
+        return prefix(1).capitalized + dropFirst()
+    }
+    
+    mutating func capitalizingFirstLatter() {
+        self = self.capitalizedFirstLatter()
+    }
+}

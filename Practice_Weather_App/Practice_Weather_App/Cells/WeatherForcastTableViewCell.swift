@@ -23,11 +23,11 @@ class WeatherForcastTableViewCell: UITableViewCell {
         
         let dayTimeInterval = Date(timeIntervalSince1970: TimeInterval(forcast.dt ?? 0.0))
         
-        
+        print(forcast.weather?.first?.icon)
         let dayOfTheWeek = formatter.string(from: dayTimeInterval)
         dayOfTheWeekLabel.text = dayOfTheWeek
-        weatherConditionIcon.image = nil
-            //MARK: сделать округгление к целому числу
-        dayOfTheWeekTemperature.text = String(forcast.main?.temp ?? 0.0)
+        weatherConditionIcon.image = UIImage(named: forcast.weather?.first?.icon ?? "")
+            
+        dayOfTheWeekTemperature.text = String(Int(forcast.main?.temp ?? 0.0))
     }
 }

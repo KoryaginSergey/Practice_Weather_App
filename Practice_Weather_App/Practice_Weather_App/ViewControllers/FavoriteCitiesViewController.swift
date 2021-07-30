@@ -22,7 +22,7 @@ class FavoriteCitiesViewController: UIPageViewController {
         super.viewDidLoad()
         
         self.configureNavigationButtons()
-        self.setBackgroundImage()
+//        self.setBackgroundImage()
         self.dataSource = self
         self.reloadViewControllers()
     }
@@ -147,17 +147,15 @@ private extension FavoriteCitiesViewController {
 
         background.contentMode = .scaleAspectFill
 
-        background.contentMode = .scaleToFill
-
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
-        
+
 //        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
-        self.weatherAnimationView = self.setWeatherAnimation(with: "rain",
+        self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
                                                                andFrame: self.view.bounds)
         background.addSubview(weatherAnimationView!)
-        
+
     }
     
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {

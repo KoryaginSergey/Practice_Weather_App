@@ -63,20 +63,15 @@ class CurrentLocationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
        
-//        if let animation = weatherAnimationView {
-////            self.backgroundView.addSubview(animation)    // добавление анимации
-//            animation.play()                            // и запуск
-//        }
+        if let animation = weatherAnimationView {
+//            self.backgroundView.addSubview(animation)
+            animation.play()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isLocationState { startLocationManager() }
-        
-        if let animation = weatherAnimationView {
-            self.backgroundView.addSubview(animation)    // добавление анимации
-            animation.play()                            // и запуск
-        }
     }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
@@ -90,18 +85,13 @@ class CurrentLocationViewController: UIViewController {
         }
     }
     
-    
     private func setBackground() {
-        
         backgroundView.contentMode = .scaleAspectFill
         view.insertSubview(backgroundView, at: 0)
         backgroundView.frame = view.bounds
         backgroundView.image = UIImage(named: "Mountain")
-        
-        
-        
-        
     }
+    
     // MARK: функция создания анимации
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
         let animationView = AnimationView()
@@ -120,33 +110,26 @@ class CurrentLocationViewController: UIViewController {
         switch conditionID {
             case 200 ... 202, 210 ... 212, 221, 230 ... 232:
                 jsonName = "thunderstorm"
-
             case 313, 314, 321, 502 ... 504, 520 ... 522, 531:
                 jsonName = "rainfall"
-
             case 300 ... 302, 310 ... 312, 500, 501:
                 jsonName = "rain"
-
             case 511, 611, 612, 615, 616:
                 jsonName = "snowandrain"
-
             case 600 ... 602:
                 jsonName = "snow"
-
             case 620 ... 622:
                 jsonName = "blizzard"
-
             case 711, 721, 741:
                 jsonName = "fog"
-
+            case 800:
+                jsonName = "clear"
             case 801 ... 803:
                 jsonName = "cloudsandsun"
-
             case 701, 804:
                 jsonName = "clouds"
-
             default:
-                jsonName = "clear"  // чистое небо
+                jsonName = ""
         }
         
         return jsonName

@@ -7,11 +7,14 @@
 
 import UIKit
 import CoreData
+import Lottie
+
 
 class FavoriteCitiesViewController: UIPageViewController {
     
     private var weatherVcs = [UIViewController]()
     private var defaultWeatherVcs = [UIViewController]()
+    private var weatherAnimationView: AnimationView?
     
     private var models = [CDCityModel]()
     
@@ -26,6 +29,10 @@ class FavoriteCitiesViewController: UIPageViewController {
         self.reloadViewControllers()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        weatherAnimationView?.play()
+    }
 }
 
 extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
@@ -135,6 +142,25 @@ private extension FavoriteCitiesViewController {
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
+        
+//        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
+        self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
+                                                               andFrame: self.view.bounds)
+        background.addSubview(weatherAnimationView!)
+        
+    }
+    
+    private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
+        let animationView = AnimationView()
+        
+        animationView.frame = frame
+        animationView.animation = Animation.named(name)
+        animationView.contentMode = .scaleAspectFill
+        animationView.loopMode = .loop
+        
+        
+        
+        return animationView
     }
 }
 

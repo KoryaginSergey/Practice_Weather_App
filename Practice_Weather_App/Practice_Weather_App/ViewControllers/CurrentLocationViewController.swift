@@ -63,15 +63,20 @@ class CurrentLocationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
        
-        if let animation = weatherAnimationView {
-            self.backgroundView.addSubview(animation)    // добавление анимации
-            animation.play()                            // и запуск
-        }
+//        if let animation = weatherAnimationView {
+////            self.backgroundView.addSubview(animation)    // добавление анимации
+//            animation.play()                            // и запуск
+//        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isLocationState { startLocationManager() }
+        
+        if let animation = weatherAnimationView {
+            self.backgroundView.addSubview(animation)    // добавление анимации
+            animation.play()                            // и запуск
+        }
     }
         
     //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
@@ -109,6 +114,44 @@ class CurrentLocationViewController: UIViewController {
         return animationView
     }
     
+    private func getAnimationForWeather(conditionID: Float) -> String {
+        var jsonName: String
+        
+        switch conditionID {
+            case 200 ... 202, 210 ... 212, 221, 230 ... 232:
+                jsonName = "thunderstorm"
+
+            case 313, 314, 321, 502 ... 504, 520 ... 522, 531:
+                jsonName = "rainfall"
+
+            case 300 ... 302, 310 ... 312, 500, 501:
+                jsonName = "rain"
+
+            case 511, 611, 612, 615, 616:
+                jsonName = "snowandrain"
+
+            case 600 ... 602:
+                jsonName = "snow"
+
+            case 620 ... 622:
+                jsonName = "blizzard"
+
+            case 711, 721, 741:
+                jsonName = "fog"
+
+            case 801 ... 803:
+                jsonName = "cloudsandsun"
+
+            case 701, 804:
+                jsonName = "clouds"
+
+            default:
+                jsonName = "clear"  // чистое небо
+        }
+        
+        return jsonName
+    }
+
     func presentForcast() {
         
         let weatherForcastVC = GestureViewController()
@@ -195,7 +238,7 @@ private extension CurrentLocationViewController {
                 break
         }
     }
-}
+
     
     //MARK: - alert "go to location settings"
     func locationAlert(title: String ,message: String,url: URL?) {
@@ -248,10 +291,13 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     self.updateUI()
                     
                     // определяем нужную анимацию
-                    let weatherAnimationNamed = getAnimationForWeather(conditionID: weatherConditionsID)
+                    let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
                     self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
                                                                            andFrame: self.view.bounds)
-                    
+                    if let animation = self.weatherAnimationView {
+                        self.backgroundView.addSubview(animation)    // добавление анимации
+                        animation.play()                            // и запуск
+                    }
                     self.locationManager.stopMonitoringSignificantLocationChanges()
                 }
             }

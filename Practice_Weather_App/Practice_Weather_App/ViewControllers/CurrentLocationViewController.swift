@@ -60,12 +60,10 @@ class CurrentLocationViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if let animationView = self.weatherAnimationView {
-            self.backgroundView.addSubview(animationView)
-        }
+       
         if let animation = weatherAnimationView {
-            animation.play()
+            self.backgroundView.addSubview(animation)    // добавление анимации
+            animation.play()                            // и запуск
         }
     }
     
@@ -92,7 +90,7 @@ class CurrentLocationViewController: UIViewController {
         
         
     }
-    
+    // MARK: функция создания анимации
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
         let animationView = AnimationView()
         
@@ -203,7 +201,7 @@ private extension CurrentLocationViewController {
 extension CurrentLocationViewController: CLLocationManagerDelegate {
     //MARK: - request of coordinate when changing location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
+        print("--------------------->>")
         if let lastLocation = locations.last {
             print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
@@ -236,9 +234,11 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     self.currentWeather = current
                     self.updateUI()
                     
+                    // определяем нужную анимацию
                     let weatherAnimationNamed = getAnimationForWeather(conditionID: weatherConditionsID)
                     self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
                                                                            andFrame: self.view.bounds)
+                    
                     self.locationManager.stopUpdatingLocation()
                 }
             }

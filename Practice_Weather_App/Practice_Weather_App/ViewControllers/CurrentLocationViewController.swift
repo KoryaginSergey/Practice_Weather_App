@@ -37,12 +37,12 @@ class CurrentLocationViewController: UIViewController {
     var settings: Settings = Settings.getDefaultSettings()
     
     //MARK: - viewDidLoad
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.configureViewController()
         
-        //MARK: Картинки для теста заката/рассвета.
         self.sunriseImageView.image = UIImage(named: "Free-Weather-Icons_03")
         self.sunsetImageView.image = UIImage(named: "Free-Weather-Icons_22")
         
@@ -56,7 +56,6 @@ class CurrentLocationViewController: UIViewController {
         if isLocationState { startLocationManager() }
     }
         
-    //MARK: Убрать старую ф-цию getDataFromServer() если не нужна
     private func getDataFromServer(cityName: String) {
         Networkmanager.shared.getCurrentWeather(city: cityName) { [weak self] current in
             guard let current = current else {return}
@@ -67,17 +66,14 @@ class CurrentLocationViewController: UIViewController {
         }
     }
     
-    
     private func setBackgroundImage() {
         let background = UIImageView()
-        background.contentMode = .scaleToFill // Or w/e your desired content mode is
+        background.contentMode = .scaleToFill
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
     }
 
-    
-    
     func presentForcast() {
         let weatherForcast = GestureViewController()
         weatherForcast.modalPresentationStyle = .custom
@@ -87,6 +83,7 @@ class CurrentLocationViewController: UIViewController {
 }
 
 //MARK: -  locationManager
+
 extension CurrentLocationViewController {
     
     private func configureViewController() {

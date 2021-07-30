@@ -20,9 +20,7 @@ class FavoriteCitiesViewController: UIPageViewController {
         
         self.configureNavigationButtons()
         self.setBackgroundImage()
-
         self.dataSource = self
-     
         self.reloadViewControllers()
     }
     
@@ -78,8 +76,18 @@ private extension FavoriteCitiesViewController {
     }
     
     private func configureNavigationButtons() {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonSelector))
-        self.navigationItem.title = "Add your favorite cities --->>"
+        
+        let origImage = UIImage(named: "add_to_favorites1")
+        let tintedImage = origImage?.withRenderingMode(.alwaysTemplate)
+        let moreButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        moreButton.setBackgroundImage(tintedImage, for: .normal)
+        moreButton.tintColor = .white
+        moreButton.addTarget(self, action: #selector(addButtonSelector), for: .touchUpInside)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: moreButton)
+//        moreButton.setBackgroundImage(UIImage(named: "add_to_favorites1"), for: .normal)
+//        moreButton.setBackgroundImage(UIImage(named: "ic_more_vert_white"), for: .normal)
+//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonSelector))
+//        self.navigationController?.navigationBar.tintColor = UIColor.black
     }
     
     @objc private func addButtonSelector() {
@@ -107,7 +115,6 @@ private extension FavoriteCitiesViewController {
     
     private func createArrayVC() -> [UIViewController] {
         var weatherVcsArray = [UIViewController]()
-        
         for model in models {
             guard let modelVC =
                     storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
@@ -119,7 +126,6 @@ private extension FavoriteCitiesViewController {
     }
     
     private func createDefaultArrayVC() -> [UIViewController] {
-        
         var weatherVcsArray = [UIViewController]()
         guard let modelVC =
                 storyboard?.instantiateViewController(identifier: String(describing: CurrentLocationViewController.self))
@@ -131,7 +137,7 @@ private extension FavoriteCitiesViewController {
     
     private func setBackgroundImage() {
         let background = UIImageView()
-        background.contentMode = .scaleToFill // Or w/e your desired content mode is
+        background.contentMode = .scaleToFill
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")

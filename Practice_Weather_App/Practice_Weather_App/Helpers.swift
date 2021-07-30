@@ -43,28 +43,32 @@ public func getDescribe(_ codeOfWeather: Int) -> String {
 
 
 public func getAnimationForWeather(conditionID: Float) -> String {
+    var jsonName: String
+    
     switch conditionID {
         case 200 ... 221:
-            return "thunderstorm"
+            jsonName = "thunderstorm"
         case 230 ... 232, 313, 314, 321, 502 ... 504, 520 ... 522, 531:
-            return "rainfall"
+            jsonName = "rainfall"
         case 300 ... 302, 310 ... 312, 500, 501:
-            return "rain"
+            jsonName = "rain"
         case 511, 611, 612, 616:
-            return "snowandrain"
+            jsonName = "snowandrain"
         case 600 ... 602:
-            return "snow"
+            jsonName = "snow"
         case 620 ... 622:
-            return "blizzard"
+            jsonName = "blizzard"
         case 711, 722,741:
-            return "fog"
+            jsonName = "fog"
         case 701:
-            return "cloudsandsun"
+            jsonName = "cloudsandsun"
         case 801 ... 804:
-            return "clouds"
+            jsonName = "clouds"
         default:
-            return "clear"  // чистое небо
+            jsonName = "clear"  // чистое небо
     }
+    
+    return jsonName
 }
 
 

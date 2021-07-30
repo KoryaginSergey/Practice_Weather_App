@@ -155,15 +155,18 @@ private extension CurrentLocationViewController {
     func startLocationManager() {
         locationManager.requestWhenInUseAuthorization()//запрос положения когда приложение используется
         if CLLocationManager.locationServicesEnabled() {
+            
             locationManager.delegate = self
             locationManager.desiredAccuracy = 100
             locationManager.pausesLocationUpdatesAutomatically = false
             checkAutorisation()
+          
         }else{
             self.locationAlert(title: "Геопозиционирование выключено",
                                message: "разрешить?",
                                url: URL(string:"App-Prefs:root=LOCATION_SERVICES"))
         }
+        locationManager.stopMonitoringSignificantLocationChanges()
     }
     
     func checkAutorisation() {
@@ -171,7 +174,7 @@ private extension CurrentLocationViewController {
             case .authorizedAlways:
                 break
             case .authorizedWhenInUse:
-                locationManager.startUpdatingLocation()
+                locationManager.startMonitoringSignificantLocationChanges()
             case .denied:
                 self.locationAlert(title: "Вы запретили использование геопозиции",
                                    message: "разрешить?",
@@ -239,7 +242,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
                                                                            andFrame: self.view.bounds)
                     
-                    self.locationManager.stopUpdatingLocation()
+                    self.locationManager.stopMonitoringSignificantLocationChanges()
                 }
             }
         }
@@ -281,6 +284,10 @@ private extension CurrentLocationViewController {
         
             //MARK: Для теста мин/макс температуры
             self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"
+        
+    }
+    
+    func getCurrentTimeForLocation() {
         
     }
 }

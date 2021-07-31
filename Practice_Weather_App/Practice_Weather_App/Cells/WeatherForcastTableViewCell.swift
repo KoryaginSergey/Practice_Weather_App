@@ -23,7 +23,6 @@ class WeatherForcastTableViewCell: UITableViewCell {
         
         let dayTimeInterval = Date(timeIntervalSince1970: TimeInterval(forcast.dt ?? 0.0))
         
-        print(forcast.weather?.first?.icon)
         let dayOfTheWeek = formatter.string(from: dayTimeInterval)
         dayOfTheWeekLabel.text = dayOfTheWeek
         weatherConditionIcon.image = UIImage(named: forcast.weather?.first?.icon ?? "")

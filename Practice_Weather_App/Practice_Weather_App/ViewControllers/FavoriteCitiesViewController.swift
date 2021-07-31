@@ -24,7 +24,7 @@ class FavoriteCitiesViewController: UIPageViewController {
         super.viewDidLoad()
         self.setAnimationView()
         self.configureNavigationButtons()
-//        self.setBackgroundImage()
+        self.setBackgroundImage()
         self.dataSource = self
         self.reloadViewControllers()
     }
@@ -175,18 +175,14 @@ private extension FavoriteCitiesViewController {
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
-//<<<<<<< HEAD
 
 //        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
         self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
                                                                andFrame: self.view.bounds)
         background.addSubview(weatherAnimationView!)
-
-//=======
-        
         
         self.backgroundImage = background        
-//>>>>>>> feature/dev-for-merge
+
     }
     
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
@@ -208,8 +204,8 @@ private extension FavoriteCitiesViewController {
         self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
                                                                andFrame: self.view.bounds)
         if let animation = self.weatherAnimationView {
-            self.animationView.addSubview(animation)    // добавление анимации
-            animation.play()                            // и запуск
+            self.animationView.addSubview(animation)
+            animation.play()
         }
     }
     

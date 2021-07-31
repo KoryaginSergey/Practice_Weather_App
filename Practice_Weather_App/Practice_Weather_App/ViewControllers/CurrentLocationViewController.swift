@@ -43,8 +43,6 @@ class CurrentLocationViewController: UIViewController {
     }
     private var weatherAnimationView: AnimationView?
     private let backgroundView = UIImageView()
-
-    private let background = UIImageView()
     
     @IBOutlet private weak var currentLocationLabel: UILabel!
     @IBOutlet private weak var weatherConditionLabel: UILabel!
@@ -81,10 +79,10 @@ class CurrentLocationViewController: UIViewController {
        
         self.didLoadClosure?(self.currentWeather?.weather?.first?.id)
         
-//        if let animation = weatherAnimationView {
-////            self.backgroundView.addSubview(animation)
-//            animation.play()
-//        }
+        if let animation = weatherAnimationView {
+//            self.backgroundView.addSubview(animation)
+            animation.play()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -148,10 +146,10 @@ class CurrentLocationViewController: UIViewController {
 
 
     private func setBackground() {
-        background.contentMode = .scaleAspectFill
-        view.insertSubview(background, at: 0)
-        background.frame = view.bounds
-        background.backgroundColor = UIColor(displayP3Red: 0.82,
+        backgroundView.contentMode = .scaleAspectFill
+        view.insertSubview(backgroundView, at: 0)
+        backgroundView.frame = view.bounds
+        backgroundView.backgroundColor = UIColor(displayP3Red: 0.82,
                                    green: 0.87,
                                    blue: 0.96,
                                    alpha: 1)
@@ -172,7 +170,6 @@ class CurrentLocationViewController: UIViewController {
     }
 }
 
-//MARK: -  locationManager
 
 extension CurrentLocationViewController {
     
@@ -268,53 +265,52 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
             
             Networkmanager.shared.getCurrentWeatherByLocation(lat: lat, lon: lon) { [weak self] current in
                 
-                guard let self = self else {return}
+                guard let self = self,
+                      let currentLocation = current?.name,
+                      let weatherConditionsID = current?.weather?.first?.id,
+                      let main = current?.main
+                else {
+                    return
+                }
                 
                 DispatchQueue.main.async {
-//                    let temperature = Int(main.temp)
+                    let temperature = Int(main.temp)
                     let formatter = DateFormatter()
                     formatter.dateStyle = .none
                     formatter.timeStyle = .medium
                     formatter.dateFormat = "HH:mm"
-//
-//<<<<<<< HEAD
-//                    self.cityNameForForcast = currentLocation
-//                    self.currentLocationLabel.text = currentLocation
-//                    self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
-//                    self.temperatureLabel.text = String(Int(temperature)) + " ºC"
-//
-//=======
-//>>>>>>> feature/dev-for-merge
+
+                    self.cityNameForForcast = currentLocation
+                    self.currentLocationLabel.text = currentLocation
+                    self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
+                    self.temperatureLabel.text = String(Int(temperature)) + " ºC"
+
                     guard let current = current else {return}
                     
                     self.currentWeather = current
                     self.updateUI(withAnimation: true)
-                    
-//<<<<<<< HEAD
-//                    let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
-//                    self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
-//                                                                           andFrame: self.view.bounds)
+
+                    let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
+                    self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
+                                                                           andFrame: self.view.bounds)
                     if let animation = self.weatherAnimationView {
                         self.backgroundView.addSubview(animation)
                         animation.play()
                     }
-                    
-//                    self.locationManager.stopMonitoringSignificantLocationChanges()
-//
-//                    self.sunriseImageView.image = UIImage(named: "sunrise")
-//                    self.sunsetImageView.image = UIImage(named: "sunset")
-//                    switch temperature {
-//                        case (-15) ... 0:
-//                            self.background.image = UIImage(named: "littlemin")
-//                        case ...(-16) :
-//                            self.background.image = UIImage(named: "bigmin")
-//                        default:
-//                            self.background.image = UIImage(named: "Mountain")
-//
-//                    }
-//=======
+
+                    self.sunriseImageView.image = UIImage(named: "sunrise")
+                    self.sunsetImageView.image = UIImage(named: "sunset")
+                    switch temperature {
+                        case (-15) ... 0:
+                            self.backgroundView.image = UIImage(named: "littlemin")
+                        case ...(-16) :
+                            self.backgroundView.image = UIImage(named: "bigmin")
+                        default:
+                            self.backgroundView.image = UIImage(named: "Mountain")
+
+                    }
+
                     self.locationManager.stopUpdatingLocation()
-//>>>>>>> feature/dev-for-merge
                 }
             }
         }
@@ -340,8 +336,7 @@ private extension CurrentLocationViewController {
               let intervalForSunset = current.sys?.sunset else {
             return
         }
-      
-//<<<<<<< HEAD
+
             let sunriseTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunrise))
             let sunsetTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunset))
             let formatter = DateFormatter()
@@ -356,37 +351,14 @@ private extension CurrentLocationViewController {
             self.sunriseTimeLabel.text = formattedSunriseTime
             let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
             self.sunsetTimeLabel.text = formattedSunsetTime
-        
-          
-            
-//=======
-//        let sunriseTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunrise))
-//        let sunsetTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunset))
-//        let formatter = DateFormatter()
-//        formatter.dateStyle = .none
-//        formatter.timeStyle = .medium
-//        formatter.dateFormat = "HH:mm"
-//>>>>>>> feature/dev-for-merge
-        
-//        self.currentLocationLabel.text = currentLocation
-//        self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
-//        self.temperatureLabel.text = String(Int(main.temp)) + " ºC"
-//        let formattedSunriseTime = formatter.string(from: sunriseTimeInterval)
-//        self.sunriseTimeLabel.text = formattedSunriseTime
-//        let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
-//        self.sunsetTimeLabel.text = formattedSunsetTime
-        
-//<<<<<<< HEAD
+
         self.weatherDescription.text = weatherDescription.capitalizedFirstLatter() + ", todays max temperature " + String(Int(main.temp_max)) + " ºC" + ", todays min temperature " + String(Int(main.temp_min)) + " ºC" + ", wind speed " + String(windSpeed) + " m/sec"
-//=======
+
         if withAnimation {
             self.updateAnimation(conditionId: weatherConditionsID)
         }
-//>>>>>>> feature/dev-for-merge
         
-        //MARK: Для теста мин/макс температуры
-    
-        self.weatherDescription.text = weatherDescription + "\n\(Constant.maxTemp)  " + String(main.temp_max) + "\n\(Constant.minTemp)  " + String(main.temp_min) + "\n\(Constant.windSpeed)  " + String(windSpeed) + "m.sec"
+
     }
     
     func updateAnimation(conditionId: Float) {

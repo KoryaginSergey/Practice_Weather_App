@@ -36,6 +36,12 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hHx-DJ-D5T">
+                        <rect key="frame" x="217" y="11.5" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="rUX-eU-xQS" firstAttribute="leading" secondItem="Meh-B8-hg1" secondAttribute="trailing" constant="126" id="Dqf-Rx-JWe"/>
@@ -44,13 +50,16 @@
                     <constraint firstItem="nLY-TF-HlJ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="hjC-W9-TI2"/>
                     <constraint firstItem="Meh-B8-hg1" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="ing-7A-6Hd"/>
                     <constraint firstItem="nLY-TF-HlJ" firstAttribute="leading" secondItem="rUX-eU-xQS" secondAttribute="trailing" constant="11" id="kLI-N8-TTJ"/>
+                    <constraint firstItem="rUX-eU-xQS" firstAttribute="leading" secondItem="hHx-DJ-D5T" secondAttribute="trailing" constant="11" id="l4T-5A-Ngk"/>
+                    <constraint firstItem="hHx-DJ-D5T" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="nT0-Sk-8jC"/>
                     <constraint firstAttribute="trailing" secondItem="nLY-TF-HlJ" secondAttribute="trailing" constant="34" id="w7g-fu-TIc"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="dayOfTheWeekLabel" destination="Meh-B8-hg1" id="Mgr-1D-3OT"/>
-                <outlet property="dayOfTheWeekTemperature" destination="nLY-TF-HlJ" id="ZVH-id-X2I"/>
+                <outlet property="maxTemperatureLabel" destination="hHx-DJ-D5T" id="Uwp-wj-ciA"/>
+                <outlet property="minTemperatureLabel" destination="nLY-TF-HlJ" id="sIu-6g-V4b"/>
                 <outlet property="weatherConditionIcon" destination="rUX-eU-xQS" id="yx2-ez-nuH"/>
             </connections>
             <point key="canvasLocation" x="76.811594202898561" y="127.90178571428571"/>

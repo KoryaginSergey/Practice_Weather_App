@@ -10,9 +10,9 @@ import UIKit
 class WeatherForcastTableViewCell: UITableViewCell {
 
     @IBOutlet weak var dayOfTheWeekLabel: UILabel!
-    @IBOutlet weak var dayOfTheWeekTemperature: UILabel!
+    @IBOutlet weak var maxTemperatureLabel: UILabel!
     @IBOutlet weak var weatherConditionIcon: UIImageView!
-    
+    @IBOutlet private var minTemperatureLabel: UILabel!
     
     //MARK: Убрать нил с картинки
     
@@ -28,6 +28,7 @@ class WeatherForcastTableViewCell: UITableViewCell {
         dayOfTheWeekLabel.text = dayOfTheWeek
         weatherConditionIcon.image = UIImage(named: forcast.weather?.first?.icon ?? "")
             
-        dayOfTheWeekTemperature.text = String(Int(forcast.main?.temp ?? 0.0))
+        maxTemperatureLabel.text = String(Int(forcast.main?.temp_max ?? 0.0))
+        minTemperatureLabel.text = String(Int(forcast.main?.temp_min ?? 0.0))
     }
 }

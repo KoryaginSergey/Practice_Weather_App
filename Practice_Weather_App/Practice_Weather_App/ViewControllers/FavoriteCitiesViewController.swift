@@ -15,12 +15,14 @@ class FavoriteCitiesViewController: UIPageViewController {
     private var weatherVcs = [UIViewController]()
     private var defaultWeatherVcs = [UIViewController]()
     private var weatherAnimationView: AnimationView?
-    
+    private var backgroundImage: UIImageView?
+    private let animationView = UIImageView()
+
     private var models = [CDCityModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.setAnimationView()
         self.configureNavigationButtons()
 //        self.setBackgroundImage()
         self.dataSource = self
@@ -37,6 +39,16 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         if let index = self.weatherVcs.firstIndex(of: viewController) {
             if index < weatherVcs.count - 1 {
+                
+                if let vc = weatherVcs[index + 1] as? CurrentLocationViewController {
+                    vc.didLoadClosure = { [weak self] weatherId in
+                        guard let self = self, let id = weatherId else {
+                            return
+                        }
+                        self.updateAnimation(conditionId: id)
+                    }
+                }
+                
                 return weatherVcs[index + 1]
             }
         }
@@ -46,6 +58,14 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         if let index = self.weatherVcs.firstIndex(of: viewController) {
             if index > 0 {
+                if let vc = weatherVcs[index + 1] as? CurrentLocationViewController {
+                    vc.didLoadClosure = { [weak self] weatherId in
+                        guard let self = self, let id = weatherId else {
+                            return
+                        }
+                        self.updateAnimation(conditionId: id)
+                    }
+                }
                 return weatherVcs[index - 1]
             }
         }
@@ -80,6 +100,15 @@ private extension FavoriteCitiesViewController {
             defaultWeatherVcs = createDefaultArrayVC()
             self.setViewControllers([defaultWeatherVcs[0]], direction: .forward, animated: false, completion: nil)
         }
+        
+        if let vc = self.viewControllers?.first as? CurrentLocationViewController {
+            vc.didLoadClosure = { [weak self] weatherId in
+                guard let self = self, let id = weatherId else {
+                    return
+                }
+                self.updateAnimation(conditionId: id)
+            }
+        }
     }
     
     private func configureNavigationButtons() {
@@ -91,10 +120,6 @@ private extension FavoriteCitiesViewController {
         moreButton.tintColor = .white
         moreButton.addTarget(self, action: #selector(addButtonSelector), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: moreButton)
-//        moreButton.setBackgroundImage(UIImage(named: "add_to_favorites1"), for: .normal)
-//        moreButton.setBackgroundImage(UIImage(named: "ic_more_vert_white"), for: .normal)
-//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonSelector))
-//        self.navigationController?.navigationBar.tintColor = UIColor.black
     }
     
     @objc private func addButtonSelector() {
@@ -150,12 +175,18 @@ private extension FavoriteCitiesViewController {
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
+//<<<<<<< HEAD
 
 //        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
         self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
                                                                andFrame: self.view.bounds)
         background.addSubview(weatherAnimationView!)
 
+//=======
+        
+        
+        self.backgroundImage = background        
+//>>>>>>> feature/dev-for-merge
     }
     
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
@@ -169,6 +200,54 @@ private extension FavoriteCitiesViewController {
         
         
         return animationView
+    }
+    
+    func updateAnimation(conditionId: Float) {
+        self.weatherAnimationView?.removeFromSuperview()
+        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: conditionId)
+        self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
+                                                               andFrame: self.view.bounds)
+        if let animation = self.weatherAnimationView {
+            self.animationView.addSubview(animation)    // добавление анимации
+            animation.play()                            // и запуск
+        }
+    }
+    
+    private func getAnimationForWeather(conditionID: Float) -> String {
+        var jsonName: String
+        
+        switch conditionID {
+            case 200 ... 202, 210 ... 212, 221, 230 ... 232:
+                jsonName = "thunderstorm"
+            case 313, 314, 321, 502 ... 504, 520 ... 522, 531:
+                jsonName = "rainfall"
+            case 300 ... 302, 310 ... 312, 500, 501:
+                jsonName = "rain"
+            case 511, 611, 612, 615, 616:
+                jsonName = "snowandrain"
+            case 600 ... 602:
+                jsonName = "snow"
+            case 620 ... 622:
+                jsonName = "blizzard"
+            case 711, 721, 741:
+                jsonName = "fog"
+            case 800:
+                jsonName = "clear"
+            case 801 ... 803:
+                jsonName = "cloudsandsun"
+            case 701, 804:
+                jsonName = "clouds"
+            default:
+                jsonName = ""
+        }
+        
+        return jsonName
+    }
+    
+    private func setAnimationView() {
+        animationView.contentMode = .scaleAspectFill
+        view.insertSubview(animationView, at: 1)
+        animationView.frame = view.bounds
     }
 }
 

@@ -21,6 +21,7 @@ struct Settings {
 
 class CurrentLocationViewController: UIViewController {
     
+    @IBOutlet weak var descriptionView: UIView!
     private var isLocationState: Bool = false
     private let locationManager = CLLocationManager()
     private var currentWeather: CurrentWeather?
@@ -48,7 +49,7 @@ class CurrentLocationViewController: UIViewController {
         super.viewDidLoad()
         
         self.configureViewController()
-        
+        self.descriptionView.roundCorners(.allCorners, radius: 22)
        
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)

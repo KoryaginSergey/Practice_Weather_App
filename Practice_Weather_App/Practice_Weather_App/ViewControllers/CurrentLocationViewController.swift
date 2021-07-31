@@ -9,6 +9,18 @@ import UIKit
 import CoreLocation
 import Lottie
 
+private struct Constant {
+    static let locationOff = "Geolocation is off"
+    static let geopositionBanned = "You have banned to use geoposition"
+    static let cancel = "Cancel"
+    static let allow = "Allow?"
+    static let turnOn = "Turn on?"
+    static let minTemp = "min.Temperature"
+    static let maxTemp = "max.Temperature"
+    static let windSpeed = "wind speed"
+    static let patToPrefs = "App-Prefs:root=LOCATION_SERVICES"
+}
+
 struct Settings {
     let cityName: String?
     let showBackgroundImage: Bool
@@ -192,7 +204,6 @@ private extension CurrentLocationViewController {
     
     //MARK: - start settings for cllLocationManager
     func startLocationManager() {
-        locationManager.requestWhenInUseAuthorization()//запрос положения когда приложение используется
         if CLLocationManager.locationServicesEnabled() {
             
             locationManager.delegate = self
@@ -201,11 +212,10 @@ private extension CurrentLocationViewController {
             checkAutorisation()
           
         }else{
-            self.locationAlert(title: "Геопозиционирование выключено",
-                               message: "разрешить?",
-                               url: URL(string:"App-Prefs:root=LOCATION_SERVICES"))
+            self.locationAlert(title: Constant.locationOff,
+                        message: Constant.turnOn,
+                        url: URL(string: Constant.patToPrefs ))
         }
-        locationManager.stopMonitoringSignificantLocationChanges()
     }
     
     func checkAutorisation() {
@@ -215,8 +225,8 @@ private extension CurrentLocationViewController {
             case .authorizedWhenInUse:
                 locationManager.startUpdatingLocation()
             case .denied:
-                self.locationAlert(title: "Вы запретили использование геопозиции",
-                                   message: "разрешить?",
+                self.locationAlert(title:Constant.geopositionBanned,
+                                   message: Constant.allow,
                                    url: URL(string: UIApplication.openSettingsURLString))
             case .restricted:
                 break
@@ -236,7 +246,7 @@ private extension CurrentLocationViewController {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }))
-        alert.addAction(.init(title: "отмена", style: .cancel, handler: nil))
+        alert.addAction(.init(title: Constant.cancel, style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
 }
@@ -245,7 +255,6 @@ private extension CurrentLocationViewController {
 extension CurrentLocationViewController: CLLocationManagerDelegate {
     //MARK: - request of coordinate when changing location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("--------------------->>")
         if let lastLocation = locations.last {
             print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
@@ -314,7 +323,7 @@ private extension CurrentLocationViewController {
         
         //MARK: Для теста мин/макс температуры
     
-        self.weatherDescription.text = weatherDescription + ", максимальная температура " + String(main.temp_max) + ", минимальная температура  " + String(main.temp_min) + ", скорость ветра " + String(windSpeed) + " м/сек"
+        self.weatherDescription.text = weatherDescription + "\n\(Constant.maxTemp)  " + String(main.temp_max) + "\n\(Constant.minTemp)  " + String(main.temp_min) + "\n\(Constant.windSpeed)  " + String(windSpeed) + "m.sec"
     }
     
     func updateAnimation(conditionId: Float) {
@@ -323,8 +332,8 @@ private extension CurrentLocationViewController {
         self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
                                                                andFrame: self.view.bounds)
         if let animation = self.weatherAnimationView {
-            self.backgroundView.addSubview(animation)    // добавление анимации
-            animation.play()                            // и запуск
+            self.backgroundView.addSubview(animation)    
+            animation.play()
         }
     }
 //

@@ -17,6 +17,8 @@ class FavoriteCitiesViewController: UIPageViewController {
     private var weatherAnimationView: AnimationView?
     private var backgroundImage: UIImageView?
     private let animationView = UIImageView()
+    
+        let background = UIImageView()
 
     private var models = [CDCityModel]()
     
@@ -168,7 +170,6 @@ private extension FavoriteCitiesViewController {
     }
     
     private func setBackgroundImage() {
-        let background = UIImageView()
 
         background.contentMode = .scaleAspectFill
 
@@ -176,12 +177,11 @@ private extension FavoriteCitiesViewController {
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
 
-//        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
         self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
                                                                andFrame: self.view.bounds)
         background.addSubview(weatherAnimationView!)
         
-        self.backgroundImage = background        
+        self.backgroundImage = background
 
     }
     

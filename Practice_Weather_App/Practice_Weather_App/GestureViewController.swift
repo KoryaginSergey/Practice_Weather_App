@@ -14,6 +14,7 @@ class GestureViewController: UIViewController {
     private var pointOrigin: CGPoint?
     private let cellID = String(describing: WeatherForcastTableViewCell.self)
     private var weatherForcast: [ListModelForcast]?
+    var forcastForCityNamed: String? //для передачи в прогноз на след дни
     
     
     override func viewDidLoad() {
@@ -34,7 +35,12 @@ class GestureViewController: UIViewController {
     
     private func loadForcast() {
         
-        Networkmanager.shared.getForcastWeather(city: "Лондон") { [weak self] weatherForcastData in
+        guard let cityNamed = forcastForCityNamed else {
+            forcastForCityNamed = "Харьков"
+            return
+        }
+        
+        Networkmanager.shared.getForcastWeather(city: cityNamed) { [weak self] weatherForcastData in
             guard let self = self,
                   let forcast = weatherForcastData?.list
             else {
@@ -70,7 +76,7 @@ class GestureViewController: UIViewController {
 }
 
 
-extension LocationViewController: UITableViewDelegate {
+extension GestureViewController: UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1

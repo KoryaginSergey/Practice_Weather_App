@@ -240,7 +240,6 @@ private extension CurrentLocationViewController {
 extension CurrentLocationViewController: CLLocationManagerDelegate {
     //MARK: - request of coordinate when changing location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("--------------------->>")
         if let lastLocation = locations.last {
             print(lastLocation.coordinate.latitude , lastLocation.coordinate.longitude)
             let lat = lastLocation.coordinate.latitude
@@ -257,8 +256,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                 }
                 
                 DispatchQueue.main.async {
-                    let temperature = -10
-//                    let temperature = Int(main.temp)
+                    let temperature = Int(main.temp)
                     let formatter = DateFormatter()
                     formatter.dateStyle = .none
                     formatter.timeStyle = .medium

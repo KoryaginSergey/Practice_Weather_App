@@ -80,7 +80,6 @@ class CurrentLocationViewController: UIViewController {
         self.didLoadClosure?(self.currentWeather?.weather?.first?.id)
         
         if let animation = weatherAnimationView {
-//            self.backgroundView.addSubview(animation)
             animation.play()
         }
     }

@@ -14,7 +14,7 @@ class GestureViewController: UIViewController {
     private var pointOrigin: CGPoint?
     private let cellID = String(describing: WeatherForcastTableViewCell.self)
     private var weatherForcast: [ListModelForcast]?
-    var forcastForCityNamed: String? //для передачи в прогноз на след дни
+    var forcastForCityNamed: String?
     
     
     override func viewDidLoad() {

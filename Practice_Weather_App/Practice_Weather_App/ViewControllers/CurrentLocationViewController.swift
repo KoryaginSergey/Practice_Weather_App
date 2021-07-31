@@ -9,6 +9,18 @@ import UIKit
 import CoreLocation
 import Lottie
 
+private struct Constant {
+    static let locationOff = "Geolocation is off"
+    static let geopositionBanned = "You have banned to use geoposition"
+    static let cancel = "Cancel"
+    static let allow = "Allow?"
+    static let turnOn = "Turn on?"
+    static let minTemp = "min.Temperature"
+    static let maxTemp = "max.Temperature"
+    static let windSpeed = "wind speed"
+    static let patToPrefs = "App-Prefs:root=LOCATION_SERVICES"
+}
+
 struct Settings {
     let cityName: String?
     let showBackgroundImage: Bool
@@ -24,10 +36,13 @@ class CurrentLocationViewController: UIViewController {
     @IBOutlet weak var descriptionView: UIView!
     private var isLocationState: Bool = false
     private let locationManager = CLLocationManager()
-    private var currentWeather: CurrentWeather?
+    private var currentWeather: CurrentWeather? {
+        didSet {
+            self.didLoadClosure?(self.currentWeather?.weather?.first?.id)
+        }
+    }
     private var weatherAnimationView: AnimationView?
     private let backgroundView = UIImageView()
-    private let background = UIImageView()
     
     @IBOutlet private weak var currentLocationLabel: UILabel!
     @IBOutlet private weak var weatherConditionLabel: UILabel!
@@ -38,6 +53,8 @@ class CurrentLocationViewController: UIViewController {
     @IBOutlet private weak var sunsetImageView: UIImageView!
     
     var cityNameForForcast: String?
+    
+    public var didLoadClosure: ((Float?) -> ())?
     
     @IBOutlet weak var weatherDescription: UILabel!
     
@@ -60,8 +77,9 @@ class CurrentLocationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
        
+        self.didLoadClosure?(self.currentWeather?.weather?.first?.id)
+        
         if let animation = weatherAnimationView {
-//            self.backgroundView.addSubview(animation)
             animation.play()
         }
     }
@@ -76,7 +94,7 @@ class CurrentLocationViewController: UIViewController {
             guard let current = current else {return}
             DispatchQueue.main.async {
                 self?.currentWeather = current
-                self?.updateUI()
+                self?.updateUI(withAnimation: false)
             }
         }
     }
@@ -125,16 +143,16 @@ class CurrentLocationViewController: UIViewController {
         return jsonName
     }
 
+
     private func setBackground() {
-        background.contentMode = .scaleAspectFill
-        view.insertSubview(background, at: 0)
-        background.frame = view.bounds
-        background.backgroundColor = UIColor(displayP3Red: 0.82,
+        backgroundView.contentMode = .scaleAspectFill
+        view.insertSubview(backgroundView, at: 0)
+        backgroundView.frame = view.bounds
+        backgroundView.backgroundColor = UIColor(displayP3Red: 0.82,
                                    green: 0.87,
                                    blue: 0.96,
                                    alpha: 1)
     }
-
 
     func presentForcast() {
         
@@ -151,7 +169,6 @@ class CurrentLocationViewController: UIViewController {
     }
 }
 
-//MARK: -  locationManager
 
 extension CurrentLocationViewController {
     
@@ -169,7 +186,7 @@ extension CurrentLocationViewController {
         } else {
             self.view.backgroundColor = UIColor.clear
         }
-        
+                
     }
     
     @IBAction func didTapPresentForcast(_ sender: Any) {
@@ -189,7 +206,6 @@ private extension CurrentLocationViewController {
     
     //MARK: - start settings for cllLocationManager
     func startLocationManager() {
-        locationManager.requestWhenInUseAuthorization()//запрос положения когда приложение используется
         if CLLocationManager.locationServicesEnabled() {
             
             locationManager.delegate = self
@@ -198,9 +214,9 @@ private extension CurrentLocationViewController {
             checkAutorisation()
           
         }else{
-            self.locationAlert(title: "Геопозиционирование выключено",
-                               message: "разрешить?",
-                               url: URL(string:"App-Prefs:root=LOCATION_SERVICES"))
+            self.locationAlert(title: Constant.locationOff,
+                        message: Constant.turnOn,
+                        url: URL(string: Constant.patToPrefs ))
         }
     }
     
@@ -209,10 +225,10 @@ private extension CurrentLocationViewController {
             case .authorizedAlways:
                 break
             case .authorizedWhenInUse:
-                locationManager.startMonitoringSignificantLocationChanges()
+                locationManager.startUpdatingLocation()
             case .denied:
-                self.locationAlert(title: "Вы запретили использование геопозиции",
-                                   message: "разрешить?",
+                self.locationAlert(title:Constant.geopositionBanned,
+                                   message: Constant.allow,
                                    url: URL(string: UIApplication.openSettingsURLString))
             case .restricted:
                 break
@@ -232,7 +248,7 @@ private extension CurrentLocationViewController {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }))
-        alert.addAction(.init(title: "отмена", style: .cancel, handler: nil))
+        alert.addAction(.init(title: Constant.cancel, style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
 }
@@ -262,17 +278,17 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                     formatter.dateStyle = .none
                     formatter.timeStyle = .medium
                     formatter.dateFormat = "HH:mm"
-                    
+
                     self.cityNameForForcast = currentLocation
                     self.currentLocationLabel.text = currentLocation
                     self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
                     self.temperatureLabel.text = String(Int(temperature)) + " ºC"
-                    
+
                     guard let current = current else {return}
                     
                     self.currentWeather = current
-                    self.updateUI()
-                    
+                    self.updateUI(withAnimation: true)
+
                     let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
                     self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
                                                                            andFrame: self.view.bounds)
@@ -280,20 +296,20 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
                         self.backgroundView.addSubview(animation)
                         animation.play()
                     }
-                    
-                    self.locationManager.stopMonitoringSignificantLocationChanges()
-                    
+
                     self.sunriseImageView.image = UIImage(named: "sunrise")
                     self.sunsetImageView.image = UIImage(named: "sunset")
                     switch temperature {
                         case (-15) ... 0:
-                            self.background.image = UIImage(named: "littlemin")
+                            self.backgroundView.image = UIImage(named: "littlemin")
                         case ...(-16) :
-                            self.background.image = UIImage(named: "bigmin")
+                            self.backgroundView.image = UIImage(named: "bigmin")
                         default:
-                            self.background.image = UIImage(named: "Mountain")
+                            self.backgroundView.image = UIImage(named: "Mountain")
 
                     }
+
+                    self.locationManager.stopUpdatingLocation()
                 }
             }
         }
@@ -306,7 +322,7 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
 
 private extension CurrentLocationViewController {
     
-    func updateUI() {
+    func updateUI(withAnimation: Bool) {
         guard let current = self.currentWeather else {return}
         
         guard let currentLocation = current.name,
@@ -319,7 +335,7 @@ private extension CurrentLocationViewController {
               let intervalForSunset = current.sys?.sunset else {
             return
         }
-      
+
             let sunriseTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunrise))
             let sunsetTimeInterval = Date(timeIntervalSince1970: TimeInterval(intervalForSunset))
             let formatter = DateFormatter()
@@ -334,14 +350,25 @@ private extension CurrentLocationViewController {
             self.sunriseTimeLabel.text = formattedSunriseTime
             let formattedSunsetTime = formatter.string(from: sunsetTimeInterval)
             self.sunsetTimeLabel.text = formattedSunsetTime
-        
-          
-            
-        
-            //MARK: Для теста мин/макс температуры
-        
+
         self.weatherDescription.text = weatherDescription.capitalizedFirstLatter() + ", todays max temperature " + String(Int(main.temp_max)) + " ºC" + ", todays min temperature " + String(Int(main.temp_min)) + " ºC" + ", wind speed " + String(windSpeed) + " m/sec"
+
+        if withAnimation {
+            self.updateAnimation(conditionId: weatherConditionsID)
+        }
         
+
+    }
+    
+    func updateAnimation(conditionId: Float) {
+        self.weatherAnimationView?.removeFromSuperview()
+        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: conditionId)
+        self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
+                                                               andFrame: self.view.bounds)
+        if let animation = self.weatherAnimationView {
+            self.backgroundView.addSubview(animation)    
+            animation.play()
+        }
     }
 //
 //    func getCurrentTimeForLocation() {

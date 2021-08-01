@@ -14,7 +14,7 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     private var weatherVcs = [UIViewController]()
     private var defaultWeatherVcs = [UIViewController]()
-    private var weatherAnimationView: AnimationView?
+    private var weatherAnimationView = AnimationView()
     private var backgroundImage: UIImageView?
     private let animationView = UIImageView()
     
@@ -33,7 +33,7 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        weatherAnimationView?.play()
+        weatherAnimationView.play()
     }
 }
 
@@ -179,34 +179,30 @@ private extension FavoriteCitiesViewController {
 
         self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
                                                                andFrame: self.view.bounds)
-        background.addSubview(weatherAnimationView!)
+        background.addSubview(weatherAnimationView)
         
         self.backgroundImage = background
 
     }
     
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
-        let animationView = AnimationView()
         
-        animationView.frame = frame
-        animationView.animation = Animation.named(name)
-        animationView.contentMode = .scaleAspectFill
-        animationView.loopMode = .loop
+        weatherAnimationView.frame = frame
+        weatherAnimationView.animation = Animation.named(name)
+        weatherAnimationView.contentMode = .scaleAspectFill
+        weatherAnimationView.loopMode = .loop
         
-        
-        
-        return animationView
+        return weatherAnimationView
     }
     
     func updateAnimation(conditionId: Float) {
-        self.weatherAnimationView?.removeFromSuperview()
         let weatherAnimationNamed = self.getAnimationForWeather(conditionID: conditionId)
         self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
                                                                andFrame: self.view.bounds)
-        if let animation = self.weatherAnimationView {
-            self.animationView.addSubview(animation)
-            animation.play()
-        }
+        
+            self.background.addSubview(weatherAnimationView)
+            weatherAnimationView.play()
+        
     }
     
     private func getAnimationForWeather(conditionID: Float) -> String {
@@ -241,9 +237,9 @@ private extension FavoriteCitiesViewController {
     }
     
     private func setAnimationView() {
-        animationView.contentMode = .scaleAspectFill
-        view.insertSubview(animationView, at: 1)
-        animationView.frame = view.bounds
+        weatherAnimationView.contentMode = .scaleAspectFill
+        view.insertSubview(weatherAnimationView, at: 1)
+        weatherAnimationView.frame = view.bounds
     }
 }
 

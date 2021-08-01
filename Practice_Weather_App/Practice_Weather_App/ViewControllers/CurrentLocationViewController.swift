@@ -76,14 +76,13 @@ class CurrentLocationViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        self.didLoadClosure?(self.currentWeather?.weather?.first?.id)
-        weatherAnimationView.play()
+        self.didLoadClosure?(self.currentWeather?.weather?.first?.id)        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isLocationState { startLocationManager() }
+        weatherAnimationView.play()
     }
     
     private func getDataFromServer(cityName: String) {
@@ -299,6 +298,9 @@ private extension CurrentLocationViewController {
             return
         }
         settings.cityName = currentLocationName
+        
+        
+        // делаем сдвиг по временной зоне, чтобы отобразить по времени локации, а не времени устройства
         let sunriseTime = getDayTimeFor(timeInterval: TimeInterval(intervalForSunrise),
                                         withTimeZone: timeZone)
         let sunsetTime = getDayTimeFor(timeInterval: TimeInterval(intervalForSunset),
@@ -308,7 +310,7 @@ private extension CurrentLocationViewController {
         formatter.dateStyle = .none
         formatter.timeStyle = .medium
         formatter.dateFormat = "HH:mm"
-   
+        
         updateBackgroundImage(forTenperature: Int(temperature))
         
         self.currentLocationLabel.text = currentLocationName
@@ -323,11 +325,12 @@ private extension CurrentLocationViewController {
         
         self.weatherDescription.text = "Country: \(country)" + "\ntodays max temperature " + String(Int(main.temp_max)) + " ºC" + "\ntodays min temperature " + String(Int(main.temp_min)) + " ºC" + "\nwind speed " + String(windSpeed) + " m/sec"
         
+        // передаем интервалы времени рассвета\заката уже со свдигом по временной зоне
         if withAnimation {
             updateAnimation(conditionId: weatherConditionsID,
-                                 forDayTimeInterval: TimeInterval(dayTimeInterval),
-                                 bySunriseInterval: TimeInterval(intervalForSunrise),
-                                 andSunsetInterval: TimeInterval(intervalForSunset))
+                            forDayTimeInterval: TimeInterval(dayTimeInterval),
+                            bySunriseInterval: TimeInterval(intervalForSunrise),
+                            andSunsetInterval: TimeInterval(intervalForSunset))
         }
         
     }
@@ -337,18 +340,18 @@ private extension CurrentLocationViewController {
                          bySunriseInterval sunriseInterval: TimeInterval,
                          andSunsetInterval sunsetInterval: TimeInterval) {
         
+        // должно быть var для того, чтобы модифицировать имя json которое записалось
         var weatherAnimationNamed = getAnimationForWeather(conditionID: conditionId)
         
-        if sunriseInterval < dayTimeInterval && sunsetInterval > dayTimeInterval {
-         
-        } else {
+        // если текущее время локации попадает в промежуток от рассвета до заката локации, то if не выполнится
+        if !(sunriseInterval < dayTimeInterval && sunsetInterval > dayTimeInterval) {
             weatherAnimationNamed = "night" + weatherAnimationNamed
         }
         weatherAnimationView = setWeatherAnimation(with: weatherAnimationNamed,
-                                                             andFrame: self.view.bounds)
-
-            backgroundView.addSubview(weatherAnimationView)
-            weatherAnimationView.play()
+                                                   andFrame: self.view.bounds)
+        
+        backgroundView.addSubview(weatherAnimationView)
+        weatherAnimationView.play()
         
     }
     

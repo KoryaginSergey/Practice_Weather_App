@@ -336,9 +336,7 @@ private extension CurrentLocationViewController {
         
         var weatherAnimationNamed = getAnimationForWeather(conditionID: conditionId)
         
-        if sunriseInterval < dayTimeInterval && sunsetInterval > dayTimeInterval {
-         
-        } else {
+        if !(sunriseInterval < dayTimeInterval && sunsetInterval > dayTimeInterval) {
             weatherAnimationNamed = "night" + weatherAnimationNamed
         }
         weatherAnimationView = setWeatherAnimation(with: weatherAnimationNamed,

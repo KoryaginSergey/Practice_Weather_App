@@ -167,15 +167,11 @@ private extension FavoriteCitiesViewController {
     }
     
     private func setBackgroundImage() {
-
         background.contentMode = .scaleAspectFill
 
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
-        self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
-                                                               andFrame: self.view.bounds)
-        background.addSubview(weatherAnimationView)
         self.backgroundImage = background
     }
     

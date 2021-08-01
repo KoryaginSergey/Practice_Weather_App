@@ -71,8 +71,8 @@
 		84CE305E26A8875D0092427F /* SearchListViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SearchListViewController.storyboard; sourceTree = "<group>"; };
 		84CE306026A8875D0092427F /* SearchListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchListCell.swift; sourceTree = "<group>"; };
 		84CE307826A9ABEF0092427F /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModels.swift; sourceTree = "<group>"; };
-		84CE308E26A9FF420092427F /* CDCityModel+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "CDCityModel+CoreDataClass.swift"; path = "Practice_Weather_App/Extensions/CDCityModel+CoreDataClass.swift"; sourceTree = "<group>"; };
-		84CE308F26A9FF420092427F /* CDCityModel+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "CDCityModel+CoreDataProperties.swift"; path = "Practice_Weather_App/Extensions/CDCityModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		84CE308E26A9FF420092427F /* CDCityModel+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDCityModel+CoreDataClass.swift"; sourceTree = "<group>"; };
+		84CE308F26A9FF420092427F /* CDCityModel+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDCityModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		84CE30A226AB1F820092427F /* WeatherForcastTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherForcastTableViewCell.swift; sourceTree = "<group>"; };
 		86BA795C72316E97FCBF5F7B /* Pods-Practice_Weather_App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Practice_Weather_App.release.xcconfig"; path = "Target Support Files/Pods-Practice_Weather_App/Pods-Practice_Weather_App.release.xcconfig"; sourceTree = "<group>"; };
 		9CD7EAF9BA421F0DD14DE3F8 /* Pods-Practice_Weather_App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Practice_Weather_App.debug.xcconfig"; path = "Target Support Files/Pods-Practice_Weather_App/Pods-Practice_Weather_App.debug.xcconfig"; sourceTree = "<group>"; };
@@ -129,6 +129,8 @@
 		845DCE9726B341E3005B9CB4 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				84CE308E26A9FF420092427F /* CDCityModel+CoreDataClass.swift */,
+				84CE308F26A9FF420092427F /* CDCityModel+CoreDataProperties.swift */,
 				84BE972F26A6C15800796529 /* DataBase.xcdatamodeld */,
 			);
 			path = CoreData;
@@ -137,8 +139,6 @@
 		84BE971A26A6C15800796529 = {
 			isa = PBXGroup;
 			children = (
-				84CE308E26A9FF420092427F /* CDCityModel+CoreDataClass.swift */,
-				84CE308F26A9FF420092427F /* CDCityModel+CoreDataProperties.swift */,
 				84BE972526A6C15800796529 /* Practice_Weather_App */,
 				F0B34107B79C613CDB155CEB /* Pods */,
 				C96D080A26B4890500423E7F /* Practice_Weather_App.app */,

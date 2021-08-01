@@ -26,9 +26,11 @@ extension CDCityModel : Identifiable {
 
     static func getCity(by name: String?) -> CDCityModel? {
         let context = DataModels.sharedInstance.context
-        let predicate = NSPredicate(format: "name == %@", name as! CVarArg)
         let fetchRequest = NSFetchRequest<CDCityModel>(entityName: String(describing: CDCityModel.self))
-        fetchRequest.predicate = predicate
+        if let name = name {
+            let predicate = NSPredicate(format: "name == %@", name)
+            fetchRequest.predicate = predicate
+        }
         let cities = try? context.fetch(fetchRequest)
         
         return cities?.first

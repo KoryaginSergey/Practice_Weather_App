@@ -20,7 +20,9 @@ class SearchListViewController: UIViewController {
     private let searchListCellID = String(describing: SearchListCell.self)
     private var pendingRequestWorkItem: DispatchWorkItem?
     private var dataTask: URLSessionDataTask?
-
+    private let backgroundImageView = UIImageView()
+    
+    
     private var models = [CDCityModel]()
     
     private var cities = [CityModel]()
@@ -38,6 +40,7 @@ class SearchListViewController: UIViewController {
         configureNavigationButtons()
         
         self.navigationItem.title = nameNavigationItem
+        self.setBackgroundImage()
         self.fetchData()
     }
 }
@@ -178,6 +181,14 @@ extension SearchListViewController: UISearchBarDelegate {
 
 private extension SearchListViewController {
     
+    private func setBackgroundImage() {
+        backgroundImageView.contentMode = .scaleAspectFill
+
+        backgroundImageView.frame = view.bounds
+        backgroundImageView.image = UIImage(named: "Mountain")
+        view.insertSubview(backgroundImageView, at: 0)
+    }
+    
     private func configureNavigationButtons() {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Exit", style: .plain, target: self, action: #selector(cancelButtonSelector))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonSelector))
@@ -241,10 +252,12 @@ private extension SearchListViewController {
         if let cityObject = CDCityModel.getCity(by: city.name) {
             cityObject.name = city.name
             cityObject.id = Int16(CDCityModel.objectNumber())
+            cityObject.country = city.country
         } else {
             let newCityObject = CDCityModel.createObject() as CDCityModel
             newCityObject.name = city.name
             newCityObject.id = Int16(CDCityModel.objectNumber())
+            newCityObject.country = city.country
         }
 
         DataModels.sharedInstance.saveContext()

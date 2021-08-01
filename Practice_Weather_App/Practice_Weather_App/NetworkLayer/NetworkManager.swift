@@ -31,7 +31,7 @@ enum WeatherURL {
         case .forecast(let name): return Api.mainUrl+"2.5/forecast?q=\(name.replacingOccurrences(of:" ", with: "%20"))&units=metric&"+Api.id
         case .weatherToday(let name):return Api.mainUrl+"2.5/weather?q=\(name.replacingOccurrences(of:" ", with: "%20"))&units=metric&"+Api.id
         case .weatherbyLocation(let lat,let lon): return Api.mainUrl+"2.5/weather?lat=\(lat)&lon=\(lon)&units=metric&"+Api.id
-        case .direct(let name): return  Api.mainUrlGeo+"/1.0/direct?q=\(name.replacingOccurrences(of:" ", with: "%20"))&limit=1&"+Api.id2
+        case .direct(let name): return  Api.mainUrlGeo+"/1.0/direct?q=\(name.replacingOccurrences(of:" ", with: "%20"))&limit=3&"+Api.id2
         }
     }
 }
@@ -107,6 +107,7 @@ class Networkmanager {
                     print("error: ",error?.localizedDescription as Any)
                     return
                 }
+                                
                 result(self.decodejson(type: [CityModel].self , from: data))
             }
         }

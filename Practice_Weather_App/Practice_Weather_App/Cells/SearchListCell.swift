@@ -13,12 +13,11 @@ class SearchListCell: UITableViewCell {
     
     @IBOutlet weak var nameCityLabel: UILabel!
     @IBOutlet weak var viewForCell: UIView!
+    @IBOutlet weak var nameCountryLabel: UILabel!
     
     
     public func setParamsViewForCell() {
         viewForCell.layer.cornerRadius = 15.0
-        //        viewForCell.layer.borderWidth = 1.0
-        //        viewForCell.layer.borderColor = UIColor.black.cgColor
     }
     
     

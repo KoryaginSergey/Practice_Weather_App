@@ -39,7 +39,13 @@
                                                     <rect key="frame" x="10" y="5" width="370" height="21"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AS1-0t-1Ay">
-                                                            <rect key="frame" x="10" y="0.0" width="350" height="21"/>
+                                                            <rect key="frame" x="10" y="0.0" width="291.66666666666669" height="21"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cm4-y8-gnM">
+                                                            <rect key="frame" x="301.66666666666669" y="0.0" width="58.333333333333314" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -48,9 +54,13 @@
                                                     <color key="backgroundColor" systemColor="systemGray6Color"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="AS1-0t-1Ay" secondAttribute="bottom" id="5tJ-Z3-p54"/>
-                                                        <constraint firstAttribute="trailing" secondItem="AS1-0t-1Ay" secondAttribute="trailing" constant="10" id="LCY-Xs-14U"/>
+                                                        <constraint firstAttribute="bottom" secondItem="cm4-y8-gnM" secondAttribute="bottom" id="D2w-3U-Rgt"/>
                                                         <constraint firstItem="AS1-0t-1Ay" firstAttribute="top" secondItem="Znm-hm-cGo" secondAttribute="top" id="cSy-DF-A6H"/>
+                                                        <constraint firstItem="cm4-y8-gnM" firstAttribute="leading" secondItem="AS1-0t-1Ay" secondAttribute="trailing" id="lQB-BI-mP6"/>
+                                                        <constraint firstItem="cm4-y8-gnM" firstAttribute="top" secondItem="Znm-hm-cGo" secondAttribute="top" id="oaT-O0-d7a"/>
+                                                        <constraint firstAttribute="trailing" secondItem="cm4-y8-gnM" secondAttribute="trailing" constant="10" id="rmj-61-foz"/>
                                                         <constraint firstItem="AS1-0t-1Ay" firstAttribute="leading" secondItem="Znm-hm-cGo" secondAttribute="leading" constant="10" id="slp-VC-Sex"/>
+                                                        <constraint firstItem="cm4-y8-gnM" firstAttribute="width" secondItem="AS1-0t-1Ay" secondAttribute="width" multiplier="0.2" id="tsr-Pe-Tvl"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -63,6 +73,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="nameCityLabel" destination="AS1-0t-1Ay" id="tlx-nh-hal"/>
+                                            <outlet property="nameCountryLabel" destination="cm4-y8-gnM" id="MBS-tx-1bQ"/>
                                             <outlet property="viewForCell" destination="Znm-hm-cGo" id="YTV-ZY-YBk"/>
                                         </connections>
                                     </tableViewCell>
@@ -97,7 +108,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6S9-bb-t84" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-308" y="80"/>
+            <point key="canvasLocation" x="-309.23076923076923" y="79.620853080568722"/>
         </scene>
     </scenes>
     <resources>

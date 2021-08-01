@@ -60,9 +60,11 @@ extension SearchListViewController: UITableViewDataSource {
         if isSearching {
             let city = cities[indexPath.row]
             cell.nameCityLabel.text = city.name
+            cell.nameCountryLabel.text = city.country
         } else {
             let city = models[indexPath.row]
             cell.nameCityLabel.text = city.name
+            cell.nameCountryLabel.text = city.country
         }
         return cell
     }

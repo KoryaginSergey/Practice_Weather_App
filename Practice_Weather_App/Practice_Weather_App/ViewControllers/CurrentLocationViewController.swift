@@ -299,8 +299,6 @@ private extension CurrentLocationViewController {
         }
         settings.cityName = currentLocationName
         
-        
-        // делаем сдвиг по временной зоне, чтобы отобразить по времени локации, а не времени устройства
         let sunriseTime = getDayTimeFor(timeInterval: TimeInterval(intervalForSunrise),
                                         withTimeZone: timeZone)
         let sunsetTime = getDayTimeFor(timeInterval: TimeInterval(intervalForSunset),
@@ -325,34 +323,28 @@ private extension CurrentLocationViewController {
         
         self.weatherDescription.text = "Country: \(country)" + "\ntodays max temperature " + String(Int(main.temp_max)) + " ºC" + "\ntodays min temperature " + String(Int(main.temp_min)) + " ºC" + "\nwind speed " + String(windSpeed) + " m/sec"
         
-        // передаем интервалы времени рассвета\заката уже со свдигом по временной зоне
         if withAnimation {
             updateAnimation(conditionId: weatherConditionsID,
                             forDayTimeInterval: TimeInterval(dayTimeInterval),
                             bySunriseInterval: TimeInterval(intervalForSunrise),
                             andSunsetInterval: TimeInterval(intervalForSunset))
         }
-        
     }
     
     func updateAnimation(conditionId: Float,
                          forDayTimeInterval dayTimeInterval: TimeInterval,
                          bySunriseInterval sunriseInterval: TimeInterval,
-                         andSunsetInterval sunsetInterval: TimeInterval) {
-        
-        // должно быть var для того, чтобы модифицировать имя json которое записалось
+                         andSunsetInterval sunsetInterval: TimeInterval) {        
+       
         var weatherAnimationNamed = getAnimationForWeather(conditionID: conditionId)
         
-        // если текущее время локации попадает в промежуток от рассвета до заката локации, то if не выполнится
         if !(sunriseInterval < dayTimeInterval && sunsetInterval > dayTimeInterval) {
             weatherAnimationNamed = "night" + weatherAnimationNamed
         }
         weatherAnimationView = setWeatherAnimation(with: weatherAnimationNamed,
                                                    andFrame: self.view.bounds)
-        
         backgroundView.addSubview(weatherAnimationView)
         weatherAnimationView.play()
-        
     }
     
     func updateBackgroundImage(forTenperature: Int) {

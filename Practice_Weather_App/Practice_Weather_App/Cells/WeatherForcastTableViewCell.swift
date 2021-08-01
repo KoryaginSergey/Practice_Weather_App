@@ -17,14 +17,8 @@ class WeatherForcastTableViewCell: UITableViewCell {
     //MARK: Убрать нил с картинки
     
     func setupWeatherForDaysCell(withForcast forcast: ListModelForcast) {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        
-        let dayTimeInterval = Date(timeIntervalSince1970: TimeInterval(forcast.dt ?? 0.0))
-        
-        let dayOfTheWeek = formatter.string(from: dayTimeInterval)
-        dayOfTheWeekLabel.text = dayOfTheWeek
+     
+        dayOfTheWeekLabel.text = forcast.dt_txt ?? "No date was loaded"
         weatherConditionIcon.image = UIImage(named: forcast.weather?.first?.icon ?? "")
             
         maxTemperatureLabel.text = String(Int(forcast.main?.temp_max ?? 0.0))

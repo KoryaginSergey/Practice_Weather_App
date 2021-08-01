@@ -56,17 +56,17 @@ class GestureViewController: UIViewController {
     
     @objc private func panGestureRecognizerAction(sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: view)
-        
+
         guard translation.y >= 0 else { return }
-        
+
         view.frame.origin = CGPoint(x: 0, y: self.pointOrigin!.y + translation.y)
-        
+
         if sender.state == .ended {
             let dragVelocity = sender.velocity(in: view)
             if dragVelocity.y >= 1300 {
                 self.dismiss(animated: true, completion: nil)
             } else {
-                
+
                 UIView.animate(withDuration: 0.3) {
                     self.view.frame.origin = self.pointOrigin ?? CGPoint(x: 0, y: 400)
                 }
@@ -74,7 +74,6 @@ class GestureViewController: UIViewController {
         }
     }
 }
-
 
 extension GestureViewController: UITableViewDelegate {
     
@@ -101,7 +100,7 @@ extension GestureViewController: UITableViewDataSource {
         }
        
         weatherCell.setupWeatherForDaysCell(withForcast: forcast)
-       
+        
         return weatherCell
     }
 }

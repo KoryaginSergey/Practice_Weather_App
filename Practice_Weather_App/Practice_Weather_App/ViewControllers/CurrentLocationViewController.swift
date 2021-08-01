@@ -151,13 +151,13 @@ class CurrentLocationViewController: UIViewController {
     
     func presentForcast() {
         
-        let weatherForcastVC = GestureViewController()
+        let weatherForcastVC = ForcastViewController()
         weatherForcastVC.forcastForCityNamed = self.settings.cityName
         weatherForcastVC.modalPresentationStyle = .custom
         weatherForcastVC.transitioningDelegate = self
         self.present(weatherForcastVC, animated: true, completion: nil)
         
-        let weatherForcast = GestureViewController()
+        let weatherForcast = ForcastViewController()
         weatherForcast.modalPresentationStyle = .custom
         weatherForcast.transitioningDelegate = self
         self.present(weatherForcast, animated: true, completion: nil)
@@ -289,9 +289,8 @@ private extension CurrentLocationViewController {
               let weatherConditionsID = current.weather?.first?.id,
               let main = current.main,
               let windSpeed = current.wind?.speed,
-            //  let weatherDescription = current.weather?.first?.description,
+              let weatherDescription = current.weather?.first?.description,
               let dayTimeInterval = current.dt,
-              let country = current.sys?.country,
               let intervalForSunrise = current.sys?.sunrise,
               let intervalForSunset = current.sys?.sunset,
               let timeZone = current.timezone else {
@@ -319,9 +318,7 @@ private extension CurrentLocationViewController {
         let formattedSunsetTime = formatter.string(from: sunsetTime)
         self.sunsetTimeLabel.text = formattedSunsetTime
         
-        //weatherDescription.capitalizedFirstLatter()
-        
-        self.weatherDescription.text = "Country: \(country)" + "\ntodays max temperature " + String(Int(main.temp_max)) + " ºC" + "\ntodays min temperature " + String(Int(main.temp_min)) + " ºC" + "\nwind speed " + String(windSpeed) + " m/sec"
+        self.weatherDescription.text = weatherDescription.capitalizedFirstLatter() + ", todays max temperature " + String(Int(main.temp_max)) + " ºC" + ", todays min temperature " + String(Int(main.temp_min)) + " ºC" + ", wind speed " + String(windSpeed) + " m/sec"
         
         if withAnimation {
             updateAnimation(conditionId: weatherConditionsID,

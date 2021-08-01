@@ -7,7 +7,7 @@
 
 import UIKit
 
-class GestureViewController: UIViewController {
+class ForcastViewController: UIViewController {
     
     @IBOutlet private weak var weatherForcastTableView: UITableView!
     private var hasSetPointOrigin = false
@@ -75,14 +75,14 @@ class GestureViewController: UIViewController {
     }
 }
 
-extension GestureViewController: UITableViewDelegate {
+extension ForcastViewController: UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 }
 
-extension GestureViewController: UITableViewDataSource {
+extension ForcastViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let rowsCount = weatherForcast?.count else {

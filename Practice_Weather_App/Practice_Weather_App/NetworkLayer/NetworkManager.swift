@@ -54,49 +54,45 @@ class Networkmanager {
             return nil
         }
     }
+    //MARK: -  create urlsession
     
-    //MARK: - weather for a few days
-    func getForcastWeather(city: String, result: @escaping ((WeatherModelForcast?)->())) {
-        if let url = URL(string: WeatherURL.forecast(name: city).url) {
+    func urlSession(_ urlStr: String ,result: @escaping ((Data?) -> ()) ) {
+        if let url = URL(string: urlStr) {
             URLSession.shared.dataTask(with: url) { (data, responce, error) in
                 guard  error == nil else {
                     print("error: ",error?.localizedDescription as Any)
                     return
                 }
-                DispatchQueue.main.async {
-                    result(self.decodejson(type: WeatherModelForcast.self , from: data))
-                }
+                    result(data)
             }.resume()
+        }
+    }
+    
+    
+    //MARK: - weather for a few days
+    func getForcastWeather(city: String, result: @escaping ((WeatherModelForcast?)->())) {
+        urlSession(WeatherURL.forecast(name: city).url) { data in
+            DispatchQueue.main.async {
+                result(self.decodejson(type: WeatherModelForcast.self, from: data))
+            }
         }
     }
     
     //MARK: - weather today
     func getCurrentWeather(city: String, result: @escaping ((CurrentWeather?)->())) {
-        if let url = URL(string: WeatherURL.weatherToday(name: city).url) {
-            URLSession.shared.dataTask(with: url){ (data, responce, error) in
-                guard  error == nil else {
-                    print("error: ",error?.localizedDescription as Any)
-                    return
-                }
-                DispatchQueue.main.async {
-                    result(self.decodejson(type: CurrentWeather.self , from: data))
-                }
-            }.resume()
+        urlSession(WeatherURL.weatherToday(name: city).url) { data in
+            DispatchQueue.main.async {
+            result(self.decodejson(type: CurrentWeather.self, from: data))
+            }
         }
     }
     //MARK: - weather today by coordinate
     func getCurrentWeatherByLocation(lat: Double,lon: Double, result: @escaping ((CurrentWeather?)->())) {
-        guard let url = URL(string: WeatherURL.weatherbyLocation(lat: lat, lon: lon).url) else {return}
-        URLSession.shared.dataTask(with: url) { (data, responce, error) in
-            guard  error == nil else {
-                print("error: ",error?.localizedDescription as Any)
-                return
-            }
+        urlSession(WeatherURL.weatherbyLocation(lat: lat, lon: lon).url) { data in
             DispatchQueue.main.async {
-                result(self.decodejson(type: CurrentWeather.self , from: data))
+            result(self.decodejson(type: CurrentWeather.self, from: data))
             }
-        }.resume()
-        
+        }
     }
     
     //MARK: - description for choosen City

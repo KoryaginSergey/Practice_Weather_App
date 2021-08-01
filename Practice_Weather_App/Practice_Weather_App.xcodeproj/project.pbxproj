@@ -43,8 +43,7 @@
 		C96D082626B49BBE00423E7F /* rain.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081226B49BBD00423E7F /* rain.json */; };
 		C96D082726B49BBE00423E7F /* blizzard.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081326B49BBD00423E7F /* blizzard.json */; };
 		C96D082826B49BBE00423E7F /* nightthunderstorm.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081426B49BBD00423E7F /* nightthunderstorm.json */; };
-		C96D082926B49BBE00423E7F /* nighsnow.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081526B49BBD00423E7F /* nighsnow.json */; };
-		C96D082A26B49BBE00423E7F /* nightfog.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081626B49BBD00423E7F /* nightfog.json */; };
+		C96D082926B49BBE00423E7F /* nightsnow.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081526B49BBD00423E7F /* nightsnow.json */; };
 		C96D082B26B49BBE00423E7F /* nightclear.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081726B49BBE00423E7F /* nightclear.json */; };
 		C96D082C26B49BBE00423E7F /* fog.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081826B49BBE00423E7F /* fog.json */; };
 		C96D082D26B49BBE00423E7F /* snow.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081926B49BBE00423E7F /* snow.json */; };
@@ -53,6 +52,7 @@
 		C96D083026B49BBE00423E7F /* thunderstorm.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081C26B49BBE00423E7F /* thunderstorm.json */; };
 		C96D083126B49BBE00423E7F /* nightcloudsandsun.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081D26B49BBE00423E7F /* nightcloudsandsun.json */; };
 		C96D083226B49BBE00423E7F /* rainfall.json in Resources */ = {isa = PBXBuildFile; fileRef = C96D081E26B49BBE00423E7F /* rainfall.json */; };
+		C988630026B7257500168E6A /* nightfog.json in Resources */ = {isa = PBXBuildFile; fileRef = C98862FF26B7257500168E6A /* nightfog.json */; };
 		C9FC35C026A84D21008BC576 /* WeatherForcastTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9FC35BD26A84D21008BC576 /* WeatherForcastTableViewCell.xib */; };
 		F13486F726A89DBD008E9582 /* ModelsCity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13486F626A89DBD008E9582 /* ModelsCity.swift */; };
 		F14BA82126B08A1F004E69D6 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14BA82026B08A1F004E69D6 /* NSManagedObject+Extension.swift */; };
@@ -100,8 +100,7 @@
 		C96D081226B49BBD00423E7F /* rain.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = rain.json; sourceTree = "<group>"; };
 		C96D081326B49BBD00423E7F /* blizzard.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blizzard.json; sourceTree = "<group>"; };
 		C96D081426B49BBD00423E7F /* nightthunderstorm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nightthunderstorm.json; sourceTree = "<group>"; };
-		C96D081526B49BBD00423E7F /* nighsnow.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nighsnow.json; sourceTree = "<group>"; };
-		C96D081626B49BBD00423E7F /* nightfog.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nightfog.json; sourceTree = "<group>"; };
+		C96D081526B49BBD00423E7F /* nightsnow.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nightsnow.json; sourceTree = "<group>"; };
 		C96D081726B49BBE00423E7F /* nightclear.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nightclear.json; sourceTree = "<group>"; };
 		C96D081826B49BBE00423E7F /* fog.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fog.json; sourceTree = "<group>"; };
 		C96D081926B49BBE00423E7F /* snow.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = snow.json; sourceTree = "<group>"; };
@@ -110,6 +109,7 @@
 		C96D081C26B49BBE00423E7F /* thunderstorm.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = thunderstorm.json; sourceTree = "<group>"; };
 		C96D081D26B49BBE00423E7F /* nightcloudsandsun.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nightcloudsandsun.json; sourceTree = "<group>"; };
 		C96D081E26B49BBE00423E7F /* rainfall.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = rainfall.json; sourceTree = "<group>"; };
+		C98862FF26B7257500168E6A /* nightfog.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nightfog.json; sourceTree = "<group>"; };
 		C9FC35BD26A84D21008BC576 /* WeatherForcastTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WeatherForcastTableViewCell.xib; sourceTree = "<group>"; };
 		F13486F626A89DBD008E9582 /* ModelsCity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsCity.swift; sourceTree = "<group>"; };
 		F14BA82026B08A1F004E69D6 /* NSManagedObject+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extension.swift"; sourceTree = "<group>"; };
@@ -232,13 +232,13 @@
 				C96D080F26B49BBD00423E7F /* clouds.json */,
 				C96D081A26B49BBE00423E7F /* cloudsandsun.json */,
 				C96D081826B49BBE00423E7F /* fog.json */,
-				C96D081526B49BBD00423E7F /* nighsnow.json */,
+				C96D081526B49BBD00423E7F /* nightsnow.json */,
 				C96D081026B49BBD00423E7F /* nighsnowandrain.json */,
 				C96D080C26B49BBD00423E7F /* nightblizzard.json */,
 				C96D081726B49BBE00423E7F /* nightclear.json */,
 				C96D080D26B49BBD00423E7F /* nightclouds.json */,
 				C96D081D26B49BBE00423E7F /* nightcloudsandsun.json */,
-				C96D081626B49BBD00423E7F /* nightfog.json */,
+				C98862FF26B7257500168E6A /* nightfog.json */,
 				C96D080B26B49BBD00423E7F /* nightrain.json */,
 				C96D081B26B49BBE00423E7F /* nightrainfall.json */,
 				C96D081426B49BBD00423E7F /* nightthunderstorm.json */,
@@ -327,11 +327,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C96D082926B49BBE00423E7F /* nighsnow.json in Resources */,
+				C96D082926B49BBE00423E7F /* nightsnow.json in Resources */,
 				C967F51826B474240011B354 /* images in Resources */,
 				84BE973626A6C15C00796529 /* LaunchScreen.storyboard in Resources */,
 				C96D082126B49BBE00423E7F /* nightclouds.json in Resources */,
-				C96D082A26B49BBE00423E7F /* nightfog.json in Resources */,
 				C96D082226B49BBE00423E7F /* snowandrain.json in Resources */,
 				C96D082626B49BBE00423E7F /* rain.json in Resources */,
 				C96D083126B49BBE00423E7F /* nightcloudsandsun.json in Resources */,
@@ -341,6 +340,7 @@
 				C96D082326B49BBE00423E7F /* clouds.json in Resources */,
 				C96D082D26B49BBE00423E7F /* snow.json in Resources */,
 				C96D082726B49BBE00423E7F /* blizzard.json in Resources */,
+				C988630026B7257500168E6A /* nightfog.json in Resources */,
 				C96D082426B49BBE00423E7F /* nighsnowandrain.json in Resources */,
 				C96D082026B49BBE00423E7F /* nightblizzard.json in Resources */,
 				C96D082B26B49BBE00423E7F /* nightclear.json in Resources */,

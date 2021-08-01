@@ -38,7 +38,7 @@ class CurrentLocationViewController: UIViewController {
     private let locationManager = CLLocationManager()
     private var currentWeather: CurrentWeather? {
         didSet {
-            self.didLoadClosure?(self.currentWeather?.weather?.first?.id)
+            self.didLoadClosure?(currentWeather)
         }
     }
     private var weatherAnimationView = AnimationView()
@@ -54,7 +54,7 @@ class CurrentLocationViewController: UIViewController {
     
     var cityNameForForcast: String?
     
-    public var didLoadClosure: ((Float?) -> ())?
+    public var didLoadClosure: ((CurrentWeather?) -> ())?
     
     @IBOutlet weak var weatherDescription: UILabel!
     
@@ -76,7 +76,7 @@ class CurrentLocationViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.didLoadClosure?(self.currentWeather?.weather?.first?.id)        
+        self.didLoadClosure?(currentWeather)
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -41,7 +41,7 @@ class CurrentLocationViewController: UIViewController {
             self.didLoadClosure?(self.currentWeather?.weather?.first?.id)
         }
     }
-    private var weatherAnimationView: AnimationView?
+    private var weatherAnimationView = AnimationView()
     private let backgroundView = UIImageView()
     
     @IBOutlet private weak var currentLocationLabel: UILabel!
@@ -66,7 +66,7 @@ class CurrentLocationViewController: UIViewController {
         super.viewDidLoad()
         
         self.configureViewController()
-        self.descriptionView.roundCorners(.allCorners, radius: 22)
+        self.descriptionView.roundedCorners(withRadius: 10)
         
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -78,10 +78,7 @@ class CurrentLocationViewController: UIViewController {
         super.viewDidAppear(animated)
         
         self.didLoadClosure?(self.currentWeather?.weather?.first?.id)
-        
-        if let animation = weatherAnimationView {
-            animation.play()
-        }
+        weatherAnimationView.play()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -102,14 +99,13 @@ class CurrentLocationViewController: UIViewController {
     
     // MARK: функция создания анимации
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
-        let animationView = AnimationView()
         
-        animationView.frame = frame
-        animationView.animation = Animation.named(name)
-        animationView.contentMode = .scaleAspectFill
-        animationView.loopMode = .loop
+        weatherAnimationView.frame = frame
+        weatherAnimationView.animation = Animation.named(name)
+        weatherAnimationView.contentMode = .scaleAspectFill
+        weatherAnimationView.loopMode = .loop
         
-        return animationView
+        return weatherAnimationView
     }
     
     private func getAnimationForWeather(conditionID: Float) -> String {
@@ -265,36 +261,14 @@ extension CurrentLocationViewController: CLLocationManagerDelegate {
             Networkmanager.shared.getCurrentWeatherByLocation(lat: lat, lon: lon) { [weak self] current in
                 
                 guard let self = self,
-                      let currentLocation = current?.name,
-                      let weatherConditionsID = current?.weather?.first?.id,
-                      let main = current?.main
+                      let current = current
                 else {
                     return
                 }
                 
                 DispatchQueue.main.async {
-                    let temperature = Int(main.temp)
-                    
-                    self.settings.cityName = currentLocation
-                    self.currentLocationLabel.text = currentLocation
-                    self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
-                    self.temperatureLabel.text = String(Int(temperature)) + " ºC"
-                    
-                    guard let current = current else {return}
-                    
                     self.currentWeather = current
                     self.updateUI(withAnimation: true)
-                    
-                    let weatherAnimationNamed = self.getAnimationForWeather(conditionID: weatherConditionsID)
-                    self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
-                                                                         andFrame: self.view.bounds)
-                    if let animation = self.weatherAnimationView {
-                        self.backgroundView.addSubview(animation)
-                        animation.play()
-                    }
-                    
-                    self.updateBackgroundImage(forTenperature: temperature)
-                    
                     self.locationManager.stopUpdatingLocation()
                 }
             }
@@ -311,19 +285,19 @@ private extension CurrentLocationViewController {
     func updateUI(withAnimation: Bool) {
         
         guard let current = self.currentWeather,
-              let currentLocation = current.name,
+              let currentLocationName = current.name,
               let temperature = current.main?.temp,
               let weatherConditionsID = current.weather?.first?.id,
               let main = current.main,
               let windSpeed = current.wind?.speed,
               let weatherDescription = current.weather?.first?.description,
+              let dayTimeInterval = current.dt,
               let intervalForSunrise = current.sys?.sunrise,
               let intervalForSunset = current.sys?.sunset,
               let timeZone = current.timezone else {
             return
         }
-        
-        
+        settings.cityName = currentLocationName
         let sunriseTime = getDayTimeFor(timeInterval: TimeInterval(intervalForSunrise),
                                         withTimeZone: timeZone)
         let sunsetTime = getDayTimeFor(timeInterval: TimeInterval(intervalForSunset),
@@ -333,8 +307,10 @@ private extension CurrentLocationViewController {
         formatter.dateStyle = .none
         formatter.timeStyle = .medium
         formatter.dateFormat = "HH:mm"
+   
+        updateBackgroundImage(forTenperature: Int(temperature))
         
-        self.currentLocationLabel.text = currentLocation
+        self.currentLocationLabel.text = currentLocationName
         self.weatherConditionLabel.text = WeatherDataSource.weatherIDs[Int(floor(weatherConditionsID))]
         self.temperatureLabel.text = String(Int(temperature)) + " ºC"
         let formattedSunriseTime = formatter.string(from: sunriseTime)
@@ -345,21 +321,32 @@ private extension CurrentLocationViewController {
         self.weatherDescription.text = weatherDescription.capitalizedFirstLatter() + ", todays max temperature " + String(Int(main.temp_max)) + " ºC" + ", todays min temperature " + String(Int(main.temp_min)) + " ºC" + ", wind speed " + String(windSpeed) + " m/sec"
         
         if withAnimation {
-            self.updateAnimation(conditionId: weatherConditionsID)
+            updateAnimation(conditionId: weatherConditionsID,
+                                 forDayTimeInterval: TimeInterval(dayTimeInterval),
+                                 bySunriseInterval: TimeInterval(intervalForSunrise),
+                                 andSunsetInterval: TimeInterval(intervalForSunset))
         }
-        
         
     }
     
-    func updateAnimation(conditionId: Float) {
-        self.weatherAnimationView?.removeFromSuperview()
-        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: conditionId)
-        self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
-                                                             andFrame: self.view.bounds)
-        if let animation = self.weatherAnimationView {
-            self.backgroundView.addSubview(animation)
-            animation.play()
+    func updateAnimation(conditionId: Float,
+                         forDayTimeInterval dayTimeInterval: TimeInterval,
+                         bySunriseInterval sunriseInterval: TimeInterval,
+                         andSunsetInterval sunsetInterval: TimeInterval) {
+        
+        var weatherAnimationNamed = getAnimationForWeather(conditionID: conditionId)
+        
+        if sunriseInterval < dayTimeInterval && sunsetInterval > dayTimeInterval {
+         
+        } else {
+            weatherAnimationNamed = "night" + weatherAnimationNamed
         }
+        weatherAnimationView = setWeatherAnimation(with: weatherAnimationNamed,
+                                                             andFrame: self.view.bounds)
+
+            backgroundView.addSubview(weatherAnimationView)
+            weatherAnimationView.play()
+        
     }
     
     func updateBackgroundImage(forTenperature: Int) {
@@ -374,12 +361,6 @@ private extension CurrentLocationViewController {
                 self.backgroundView.image = UIImage(named: "Mountain")
         }
         
-    }
-    
-    func getDayTimeFor(timeInterval interval: TimeInterval, withTimeZone offset: Float) -> Date {
-        let userTimeZone = Float(TimeZone.current.secondsFromGMT())
-        let dayTime = Date(timeIntervalSince1970: TimeInterval(interval)).addingTimeInterval(TimeInterval(offset - userTimeZone))
-        return dayTime
     }
     
 }

@@ -14,3 +14,8 @@ public func someWrongAlert(_ title: String ,_ message: String) -> UIAlertControl
     return alert
 }
 
+public func getDayTimeFor(timeInterval interval: TimeInterval, withTimeZone offset: Float) -> Date {
+    let userTimeZone = Float(TimeZone.current.secondsFromGMT())
+    let dayTime = Date(timeIntervalSince1970: TimeInterval(interval)).addingTimeInterval(TimeInterval(offset - userTimeZone))
+    return dayTime
+}

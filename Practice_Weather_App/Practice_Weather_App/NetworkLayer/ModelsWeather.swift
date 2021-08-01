@@ -14,6 +14,7 @@ struct CurrentWeather: Codable {
     var main: Main?
     var wind: Wind?
     var sys: System?
+    var dt: Float?
     var timezone: Float?
     var name: String?
 }

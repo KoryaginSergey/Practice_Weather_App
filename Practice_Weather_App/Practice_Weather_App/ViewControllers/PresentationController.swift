@@ -46,7 +46,7 @@ class PresentationController: UIPresentationController {
     
     override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
-        presentedView!.roundCorners([.topLeft, .topRight], radius: 22)
+        presentedView!.roundedCorners(withRadius: 22)
     }
     
     override func containerViewDidLayoutSubviews() {

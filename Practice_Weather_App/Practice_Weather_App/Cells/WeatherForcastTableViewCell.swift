@@ -19,7 +19,7 @@ class WeatherForcastTableViewCell: UITableViewCell {
     func setupWeatherForDaysCell(withForcast forcast: ListModelForcast) {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        formatter.timeStyle = .none
+        formatter.timeStyle = .short
         
         let dayTimeInterval = Date(timeIntervalSince1970: TimeInterval(forcast.dt ?? 0.0))
         

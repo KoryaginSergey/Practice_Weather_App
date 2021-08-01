@@ -14,7 +14,7 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     private var weatherVcs = [UIViewController]()
     private var defaultWeatherVcs = [UIViewController]()
-    private var weatherAnimationView: AnimationView?
+    private var weatherAnimationView = AnimationView()
     private var backgroundImage: UIImageView?
     private let animationView = UIImageView()
     
@@ -33,7 +33,7 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        weatherAnimationView?.play()
+        weatherAnimationView.play()
     }
 }
 
@@ -43,11 +43,18 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
             if index < weatherVcs.count - 1 {
                 
                 if let vc = weatherVcs[index + 1] as? CurrentLocationViewController {
-                    vc.didLoadClosure = { [weak self] weatherId in
-                        guard let self = self, let id = weatherId else {
+                    vc.didLoadClosure = { [weak self] weather in
+                        guard let self = self,
+                              let current = weather,
+                              let weatherConditionsID = current.weather?.first?.id,
+                              let dayTimeInterval = current.dt,
+                              let intervalForSunrise = current.sys?.sunrise,
+                              let intervalForSunset = current.sys?.sunset
+//                              let timeZone = current.timezone
+                        else {
                             return
                         }
-                        self.updateAnimation(conditionId: id)
+                        self.updateAnimation(conditionId: weatherConditionsID, forDayTimeInterval: TimeInterval(dayTimeInterval), bySunriseInterval: TimeInterval(intervalForSunrise), andSunsetInterval: TimeInterval(intervalForSunset))
                     }
                 }
                 
@@ -61,11 +68,18 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
         if let index = self.weatherVcs.firstIndex(of: viewController) {
             if index > 0 {
                 if let vc = weatherVcs[index + 1] as? CurrentLocationViewController {
-                    vc.didLoadClosure = { [weak self] weatherId in
-                        guard let self = self, let id = weatherId else {
+                    vc.didLoadClosure = { [weak self] weather in
+                        guard let self = self,
+                              let current = weather,
+                              let weatherConditionsID = current.weather?.first?.id,
+                              let dayTimeInterval = current.dt,
+                              let intervalForSunrise = current.sys?.sunrise,
+                              let intervalForSunset = current.sys?.sunset
+//                              let timeZone = current.timezone
+                        else {
                             return
                         }
-                        self.updateAnimation(conditionId: id)
+                        self.updateAnimation(conditionId: weatherConditionsID, forDayTimeInterval: TimeInterval(dayTimeInterval), bySunriseInterval: TimeInterval(intervalForSunrise), andSunsetInterval: TimeInterval(intervalForSunset))
                     }
                 }
                 return weatherVcs[index - 1]
@@ -104,11 +118,18 @@ private extension FavoriteCitiesViewController {
         }
         
         if let vc = self.viewControllers?.first as? CurrentLocationViewController {
-            vc.didLoadClosure = { [weak self] weatherId in
-                guard let self = self, let id = weatherId else {
+            vc.didLoadClosure = { [weak self] weather in
+            guard     let self = self,
+                      let current = weather,
+                      let weatherConditionsID = current.weather?.first?.id,
+                      let dayTimeInterval = current.dt,
+                      let intervalForSunrise = current.sys?.sunrise,
+                      let intervalForSunset = current.sys?.sunset
+//                      let timeZone = current.timezone
+            else {
                     return
                 }
-                self.updateAnimation(conditionId: id)
+                self.updateAnimation(conditionId: weatherConditionsID, forDayTimeInterval: TimeInterval(dayTimeInterval), bySunriseInterval: TimeInterval(intervalForSunrise), andSunsetInterval: TimeInterval(intervalForSunset))
             }
         }
     }
@@ -176,13 +197,10 @@ private extension FavoriteCitiesViewController {
         view.insertSubview(background, at: 0)
         background.frame = view.bounds
         background.image = UIImage(named: "Mountain")
-
         self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
                                                                andFrame: self.view.bounds)
-        background.addSubview(weatherAnimationView!)
-        
+        background.addSubview(weatherAnimationView)
         self.backgroundImage = background
-
     }
     
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
@@ -192,21 +210,25 @@ private extension FavoriteCitiesViewController {
         animationView.animation = Animation.named(name)
         animationView.contentMode = .scaleAspectFill
         animationView.loopMode = .loop
-        
-        
-        
         return animationView
     }
     
-    func updateAnimation(conditionId: Float) {
-        self.weatherAnimationView?.removeFromSuperview()
-        let weatherAnimationNamed = self.getAnimationForWeather(conditionID: conditionId)
-        self.weatherAnimationView = self.setWeatherAnimation(with: weatherAnimationNamed,
-                                                               andFrame: self.view.bounds)
-        if let animation = self.weatherAnimationView {
-            self.animationView.addSubview(animation)
-            animation.play()
+    private func updateAnimation(conditionId: Float,
+                         forDayTimeInterval dayTimeInterval: TimeInterval,
+                         bySunriseInterval sunriseInterval: TimeInterval,
+                         andSunsetInterval sunsetInterval: TimeInterval) {
+        
+        weatherAnimationView.stop()
+        weatherAnimationView.removeFromSuperview()
+        var weatherAnimationNamed = getAnimationForWeather(conditionID: conditionId)
+        if sunriseInterval < dayTimeInterval && sunsetInterval > dayTimeInterval {
+        } else {
+            weatherAnimationNamed = "night" + weatherAnimationNamed
         }
+        weatherAnimationView = setWeatherAnimation(with: weatherAnimationNamed,
+                                                   andFrame: self.view.bounds)
+        animationView.addSubview(weatherAnimationView)
+        weatherAnimationView.play()
     }
     
     private func getAnimationForWeather(conditionID: Float) -> String {
@@ -236,7 +258,6 @@ private extension FavoriteCitiesViewController {
             default:
                 jsonName = ""
         }
-        
         return jsonName
     }
     

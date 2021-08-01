@@ -12,13 +12,6 @@ import Foundation
 //https://api.openweathermap.org/geo/1.0/direct?q=London&limit=1&appid=010490d0c60a959c36f0688641ada569
 //https://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&units=metric&appid=76a212233b5863b7fe5c80277e71a5ba
 
-//MARK: -  погода на сегодня или на несколько дней
-
-private enum DownloadTask: String {
-    case forecast
-    case weather
-    case weatherByLocation
-}
 
 private struct Api {
     static  let mainUrlGeo: String = "https://api.openweathermap.org/geo/"
@@ -93,7 +86,6 @@ class Networkmanager {
     }
     //MARK: - weather today by coordinate
     func getCurrentWeatherByLocation(lat: Double,lon: Double, result: @escaping ((CurrentWeather?)->())) {
-        // print("url: ",WeatherURL.weatherbyLocation(lat: lat, lon: lon).url)
         guard let url = URL(string: WeatherURL.weatherbyLocation(lat: lat, lon: lon).url) else {return}
         URLSession.shared.dataTask(with: url) { (data, responce, error) in
             guard  error == nil else {

@@ -7,8 +7,6 @@
 
 import Foundation
 
-//весь файл погода на несколько дней
-
 struct WeatherModelForcast: Codable {
     var cod: String?
     var message: Float?
@@ -16,7 +14,6 @@ struct WeatherModelForcast: Codable {
     var list: [ListModelForcast]?
     var city: CityModelForcast?
 }
-
 
 struct ListModelForcast: Codable {
     var dt: Float?

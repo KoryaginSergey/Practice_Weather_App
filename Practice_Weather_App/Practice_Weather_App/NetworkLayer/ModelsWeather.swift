@@ -7,8 +7,6 @@
 
 import Foundation
 
-//MARK: - структура данных пример погода на сегодня
-
 struct CurrentWeather: Codable {
     var weather: [Weather]?
     var main: Main?

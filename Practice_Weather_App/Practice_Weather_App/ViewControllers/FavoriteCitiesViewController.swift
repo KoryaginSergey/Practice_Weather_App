@@ -14,7 +14,7 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     private var weatherVcs = [UIViewController]()
     private var defaultWeatherVcs = [UIViewController]()
-    private var weatherAnimationView = AnimationView()
+    private var weatherAnimationView: AnimationView?
     private var backgroundImage: UIImageView?
     private let animationView = UIImageView()
     
@@ -33,7 +33,7 @@ class FavoriteCitiesViewController: UIPageViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        weatherAnimationView.play()
+        weatherAnimationView?.play()
     }
 }
 
@@ -199,13 +199,12 @@ private extension FavoriteCitiesViewController {
         background.image = UIImage(named: "Mountain")
         self.weatherAnimationView = self.setWeatherAnimation(with: "clear",
                                                                andFrame: self.view.bounds)
-        background.addSubview(weatherAnimationView)
+        background.addSubview(weatherAnimationView!)
         self.backgroundImage = background
     }
     
     private func setWeatherAnimation(with name: String, andFrame frame: CGRect) -> AnimationView {
         let animationView = AnimationView()
-        
         animationView.frame = frame
         animationView.animation = Animation.named(name)
         animationView.contentMode = .scaleAspectFill
@@ -218,8 +217,8 @@ private extension FavoriteCitiesViewController {
                          bySunriseInterval sunriseInterval: TimeInterval,
                          andSunsetInterval sunsetInterval: TimeInterval) {
         
-        weatherAnimationView.stop()
-        weatherAnimationView.removeFromSuperview()
+        weatherAnimationView?.stop()
+        weatherAnimationView?.removeFromSuperview()
         var weatherAnimationNamed = getAnimationForWeather(conditionID: conditionId)
         if sunriseInterval < dayTimeInterval && sunsetInterval > dayTimeInterval {
         } else {
@@ -227,8 +226,8 @@ private extension FavoriteCitiesViewController {
         }
         weatherAnimationView = setWeatherAnimation(with: weatherAnimationNamed,
                                                    andFrame: self.view.bounds)
-        animationView.addSubview(weatherAnimationView)
-        weatherAnimationView.play()
+        animationView.addSubview(weatherAnimationView!)
+        weatherAnimationView!.play()
     }
     
     private func getAnimationForWeather(conditionID: Float) -> String {
@@ -262,9 +261,9 @@ private extension FavoriteCitiesViewController {
     }
     
     private func setAnimationView() {
-        animationView.contentMode = .scaleAspectFill
-        view.insertSubview(animationView, at: 1)
-        animationView.frame = view.bounds
+        weatherAnimationView.contentMode = .scaleAspectFill
+        view.insertSubview(weatherAnimationView, at: 1)
+        weatherAnimationView.frame = view.bounds
     }
 }
 

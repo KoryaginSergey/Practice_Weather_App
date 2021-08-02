@@ -249,14 +249,16 @@ private extension SearchListViewController {
     private func saveItemToDataBase(indexPath: IndexPath) {
         let city = cities[indexPath.row]
         
+        let objectId = Int16(CDCityModel.objectNumber())
+        
         if let cityObject = CDCityModel.getCity(by: city.name) {
             cityObject.name = city.name
-            cityObject.id = Int16(CDCityModel.objectNumber())
+            cityObject.id = objectId
             cityObject.country = city.country
         } else {
             let newCityObject = CDCityModel.createObject() as CDCityModel
             newCityObject.name = city.name
-            newCityObject.id = Int16(CDCityModel.objectNumber())
+            newCityObject.id = objectId
             newCityObject.country = city.country
         }
 

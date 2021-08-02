@@ -35,10 +35,13 @@ class CurrentLocationViewController: UIViewController {
     
     @IBOutlet weak var descriptionView: UIView!
     private var isLocationState: Bool = false
+    private var weatherNeedUpdate: Bool = false
     private let locationManager = CLLocationManager()
     private var currentWeather: CurrentWeather? {
         didSet {
-            self.didLoadClosure?(currentWeather)
+            if self.weatherNeedUpdate {
+                self.didLoadClosure?(currentWeather)
+            }
         }
     }
     private var weatherAnimationView = AnimationView()
@@ -64,10 +67,8 @@ class CurrentLocationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.configureViewController()
         self.descriptionView.roundedCorners(withRadius: 10)
-        
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -76,21 +77,29 @@ class CurrentLocationViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.didLoadClosure?(currentWeather)
+        if let weather = currentWeather {
+            self.weatherNeedUpdate = false
+            self.didLoadClosure?(weather)
+        } else {
+            self.weatherNeedUpdate = true
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         if isLocationState { startLocationManager() }
         weatherAnimationView.play()
     }
     
     private func getDataFromServer(cityName: String) {
-        Networkmanager.shared.getCurrentWeather(city: cityName) { [weak self] current in
-            guard let current = current else {return}
-            DispatchQueue.main.async {
-                self?.currentWeather = current
-                self?.updateUI(withAnimation: false)
+        DispatchQueue.global(qos: .userInitiated).async {
+            Networkmanager.shared.getCurrentWeather(city: cityName) { [weak self] current in
+                guard let current = current else {return}
+                DispatchQueue.main.async {
+                    self?.currentWeather = current
+                    self?.updateUI(withAnimation: false)
+                }
             }
         }
     }

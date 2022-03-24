@@ -65,7 +65,7 @@ extension FavoriteCitiesViewController: UIPageViewControllerDataSource {
         if weatherVcs.count > 0 {
             return self.weatherVcs.count
         } else {
-            return 1
+            return 0
         }
     }
     
@@ -81,6 +81,7 @@ private extension FavoriteCitiesViewController {
     
     private func reloadViewControllers() {
         self.fetchData()
+        
         weatherVcs = createArrayVC()
         if weatherVcs.count > 0 {
         } else {
@@ -167,6 +168,7 @@ private extension FavoriteCitiesViewController {
     }
     
     private func setBackgroundImage() {
+        
         background.contentMode = .scaleAspectFill
 
         view.insertSubview(background, at: 0)
@@ -184,6 +186,7 @@ private extension FavoriteCitiesViewController {
         return animationView
     }
     
+    //MARK: - updateAnimation
     private func updateAnimation(conditionId: Float,
                          forDayTimeInterval dayTimeInterval: TimeInterval,
                          bySunriseInterval sunriseInterval: TimeInterval,

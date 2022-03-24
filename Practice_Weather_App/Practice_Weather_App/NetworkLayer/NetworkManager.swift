@@ -7,7 +7,7 @@
 
 import Foundation
 
-//https://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
+//https://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&appid=b66e60708f68ae585271c30665c1382c
 //https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=010490d0c60a959c36f0688641ada569
 //https://api.openweathermap.org/geo/1.0/direct?q=London&limit=1&appid=010490d0c60a959c36f0688641ada569
 //https://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&units=metric&appid=76a212233b5863b7fe5c80277e71a5ba
@@ -16,8 +16,8 @@ import Foundation
 private struct Api {
     static  let mainUrlGeo: String = "https://api.openweathermap.org/geo/"
     static  let mainUrl: String = "https://api.openweathermap.org/data/"
-    static  let id: String = "appid=76a212233b5863b7fe5c80277e71a5ba"
-    static let id2: String = "appid=010490d0c60a959c36f0688641ada569"
+    static  let id: String = "appid=b66e60708f68ae585271c30665c1382c"
+    static let id2: String = "appid=b66e60708f68ae585271c30665c1382c"
 }
 
 enum WeatherURL {

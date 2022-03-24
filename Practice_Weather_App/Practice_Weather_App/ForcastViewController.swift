@@ -75,6 +75,7 @@ class ForcastViewController: UIViewController {
     }
 }
 
+//MARK: - UITableViewDelegate
 extension ForcastViewController: UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -82,6 +83,7 @@ extension ForcastViewController: UITableViewDelegate {
     }
 }
 
+//MARK: - UITableViewDataSource
 extension ForcastViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
